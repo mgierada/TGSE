@@ -40,15 +40,15 @@ class SplitWavAudioMubin():
 
 
 # def load_chunks(filename):
-#     long_audio = AudioSegment.from_mp3(filename)
+#     long_audio = AudioSegment.from_wav(filename)
 #     audio_chunks = split_on_silence(
-#         long_audio, min_silence_len=1800,
+#         long_audio, min_silence_len=100,
 #         silence_thresh=-17
 #     )
 #     return audio_chunks
 
 
-# for audio_chunk in load_chunks('./source/skepticast2021-02-27.mp3'):
+# for audio_chunk in load_chunks('./source/0_skepticast2021-02-27.wav'):
 #     audio_chunk.export("temp", format="wav")
 #     with sr.AudioFile("temp") as source:
 #         audio = sr.Recognizer().listen(source)
@@ -79,4 +79,6 @@ r = sr.Recognizer()
 with sr.AudioFile(f) as source:
     audio = r.record(source)  # read the entire audio file
 
-    print("Transcription: " + r.recognize_google(audio))
+    # print("Transcription: " + r.recognize_google(audio))
+    with open('transription.txt', 'w+') as out:
+        out.write(r.recognize_google(audio))
