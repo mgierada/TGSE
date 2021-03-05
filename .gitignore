@@ -1,0 +1,4 @@
+*venv
+source
+.vscode
+.DS_*
