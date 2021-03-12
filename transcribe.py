@@ -74,7 +74,7 @@ class SplitWavAudioMubin():
 
 # transcribe audio file
 # use the audio file as the audio source
-f = os.path.join(current_dir, 'source', '0_skepticast2021-02-27.wav')
+f = os.path.join(current_dir, 'source', '2_skepticast2021-02-27.wav')
 r = sr.Recognizer()
 with sr.AudioFile(f) as source:
     audio = r.record(source)  # read the entire audio file
