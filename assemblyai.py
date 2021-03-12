@@ -10,13 +10,35 @@ class SGUTrans:
         self.headers = {
             "authorization": self.api_key
         }
-        self.response_fname = 'get_response.json'
+        self.current_dir = os.getcwd()
+        self.response_dir_name = 'responses'
+        self.transcript_dir_name = 'transcripts'
+        self.response_fname = 'response.json'
+        self.response_dir = os.path.join(
+            self.current_dir, self.response_dir_name)
+
+    def submit(self, audio_url):
+        self.headers['content-type'] = 'application/json'
+
+        json = {
+            "audio_url": audio_url
+        }
+
+        response = requests.post(self.url, json=json, headers=self.headers)
+        print(response.json())
+        res = json.dumps(response.json(), indent=4)
+        print(res)
 
     def get(self, id):
         endpoint = self.url + str(id)
         response = requests.get(endpoint, headers=self.headers)
 
-        with open(self.response_fname, 'w') as f:
+        os.makedirs(self.response_dir, exist_ok=True)
+
+        response_path = os.path.join(
+            self.response_dir, id + '_' + self.response_fname)
+
+        with open(response_path, 'w') as f:
             json.dump(response.json(), f, indent=4)
 
     def get_status(self):
@@ -32,9 +54,9 @@ class SGUTrans:
             ff.write(text)
 
 
-# SGUTrans().get('icb47y7t9-2aa0-485e-b8b7-73f0930f7562')
-SGUTrans().get_status()
-SGUTrans().get_transcript()
+SGUTrans().get('icb47y7t9-2aa0-485e-b8b7-73f0930f7562')
+# SGUTrans().get_status()
+# SGUTrans().get_transcript()
 
 # endpoint = "https://api.assemblyai.com/v2/transcript"
 
