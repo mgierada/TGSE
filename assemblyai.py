@@ -4,9 +4,9 @@ import os
 
 
 class SGUTrans:
-    def __init__(self):
+    def __init__(self) -> None:
         self.api_key = os.environ['asemblyai_api_key']
-        self.url = 'https://api.assemblyai.com/v2/transcript/'
+        self.url = 'https://api.assemblyai.com/v2/transcript'
         self.headers = {
             "authorization": self.api_key
         }
@@ -20,7 +20,19 @@ class SGUTrans:
         self.transcript_dir = os.path.join(
             self.current_dir, self.transcript_dir_name)
 
-    def submit(self, audio_url):
+    def submit(
+            self,
+            audio_url: str) -> None:
+        '''Submit audio_url for converstion to speech (json format)
+
+        Parameters
+        ----------
+        audio_url : str
+            an url to audio file
+            e.g.
+            >>> audio_url = https://media.libsyn.com/media/skepticsguide/skepticast2021-03-06.mp3
+
+        '''
         self.headers['content-type'] = 'application/json'
 
         json = {
@@ -32,8 +44,18 @@ class SGUTrans:
         res = json.dumps(response.json(), indent=4)
         print(res)
 
-    def get(self, id):
-        endpoint = self.url + str(id)
+    def get(
+            self,
+            id: str) -> None:
+        ''' Get a GET request for submitted audio
+
+        Parameters
+        ----------
+        id : str
+            id of the submitted audio_url
+
+        '''
+        endpoint = self.url + '/' + str(id)
         response = requests.get(endpoint, headers=self.headers)
 
         os.makedirs(self.response_dir, exist_ok=True)
@@ -44,7 +66,20 @@ class SGUTrans:
         with open(response_path, 'w') as f:
             json.dump(response.json(), f, indent=4)
 
-    def get_status(self, id):
+    def get_status(
+            self,
+            id: str) -> None:
+        ''' Get status of conversion to speach.
+
+        The status goes from "queued" to "processing" to "completed" or
+        sometimes "error"
+
+        Parameters
+        ----------
+        id : str
+            id of the submitted audio_url
+
+        '''
         response_path = os.path.join(
             self.response_dir, id + '_' + self.response_fname)
 
@@ -52,7 +87,20 @@ class SGUTrans:
             data = json.load(f)
         print(data['status'])
 
-    def get_transcript(self, id):
+    def get_transcript(
+            self,
+            id: str) -> None:
+        ''' Get transcript and store it in ./transcripts dir.
+
+        The status goes from "queued" to "processing" to "completed" or
+        sometimes "error"
+
+        Parameters
+        ----------
+        id : str
+            id of the submitted audio_url
+
+        '''
         response_path = os.path.join(
             self.response_dir, id + '_' + self.response_fname)
         transcript_path = os.path.join(
@@ -66,8 +114,12 @@ class SGUTrans:
             ff.write(text)
 
 
-SGUTrans().get('icb47y7t9-2aa0-485e-b8b7-73f0930f7562')
-# SGUTrans().get_status()
+# SGUTrans().submit('https://media.libsyn.com/media/skepticsguide/skepticast2021-02-27.mp3')
+
+# SGUTrans().get('ic074h0f7-39f8-4550-b347-d645dcb3b2a6')
+
+# SGUTrans().get('icb47y7t9-2aa0-485e-b8b7-73f0930f7562')
+# SGUTrans().get_status('icb47y7t9-2aa0-485e-b8b7-73f0930f7562')
 SGUTrans().get_transcript('icb47y7t9-2aa0-485e-b8b7-73f0930f7562')
 
 # endpoint = "https://api.assemblyai.com/v2/transcript"
@@ -95,6 +147,7 @@ SGUTrans().get_transcript('icb47y7t9-2aa0-485e-b8b7-73f0930f7562')
 # response = requests.get(endpoint, headers=headers)
 
 # print(response.json())
+
 
 # endpoint = "https://api.assemblyai.com/v2/transcript"
 
