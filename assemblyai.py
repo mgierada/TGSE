@@ -118,6 +118,7 @@ class SGUTrans:
 
 SGUTrans().get('ic074h0f7-39f8-4550-b347-d645dcb3b2a6')
 SGUTrans().get_status('ic074h0f7-39f8-4550-b347-d645dcb3b2a6')
+SGUTrans().get_transcript('ic074h0f7-39f8-4550-b347-d645dcb3b2a6')
 
 # SGUTrans().get('icb47y7t9-2aa0-485e-b8b7-73f0930f7562')
 # SGUTrans().get_status('icb47y7t9-2aa0-485e-b8b7-73f0930f7562')
