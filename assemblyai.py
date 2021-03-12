@@ -10,20 +10,31 @@ class SGUTrans:
         self.headers = {
             "authorization": self.api_key
         }
+        self.response_fname = 'get_response.json'
 
-    def get_status(self, id):
+    def get(self, id):
         endpoint = self.url + str(id)
         response = requests.get(endpoint, headers=self.headers)
 
-        res = json.dumps(response.json(), indent=3)
+        with open(self.response_fname, 'w') as f:
+            json.dump(response.json(), f, indent=4)
 
-        status = response.json()['status']
+    def get_status(self):
+        with open(self.response_fname, 'r') as f:
+            data = json.load(f)
+        print(data['status'])
 
-        print(res)
-        print(status)
+    def get_transcript(self):
+        with open(self.response_fname, 'r') as f:
+            data = json.load(f)
+            text = data['text']
+        with open('transcript.txt', 'w') as ff:
+            ff.write(text)
 
 
-SGUTrans().get_status('icb47y7t9-2aa0-485e-b8b7-73f0930f7562')
+# SGUTrans().get('icb47y7t9-2aa0-485e-b8b7-73f0930f7562')
+SGUTrans().get_status()
+SGUTrans().get_transcript()
 
 # endpoint = "https://api.assemblyai.com/v2/transcript"
 
