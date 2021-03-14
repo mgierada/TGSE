@@ -1,7 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
 
 class City(models.Model):
     name = models.CharField(max_length=244)
@@ -21,8 +19,11 @@ class Transcript(models.Model):
     audio_url = models.CharField(max_length=244)
     status = models.CharField(max_length=244)
 
+    class Meta:
+        verbose_name_plural = 'Transcripts'
+
     def __str__(self):
-        return self.idd
+        return self.audio_url
 
 
 def populate_db():
