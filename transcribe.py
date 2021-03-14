@@ -1,84 +1,114 @@
-import math
-from re import A, L
-import speech_recognition as sr
+import requests
+import json
 import os
-from pydub import AudioSegment
-from pydub.silence import split_on_silence
-
-current_dir = os.getcwd()
-filename = 'skepticast2021-02-27'
-
-MP3_SOURCE = os.path.join(current_dir, 'source', filename + '.mp3')
-AUDIO_FILE = os.path.join(current_dir, 'source', filename + '.wav')
 
 
-class SplitWavAudioMubin():
-    def __init__(self, folder, filename):
-        self.folder = folder
-        self.filename = filename
-        self.filepath = folder + '/' + filename
+class SGUTrans:
+    def __init__(self) -> None:
+        self.api_key = os.environ['asemblyai_api_key']
+        self.url = 'https://api.assemblyai.com/v2/transcript'
+        self.headers = {
+            "authorization": self.api_key
+        }
+        self.current_dir = os.getcwd()
+        self.response_dir_name = 'responses'
+        self.transcript_dir_name = 'transcripts'
+        self.response_fname = 'response.json'
+        self.transcript_fname = 'transcript.txt'
+        self.response_dir = os.path.join(
+            self.current_dir, self.response_dir_name)
+        self.transcript_dir = os.path.join(
+            self.current_dir, self.transcript_dir_name)
 
-        self.audio = AudioSegment.from_wav(self.filepath)
+    def submit(
+            self,
+            audio_url: str) -> None:
+        '''Submit audio_url for converstion to speech (json format)
 
-    def get_duration(self):
-        return self.audio.duration_seconds
+        Parameters
+        ----------
+        audio_url : str
+            an url to audio file
+            e.g.
+            >>> audio_url = https://media.libsyn.com/media/skepticsguide/skepticast2021-03-06.mp3
 
-    def single_split(self, from_min, to_min, split_filename):
-        t1 = from_min * 60 * 1000
-        t2 = to_min * 60 * 1000
-        split_audio = self.audio[t1:t2]
-        split_audio.export(self.folder + '/' + split_filename, format="wav")
+        '''
+        self.headers['content-type'] = 'application/json'
 
-    def multiple_split(self, min_per_split):
-        total_mins = math.ceil(self.get_duration() / 60)
-        for i in range(0, total_mins, min_per_split):
-            split_fn = str(i) + '_' + self.filename
-            self.single_split(i, i+min_per_split, split_fn)
-            print(str(i) + ' Done')
-            if i == total_mins - min_per_split:
-                print('All splited successfully')
+        json = {
+            "audio_url": audio_url
+        }
 
+        response = requests.post(self.url, json=json, headers=self.headers)
+        print(response.json())
+        res = json.dumps(response.json(), indent=4)
+        print(res)
 
-# def load_chunks(filename):
-#     long_audio = AudioSegment.from_wav(filename)
-#     audio_chunks = split_on_silence(
-#         long_audio, min_silence_len=100,
-#         silence_thresh=-17
-#     )
-#     return audio_chunks
+    def get(
+            self,
+            id: str) -> None:
+        ''' Get a GET request for submitted audio
 
+        Parameters
+        ----------
+        id : str
+            id of the submitted audio_url
 
-# for audio_chunk in load_chunks('./source/0_skepticast2021-02-27.wav'):
-#     audio_chunk.export("temp", format="wav")
-#     with sr.AudioFile("temp") as source:
-#         audio = sr.Recognizer().listen(source)
-#         try:
-#             text = sr.Recognizer().recognize_google(audio)
-#             print("Chunk : {}".format(text))
-#         except Exception as ex:
-#             print("Error occured")
-#             print(ex)
+        '''
+        endpoint = self.url + '/' + str(id)
+        response = requests.get(endpoint, headers=self.headers)
 
-# print("++++++")
+        os.makedirs(self.response_dir, exist_ok=True)
 
+        response_path = os.path.join(
+            self.response_dir, id + '_' + self.response_fname)
 
-# split_wav = SplitWavAudioMubin(os.path.join(
-#     current_dir, 'source'), 'skepticast2021-02-27.wav')
-# split_wav.multiple_split(min_per_split=2)
+        with open(response_path, 'w') as f:
+            json.dump(response.json(), f, indent=4)
 
-# # convert mp3 file to wav
-# sound = AudioSegment.from_mp3(MP3_SOURCE)
-# sound - sound[6000:12000]
-# sound.export(AUDIO_FILE, format='wav')
+    def get_status(
+            self,
+            id: str) -> None:
+        ''' Get status of conversion to speach.
 
+        The status goes from "queued" to "processing" to "completed" or
+        sometimes "error"
 
-# transcribe audio file
-# use the audio file as the audio source
-f = os.path.join(current_dir, 'source', '2_skepticast2021-02-27.wav')
-r = sr.Recognizer()
-with sr.AudioFile(f) as source:
-    audio = r.record(source)  # read the entire audio file
+        Parameters
+        ----------
+        id : str
+            id of the submitted audio_url
 
-    # print("Transcription: " + r.recognize_google(audio))
-    with open('transription.txt', 'w+') as out:
-        out.write(r.recognize_google(audio))
+        '''
+        response_path = os.path.join(
+            self.response_dir, id + '_' + self.response_fname)
+
+        with open(response_path, 'r') as f:
+            data = json.load(f)
+        print(data['status'])
+
+    def get_transcript(
+            self,
+            id: str) -> None:
+        ''' Get transcript and store it in ./transcripts dir.
+
+        The status goes from "queued" to "processing" to "completed" or
+        sometimes "error"
+
+        Parameters
+        ----------
+        id : str
+            id of the submitted audio_url
+
+        '''
+        response_path = os.path.join(
+            self.response_dir, id + '_' + self.response_fname)
+        transcript_path = os.path.join(
+            self.transcript_dir, id + '_' + self.transcript_fname)
+        os.makedirs(self.transcript_dir, exist_ok=True)
+
+        with open(response_path, 'r') as f:
+            data = json.load(f)
+            text = data['text']
+        with open(transcript_path, 'w') as ff:
+            ff.write(text)
