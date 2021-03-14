@@ -9,7 +9,7 @@ class CityAdmin(admin.ModelAdmin):
 
 
 class TranscriptAdmin(admin.ModelAdmin):
-    list_display = ('idd', 'audio_url', 'status')
+    list_display = ('idd', 'date_published', 'audio_url', 'status')
 
 
 admin.site.register(City, CityAdmin)

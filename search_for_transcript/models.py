@@ -1,6 +1,4 @@
 from django.db import models
-import json
-import os
 
 # Create your models here.
 
@@ -18,6 +16,7 @@ class City(models.Model):
 
 class Transcript(models.Model):
     idd = models.CharField(max_length=244)
+    date_published = models.CharField(max_length=244)
     text = models.CharField(max_length=244)
     audio_url = models.CharField(max_length=244)
     status = models.CharField(max_length=244)
@@ -27,17 +26,27 @@ class Transcript(models.Model):
 
 
 def populate_db():
+    import os
+    import re
+    import json
+
     response_path = os.path.join(os.getcwd(), 'responses')
 
     for episode in os.listdir(response_path):
+        print(episode)
         with open(os.path.join(response_path, episode), 'r') as f:
             data = json.load(f)
 
+        audio_url = data['audio_url']
+        date_tmp = re.search('cast(.*).mp3', audio_url)
+        date_published = date_tmp.group(1)
         Transcript.objects.create(
             idd=data['id'],
+            date_published=date_published,
             text=data['text'],
-            audio_url=data['audio_url'],
-            status=data['status'])
+            audio_url=audio_url,
+            status=data['status'],
+        )
 
 
 def clear_db():
