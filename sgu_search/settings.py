@@ -76,10 +76,20 @@ WSGI_APPLICATION = 'sgu_search.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'sgu_db',
+        'USER': 'sgu_db_user',
+        'PASSWORD': 'dzin111majonez',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 # Password validation
