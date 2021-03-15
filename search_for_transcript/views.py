@@ -2,6 +2,7 @@ from django.http.response import HttpResponse
 from django.views.generic import TemplateView, ListView
 from django.views import View
 from typing import Any, Dict
+from haystack.utils.highlighting import Highlighter
 
 from .models import Transcript
 
@@ -18,13 +19,27 @@ class SearchResultsView(ListView):
     def get_queryset(self):
         query = self.request.GET.get('q')
         episode_list = Transcript.objects.filter(text__contains=query)
+        entries = Transcript.objects.all()
+        en0 = entries[0]
+        text = en0.text
+        # self.highlight_search(text, query)
         return episode_list
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super(SearchResultsView, self).get_context_data(**kwargs)
         context['count'] = self.count()
+        query = self.request.GET.get('q')
+        entries = Transcript.objects.all()
+        en0 = entries[0]
+        text = en0.text
+        context['color'] = self.highlight_search(text, query)
         return context
 
+    def highlight_search(self, text, query):
+        print('runing this')
+        highlight = Highlighter(query)
+
+        return highlight.highlight(text)
 
 # class ShowAllView(TemplateView):
 #     template_name = 'search_results.html'
@@ -34,7 +49,6 @@ class SearchResultsView(ListView):
 #         query = self.request.GET.get('q')
 #         episode_list = Transcript.objects.filter(text__contains=query)
 #         return episode_list
-
 
     def count(self):
         query = self.request.GET.get('q')
