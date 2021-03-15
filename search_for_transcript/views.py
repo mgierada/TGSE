@@ -1,5 +1,6 @@
+from django.http.response import HttpResponse
 from django.views.generic import TemplateView, ListView
-from django.shortcuts import render
+from django.views import View
 
 from .models import Transcript
 
@@ -11,18 +12,51 @@ class HomePageView(TemplateView):
 class SearchResultsView(ListView):
     model = Transcript
     template_name = 'search_results.html'
+    context_object_name = 'episode_list'
 
     def get_queryset(self):
         query = self.request.GET.get('q')
         episode_list = Transcript.objects.filter(text__contains=query)
-        contex = {'episode_list': episode_list}
-        # return render(request, 'search_results.html', contex)
         return episode_list
 
-    def count_occurences(self):
-        episode_list = self.get_queryset()
+
+class CountView(View):
+    model = Transcript
+    template_name = 'search_results.html'
+
+    def get(self, request, *args, **kwargs):
+        # query = self.request.GET.get('q')
+        query = 'SGU'
+        episode_list = Transcript.objects.filter(text__contains=query)
+        count = 0
+        for episode in episode_list:
+            count += episode.text.count(query)
+        response = HttpResponse()
+        response['count'] = count
+        response = 'Found {} occurrences of {} in DB'.format(count, query)
+        return HttpResponse(response)
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        episode_list = Transcript.objects.filter(text__contains=query)
         count = 0
         for episode in episode_list:
             count += episode.text.count(self.query)
-        print(count)
-        return count
+        response = HttpResponse()
+        response['count'] = count
+        # contex = {'count': count}
+        return response
+
+# def main(request):
+#     fun1 = index(request)
+#     fun2 = detail(request)
+#     response = fun1 + fun2
+#     return response
+
+
+# def index(request):
+#     return HttpResponse("You're looking at question")
+
+
+# def detail(request):
+#     return HttpResponse('hahaha')

@@ -13,8 +13,8 @@
 {% endfor %} -->
 
 <ul>
-  {{ query }}
-  {% for data in object_list %}
+  {{ view.index }}
+  {% for data in episode_list %}
     <li>
       {{ data.idd }}
     </li>
