@@ -3,7 +3,7 @@ from django.views.generic import TemplateView, ListView
 from django.db.models import Q
 
 
-from .models import City, Transcript
+from .models import Transcript
 
 
 class HomePageView(TemplateView):
@@ -15,13 +15,6 @@ class SearchResultsView(ListView):
     template_name = 'search_results.html'
 
     def get_queryset(self):
-        result = super(SearchResultsView, self).get_queryset()
         query = self.request.GET.get('q')
-        object_list = Transcript.objects.filter(Q(text__contains=query))
+        object_list = Transcript.objects.filter(text__contains=query)
         return object_list
-        # if query:
-        #     postresult = Transcript.objects.filter(text__contains=query)
-        #     result = postresult
-        # else:
-        #     result = None
-        # return result
