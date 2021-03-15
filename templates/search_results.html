@@ -10,9 +10,10 @@
    {{ result.text }}
 {% empty %}
    add something to show no results
-{% endfor %} --> -->
+{% endfor %} -->
 
 <ul>
+  {{ query }}
   {% for data in object_list %}
     <li>
       {{ data.idd }}
