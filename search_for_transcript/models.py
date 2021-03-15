@@ -23,7 +23,7 @@ class Transcript(models.Model):
         verbose_name_plural = 'Transcripts'
 
     def __str__(self):
-        return self.text
+        return self.idd
 
 
 def populate_db():

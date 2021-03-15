@@ -1,10 +1,25 @@
 <!-- templates/search_results.html -->
 <h1>Search Results</h1>
 
-<ul>
-  {% for city in object_list %}
+<form class="Transcripts" method="GET" action="" >
+  <input class="Transcripts" type="search" name="search"> 
+  <button class="Transcripts" type="submit"> Search </button>
+</form>
+
+{% for result in all_search_results %}
+   {{ result.text }}
+{% empty %}
+   add something to show no results
+{% endfor %}
+
+<!-- <ul>
+  {% for data in object_list %}
     <li>
-      {{ city.name }}, {{ city.state }}
+      {{ data.idd }}
     </li>
+    <li>
+      {{ data.text }}
+    </li>
+      
   {% endfor %}
-</ul>
+</ul> -->
