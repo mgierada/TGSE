@@ -2,7 +2,9 @@ from django.http.response import HttpResponse
 from django.views.generic import TemplateView, ListView
 from django.views import View
 from typing import Any, Dict
-from haystack.utils.highlighting import Highlighter
+from django.utils.safestring import mark_safe
+# from haystack.utils.highlighting import Highlighter
+from haystack.utils import Highlighter
 
 from .models import Transcript
 
@@ -32,23 +34,24 @@ class SearchResultsView(ListView):
         entries = Transcript.objects.all()
         en0 = entries[0]
         text = en0.text
-        context['color'] = self.highlight_search(text, query)
+        # replacing_query = '<strong>{}</strong>'.format(query)
+        replacing_query = '<span class="highlighted">{}</span>'.format(query)
+        text = text.replace(query, replacing_query)
+        text = mark_safe(text)
+        context['text'] = text
+
+        # highlighter = self.highlight_search(text, query)
+        # high_li = highlighter.highlight(entries[0].text)
+        # context['high_li'] = high_li
+        # print(high_li)
+        # context['color'] = self.highlight_search(text, query)
         return context
 
     def highlight_search(self, text, query):
         print('runing this')
         highlight = Highlighter(query)
-
-        return highlight.highlight(text)
-
-# class ShowAllView(TemplateView):
-#     template_name = 'search_results.html'
-#     context_object_name = 'episode_list'
-
-#     def get_queryset(self):
-#         query = self.request.GET.get('q')
-#         episode_list = Transcript.objects.filter(text__contains=query)
-#         return episode_list
+        # print(highlight,highlight([0].text))
+        return highlight
 
     def count(self):
         query = self.request.GET.get('q')
