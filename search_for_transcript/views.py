@@ -2,6 +2,7 @@ from django.http.response import HttpResponse
 from django.views.generic import TemplateView, ListView
 from django.views import View
 from typing import Any, Dict
+from django.utils.safestring import mark_safe
 
 from .models import Transcript
 
@@ -23,7 +24,25 @@ class SearchResultsView(ListView):
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super(SearchResultsView, self).get_context_data(**kwargs)
         context['count'] = self.count()
+        episode_list = context['episode_list']
+        transcripts_list = self.highlight()
+        episodes_adn_transcripts = zip(episode_list, transcripts_list)
+        context['episodes_and_transcripts'] = episodes_adn_transcripts
         return context
+
+    def highlight(self, **kwargs):
+        context = super(SearchResultsView, self).get_context_data(**kwargs)
+        query = self.request.GET.get('q')
+        episode_list = context['episode_list']
+        text_list = []
+        for episode in episode_list:
+            text = episode.text
+            replacing_query = '<span class="highlighted">{}</span>'.format(
+                query)
+            text = text.replace(query, replacing_query)
+            text = mark_safe(text)
+            text_list.append(text)
+        return text_list
 
     def count(self):
         query = self.request.GET.get('q')
