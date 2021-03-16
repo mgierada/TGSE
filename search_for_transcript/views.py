@@ -3,8 +3,6 @@ from django.views.generic import TemplateView, ListView
 from django.views import View
 from typing import Any, Dict
 from django.utils.safestring import mark_safe
-# from haystack.utils.highlighting import Highlighter
-from haystack.utils import Highlighter
 
 from .models import Transcript
 
@@ -21,20 +19,15 @@ class SearchResultsView(ListView):
     def get_queryset(self):
         query = self.request.GET.get('q')
         episode_list = Transcript.objects.filter(text__contains=query)
-        # entries = Transcript.objects.all()
-        # en0 = entries[0]
-        # text = en0.text
-        # # self.highlight_search(text, query)
         return episode_list
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super(SearchResultsView, self).get_context_data(**kwargs)
         context['count'] = self.count()
-        # context['text'] = self.highlight()
         episode_list = context['episode_list']
-        transcript = self.highlight()
-        together = zip(episode_list, transcript)
-        context['together'] = together
+        transcripts_list = self.highlight()
+        episodes_adn_transcripts = zip(episode_list, transcripts_list)
+        context['episodes_and_transcripts'] = episodes_adn_transcripts
         return context
 
     def highlight(self, **kwargs):
@@ -49,20 +42,7 @@ class SearchResultsView(ListView):
             text = text.replace(query, replacing_query)
             text = mark_safe(text)
             text_list.append(text)
-        # print(text_list)
         return text_list
-
-        # highlighter = self.highlight_search(text, query)
-        # high_li = highlighter.highlight(entries[0].text)
-        # context['high_li'] = high_li
-        # print(high_li)
-        # context['color'] = self.highlight_search(text, query)
-
-    # def highlight_search(self, text, query):
-    #     print('runing this')
-    #     highlight = Highlighter(query)
-    #     # print(highlight,highlight([0].text))
-    #     return highlight
 
     def count(self):
         query = self.request.GET.get('q')
@@ -71,10 +51,7 @@ class SearchResultsView(ListView):
         count = 0
         for episode in episode_list:
             count += episode.text.count(query)
-        # response = HttpResponse()
-        # response['count'] = count
         response = 'Found {} occurrences of "{}" in DB'.format(count, query)
-        # return HttpResponse(response)
         return response
 
 
@@ -83,7 +60,6 @@ class CountView(View):
     template_name = 'search_results.html'
 
     def get(self, request, *args, **kwargs):
-        # query = self.request.GET.get('q')
         query = 'SGU'
         episode_list = Transcript.objects.filter(text__contains=query)
         count = 0

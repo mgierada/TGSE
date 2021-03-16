@@ -1,30 +1,16 @@
 <!-- templates/search_results.html -->
 <h1>Search Results</h1>
 
-<!-- <form class="Transcripts" method="GET" action="" >
-  <input class="Transcripts" type="search" name="q"> 
-  <button class="Transcripts" type="submit"> Search </button>
-</form>
-
-{% for result in all_search_results %}
-   {{ result.text }}
-{% empty %}
-   add something to show no results
-{% endfor %} -->
-{% load highlight %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'search_for_transcript/styles.css' %}">
 <ul>
   {{ count }}
-  {% for episode, text in together %}
+  {% for episode, transcript in episodes_and_transcripts %}
     <li>
       {{ episode.idd }}
     </li>
     <li>
-      <p>{{text}}</p>
-      <!-- {{data.text}} -->
-      <!-- <p><span class="highlighted">skeptics</span> guide to the universe <span class="highlighted">skeptics</span> guide to the universe is produced by SGU productions dedicated to promoting science and critical thinking for more information, visit us at the <span class="highlighted">skeptics</span> guide.</p> -->
-      <!-- <p>{{high_li}}</p> -->
+      <p>{{ transcript }} </p>
     </li>
   </div>
       
