@@ -16,9 +16,9 @@
 <link rel="stylesheet" type="text/css" href="{% static 'search_for_transcript/styles.css' %}">
 <ul>
   {{ count }}
-  {% for data in episode_list %}
+  {% for episode, text in together %}
     <li>
-      {{ data.idd }}
+      {{ episode.idd }}
     </li>
     <li>
       <p>{{text}}</p>
