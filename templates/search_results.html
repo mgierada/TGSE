@@ -11,7 +11,9 @@
 {% empty %}
    add something to show no results
 {% endfor %} -->
-
+{% load highlight %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'search_for_transcript/styles.css' %}">
 <ul>
   {{ count }}
   {% for data in episode_list %}
@@ -19,7 +21,10 @@
       {{ data.idd }}
     </li>
     <li>
-      {{ color }}
+      <p>{{text}}</p>
+      <!-- {{data.text}} -->
+      <!-- <p><span class="highlighted">skeptics</span> guide to the universe <span class="highlighted">skeptics</span> guide to the universe is produced by SGU productions dedicated to promoting science and critical thinking for more information, visit us at the <span class="highlighted">skeptics</span> guide.</p> -->
+      <!-- <p>{{high_li}}</p> -->
     </li>
   </div>
       
