@@ -1,9 +1,17 @@
 <!-- templates/home.html -->
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'search_for_transcript/styles.css' %}">
+<br><br>
 
-<h1>Search SGU</h1>
-<h2>A transcript search engine for the Skeptics' Guide to the Universe podcasts</h2>
-
-<form class="Transcripts" method="GET" action="{% url 'search_results' %}" >
-  <input class="Transcripts" type="search" name="q"> 
-  <button class="Transcripts" type="submit"> Search </button>
-</form>
+<div class='container'>
+    <div class='center'>
+        <h1>Search SGU</h1>
+        <h2>A transcript search engine for the Skeptics' Guide to the Universe podcasts</h2>
+    </div>
+</div>
+<div class='SearchBar'>
+    <form class="SearchBar" method="GET" action="{% url 'search_results' %}" >
+        <input class="SearchBar" type="search" name="q" placeholder="Search.."> 
+        <button class="SearchBar" type="submit"> Search </button>
+    </form>
+</div>
