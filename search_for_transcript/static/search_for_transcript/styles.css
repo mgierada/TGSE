@@ -3,9 +3,32 @@
     color: black
   }
 
-  /* li {
-    color: green;
-} */
+.main {
+    text-align: center;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+
+.container {
+  display: flex;
+  justify-content: center;
+  border: 1px solid #2d2d2d;
+  align-items: center;
+}
+.center {
+  width: 800px;
+}
+
+h1{
+  text-align: center;
+}
+
+h2{
+  text-align: center;
+}
 
 body {
   color: #222;
@@ -29,3 +52,43 @@ a {
 
 
 
+
+* {
+  box-sizing: border-box;
+}
+
+/* Style the search field */
+form.SearchBar input[type=text] {
+  padding: 10px;
+  font-size: 17px;
+  border: 1px solid grey;
+  float: left;
+  width: 80%;
+  background: #f1f1f1;
+}
+
+/* Style the submit button */
+form.SearchBar button {
+  transition-duration: 0.4s;
+  float: left;
+  width: 20%;
+  padding: 10px;
+  background: red;
+  color: white;
+  font-size: 17px;
+  border: 1px solid grey;
+  border-left: none; /* Prevent double borders */
+  cursor: pointer;
+}
+
+form.SearchBar button:hover {
+  background: white;
+  color: red
+}
+
+/* Clear floats */
+form.SearchBar::after {
+  content: "";
+  clear: both;
+  display: table;
+}
