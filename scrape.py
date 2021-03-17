@@ -1,4 +1,5 @@
 from selenium import webdriver
+import re
 
 
 class SGU_scrype():
@@ -15,10 +16,18 @@ class SGU_scrype():
 
     def get_links(self):
         self.driver.get(self.url)
-        elements = self.driver.find_element_by_class_name(
-            'ep-controls__button ep-controls__button--download button')
+
+        links_to_audio_url = {}
+        elements = self.driver.find_elements_by_xpath(
+            '//*[@id="mCSB_1_container"]/div[*]/ul/li[2]/a')
+
         for element in elements:
-            print(element)
+            audio_url = (element.get_attribute('href'))
+            date_published = re.search('cast(.*).mp3', audio_url).group(1)
+            links_to_audio_url[date_published] = audio_url
+        return links_to_audio_url
 
 
-SGU_scrype().get_links()
+links = SGU_scrype().get_links()
+for k, v in links.items():
+    print('{} : {}'.format(k, v))
