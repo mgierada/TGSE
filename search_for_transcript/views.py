@@ -1,8 +1,8 @@
-from django.http.response import HttpResponse
 from django.views.generic import TemplateView, ListView
 from django.views import View
-from typing import Any, Dict
+from typing import Any, Dict, List
 from django.utils.safestring import mark_safe
+from django.db.models.query import QuerySet
 
 from .models import Transcript
 
@@ -16,21 +16,48 @@ class SearchResultsView(ListView):
     template_name = 'search_results.html'
     context_object_name = 'episode_list'
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
+        ''' Get Transcript objects containing query in text filed
+
+        Returns
+        -------
+        QuerySet
+            transcript objects containing query in text filed
+
+        '''
         query = self.request.GET.get('q')
         episode_list = Transcript.objects.filter(text__contains=query)
         return episode_list
 
-    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+    def get_context_data(
+            self,
+            **kwargs: Any) -> Dict[str, Any]:
+        ''' Update context_data to be used in html
+
+        Returns
+        -------
+        Dict[str, Any]
+            updated context_data
+
+        '''
         context = super(SearchResultsView, self).get_context_data(**kwargs)
         context['count'] = self.count()
         episode_list = context['episode_list']
         transcripts_list = self.highlight()
-        episodes_adn_transcripts = zip(episode_list, transcripts_list)
-        context['episodes_and_transcripts'] = episodes_adn_transcripts
+        episodes_and_transcripts = zip(episode_list, transcripts_list)
+        context['episodes_and_transcripts'] = episodes_and_transcripts
         return context
 
-    def highlight(self, **kwargs):
+    def highlight(self, **kwargs) -> List[str]:
+        ''' Highlight query in transcript text
+
+        Returns
+        -------
+        List[str]
+            Formated transcript with html tags that displays hightlights while
+            rendering
+
+        '''
         context = super(SearchResultsView, self).get_context_data(**kwargs)
         query = self.request.GET.get('q')
         episode_list = context['episode_list']
@@ -44,9 +71,15 @@ class SearchResultsView(ListView):
             text_list.append(text)
         return text_list
 
-    def count(self):
+    def count(self) -> str:
+        ''' Count how many times query appears in database
+
+        Returns
+        -------
+        str
+            text with info about how many query appears in database
+        '''
         query = self.request.GET.get('q')
-        # query = 'SGU'
         episode_list = Transcript.objects.filter(text__contains=query)
         count = 0
         for episode in episode_list:
