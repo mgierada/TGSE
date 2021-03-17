@@ -3,16 +3,20 @@
 
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'search_for_transcript/styles.css' %}">
-<ul>
-  {{ count }}
-  {% for episode, transcript in episodes_and_transcripts %}
-    <li>
-      {{ episode.idd }}
-    </li>
-    <li>
-      <p>{{ transcript }} </p>
-    </li>
-  </div>
-      
-  {% endfor %}
-</ul>
+<div class = "show_results">
+
+  <ul>
+    {{ count }}
+    {% for episode, transcript in episodes_and_transcripts %}
+      <li>
+        {{ episode.idd }}
+      </li>
+      <li>
+        <p>{{ transcript }} </p>
+      </li>
+    </div>
+        
+    {% endfor %}
+  </ul>
+
+</div>

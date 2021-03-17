@@ -37,7 +37,7 @@ class SearchResultsView(ListView):
         text_list = []
         for episode in episode_list:
             text = episode.text
-            replacing_query = '<span class="highlighted">{}</span>'.format(
+            replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
                 query)
             text = text.replace(query, replacing_query)
             text = mark_safe(text)
