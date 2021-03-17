@@ -75,17 +75,23 @@
   width: 800px;
 }
 
+
+
 h1{
   text-align: center;
+  color: black;
 }
 
 h2{
   text-align: center;
+  color: black;
 } */
 
 body {
   color: #222;
-  background: #fff;
+  /* background: #fff; */
+  background: rgb(2,0,36);
+  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 61%, rgba(45,168,193,1) 100%);
   font: 100% system-ui;
 }
 a {
@@ -95,7 +101,8 @@ a {
 @media (prefers-color-scheme: dark) {
   body {
     color: #eee;
-    background: #3f3a3a;
+    background: rgb(255,255,255);
+    background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(9,73,121,1) 52%, rgba(0,0,0,1) 100%);
   }
 
   body a {
@@ -106,4 +113,5 @@ a {
 .figure{
   align-items: center;
   justify-content: center;
+  /* background-color: white; */
 }
