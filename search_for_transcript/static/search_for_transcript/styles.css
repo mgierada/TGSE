@@ -68,14 +68,12 @@
 .container {
   display: flex;
   justify-content: center;
-  border: 1px solid #2d2d2d;
+  /* border: 1px solid #2d2d2d; */
   align-items: center;
 }
 .center {
   width: 800px;
 }
-
-
 
 h1{
   text-align: center;
@@ -113,5 +111,4 @@ a {
 .figure{
   align-items: center;
   justify-content: center;
-  /* background-color: white; */
 }
