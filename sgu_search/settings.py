@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# STATIC_URL = 'static/'
 
 # Application definition
 
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'search_for_transcript',
     'haystack'
 ]
+
 
 HAYSTACK_CONNECTIONS = {
     'default': {
