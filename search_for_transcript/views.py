@@ -1,5 +1,4 @@
 from django.views.generic import TemplateView, ListView
-from django.views import View
 from typing import Any, Dict, List
 from django.utils.safestring import mark_safe
 from django.db.models.query import QuerySet
