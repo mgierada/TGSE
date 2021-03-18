@@ -1,6 +1,8 @@
+from os import path
 from selenium import webdriver
 import json
 import re
+import os
 
 
 class SGU_scrype():
@@ -54,9 +56,14 @@ class SGU_scrype():
             podcast_info[ep] = inner_dict
         return podcast_info
 
-    def get_json(self):
+    def get_json(self, json_fname='all_podcasts_data.json'):
         podcast_info = self.get_all_podcasts_data()
-        with open('all_podcasts_info.json', 'w') as f:
+
+        path_to_json_dir = os.path.join(os.getcwd(), 'source')
+        os.makedirs(path_to_json_dir, exist_ok=True)
+        path_to_json = os.path.join(os.getcwd(), 'source', json_fname)
+
+        with open(path_to_json, 'w') as f:
             json.dump(podcast_info, f, indent=4)
 
 
