@@ -5,7 +5,7 @@ import re
 import os
 
 
-class SGU_scrype():
+class SGU_scrape():
     def __init__(self):
         self.url = 'https://www.theskepticsguide.org/podcasts'
         options = webdriver.ChromeOptions()
@@ -67,4 +67,4 @@ class SGU_scrype():
             json.dump(podcast_info, f, indent=4)
 
 
-SGU_scrype().get_json()
+SGU_scrape().get_json()
