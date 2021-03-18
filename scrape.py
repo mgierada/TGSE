@@ -13,21 +13,34 @@ class SGU_scrype():
 
         self.driver = webdriver.Chrome(
             executable_path=DRIVER_PATH, options=options)
-
-    def get_links(self):
         self.driver.get(self.url)
 
-        links_to_audio_url = {}
+    def get_links_to_mp3(self):
+        links_to_mp3 = {}
         elements = self.driver.find_elements_by_xpath(
-            '//*[@id="mCSB_1_container"]/div[*]/ul/li[2]/a')
+            '//*[starts-with(@id, "mCSB_") and contains(@id, "_container")]/div[*]/ul/li[2]/a')
 
         for element in elements:
-            audio_url = (element.get_attribute('href'))
+            audio_url = element.get_attribute('href')
             date_published = re.search('cast(.*).mp3', audio_url).group(1)
-            links_to_audio_url[date_published] = audio_url
-        return links_to_audio_url
+            links_to_mp3[date_published] = audio_url
+        return links_to_mp3
+
+    def get_links_to_podcast(self):
+        links_to_podcast = []
+        elements = self.driver.find_elements_by_xpath(
+            '//*[starts-with(@id, "post")]/h3/a')
+
+        for element in elements:
+            podcast_url = element.get_attribute('href')
+            print(podcast_url)
+
+    def get_current_episode_number(self):
+        pass
+
+# links = SGU_scrype().get_links_to_mp3()
+# for k, v in links.items():
+#     print('{} : {}'.format(k, v))
 
 
-links = SGU_scrype().get_links()
-for k, v in links.items():
-    print('{} : {}'.format(k, v))
+# "https://www.theskepticsguide.org/podcasts/episode-817"
