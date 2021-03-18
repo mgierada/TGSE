@@ -69,7 +69,7 @@ def add_links_and_episode_number():
         link_to_mp3 = inner_dict['link_to_mp3']
         link_to_podcast = inner_dict['link_to_podcast']
         Transcript.objects.create(
-            episode_number=int(episode_number),
+            episode_number=episode_number,
             date_published=date_published,
             link_to_mp3=link_to_mp3,
             link_to_podcast=link_to_podcast,
@@ -89,7 +89,7 @@ def add_response_results():
 
         link_to_mp3 = data['audio_url']
         status = data['status']
-        idd = data['id'],
+        idd = data['id']
         text = data['text']
 
         Transcript.objects.filter(
