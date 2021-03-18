@@ -30,7 +30,8 @@ class SGUTrans:
         audio_url : str
             an url to audio file
             e.g.
-            >>> audio_url = https://media.libsyn.com/media/skepticsguide/skepticast2021-03-06.mp3
+            >>> audio_url = 'https://media.libsyn.com/media/skepticsguide/
+                            skepticast2021-03-06.mp3'
 
         '''
         self.headers['content-type'] = 'application/json'
