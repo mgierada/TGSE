@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.fields import CharField
 
 
 class City(models.Model):
@@ -13,11 +14,13 @@ class City(models.Model):
 
 
 class Transcript(models.Model):
+    episode_number = CharField(max_length=4)
+    date_published = CharField(max_length=10)
+    link_to_mp3 = models.CharField(max_length=242)
+    link_to_podcast = models.CharField(max_length=242)
     idd = models.CharField(max_length=240)
-    date_published = models.CharField(max_length=241)
-    text = models.TextField()
-    audio_url = models.CharField(max_length=242)
     status = models.CharField(max_length=245)
+    text = models.TextField()
 
     class Meta:
         verbose_name_plural = 'Transcripts'
@@ -38,14 +41,14 @@ def populate_db():
         with open(os.path.join(response_path, episode), 'r') as f:
             data = json.load(f)
 
-        audio_url = data['audio_url']
-        date_tmp = re.search('cast(.*).mp3', audio_url)
+        link_to_mp3 = data['audio_url']
+        date_tmp = re.search('cast(.*).mp3', link_to_mp3)
         date_published = date_tmp.group(1)
         Transcript.objects.create(
             idd=data['id'],
             date_published=date_published,
             text=data['text'],
-            audio_url=audio_url,
+            link_to_mp3=link_to_mp3,
             status=data['status'],
         )
 
@@ -56,4 +59,3 @@ def clear_db():
 
 
 # populate_db()
-# clear_db()
