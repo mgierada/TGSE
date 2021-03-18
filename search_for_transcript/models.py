@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.fields import CharField
+from django.db.models.fields import CharField, IntegerField
 
 
 class City(models.Model):
@@ -14,7 +14,7 @@ class City(models.Model):
 
 
 class Transcript(models.Model):
-    episode_number = CharField(max_length=4)
+    episode_number = IntegerField(primary_key=True)
     date_published = CharField(max_length=10)
     link_to_mp3 = models.CharField(max_length=242)
     link_to_podcast = models.CharField(max_length=242)
@@ -26,7 +26,7 @@ class Transcript(models.Model):
         verbose_name_plural = 'Transcripts'
 
     def __str__(self):
-        return self.idd
+        return self.date_published
 
 
 def populate_db():
@@ -69,11 +69,31 @@ def add_links_and_episode_number():
         link_to_mp3 = inner_dict['link_to_mp3']
         link_to_podcast = inner_dict['link_to_podcast']
         Transcript.objects.create(
-            episode_number=episode_number,
+            episode_number=int(episode_number),
             date_published=date_published,
             link_to_mp3=link_to_mp3,
             link_to_podcast=link_to_podcast,
         )
+
+
+def add_response_results():
+    import os
+    import json
+
+    response_path = os.path.join(os.getcwd(), 'responses')
+
+    for episode in os.listdir(response_path):
+        print(episode)
+        with open(os.path.join(response_path, episode), 'r') as f:
+            data = json.load(f)
+
+        link_to_mp3 = data['audio_url']
+        status = data['status']
+        idd = data['id'],
+        text = data['text']
+
+        Transcript.objects.filter(
+            link_to_mp3=link_to_mp3).update(status=status, idd=idd, text=text)
 
 
 def clear_db():
@@ -81,5 +101,6 @@ def clear_db():
     entries.delete()
 
 
+# add_response_results()
 # add_links_and_episode_number()
 # populate_db()
