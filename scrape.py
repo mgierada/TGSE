@@ -36,8 +36,14 @@ class SGU_scrype():
             print(podcast_url)
 
     def get_current_episode_number(self):
-        pass
+        element = self.driver.find_element_by_xpath(
+            '/html/body/div[1]/section/div[2]/div[1]/div/div[2]/h1/a').text
+        # remove first 9 characters e.g. EPISODE #818 will be just 818
+        lates_episode_number = element[9:]
+        return lates_episode_number
 
+
+SGU_scrype().get_current_episode_number()
 # links = SGU_scrype().get_links_to_mp3()
 # for k, v in links.items():
 #     print('{} : {}'.format(k, v))
