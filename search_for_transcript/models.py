@@ -53,9 +53,33 @@ def populate_db():
         )
 
 
+def add_links_and_episode_number():
+    import os
+    import json
+
+    source_dir = os.path.join(os.getcwd(), 'source')
+    all_podcast_data = 'all_podcasts_data.json'
+    source_path = os.path.join(source_dir, all_podcast_data)
+
+    with open(source_path, 'r') as f:
+        episodes = json.load(f)
+
+    for episode_number, inner_dict in episodes.items():
+        date_published = inner_dict['date_published']
+        link_to_mp3 = inner_dict['link_to_mp3']
+        link_to_podcast = inner_dict['link_to_podcast']
+        Transcript.objects.create(
+            episode_number=episode_number,
+            date_published=date_published,
+            link_to_mp3=link_to_mp3,
+            link_to_podcast=link_to_podcast,
+        )
+
+
 def clear_db():
     entries = Transcript.objects.all()
     entries.delete()
 
 
+# add_links_and_episode_number()
 # populate_db()
