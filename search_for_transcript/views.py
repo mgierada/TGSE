@@ -43,8 +43,11 @@ class SearchResultsView(ListView):
         context['count'] = self.count()
         episode_list = context['episode_list']
         transcripts_list = self.highlight()
-        episodes_and_transcripts = zip(episode_list, transcripts_list)
-        context['episodes_and_transcripts'] = episodes_and_transcripts
+        count_each_query = self.count_each_query()
+        episodes_and_transcripts = zip(
+            episode_list, count_each_query, transcripts_list)
+        # context['count_each_query'] = self.count_each_query()
+        context['ep_countq_trans'] = episodes_and_transcripts
         return context
 
     def highlight(self, **kwargs) -> List[str]:
@@ -84,8 +87,24 @@ class SearchResultsView(ListView):
         count = 0
         for episode in episode_list:
             count += episode.text.count(query)
-        response = 'Found {} occurrences of "{}" in DB'.format(count, query)
+        response = 'Found {} occurrences of "{}" in total'.format(count, query)
         return response
 
     def count_each_query(self):
-        pass
+        ''' Count how many times query appears in database in total
+        (only text attribute)
+
+        Returns
+        -------
+        str
+            text with info about how many query appears in database
+
+        '''
+        query = self.request.GET.get('q')
+        episode_list = Transcript.objects.filter(text__contains=query)
+        count = 0
+        count_dict = {}
+        for episode in episode_list:
+            count = episode.text.count(query)
+            count_dict[episode.episode_number] = count
+        return count_dict.values()
