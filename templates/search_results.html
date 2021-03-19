@@ -7,21 +7,28 @@
 <div class='show_results'>
   {{ count }}
 </div>
-{% for episode, transcript in episodes_and_transcripts %}
+{% for episode, countq, transcript in ep_countq_trans %}
 <div class ="show_results">
     <div class = "episode_number_result">
       <h1 class = "episode_number_result"> Episode #{{ episode.episode_number }}</h1>
     </div>
     <div>
+      Found {{ countq }} occurrences
+    </div>
+    <br>
+    <div>
       <input type=button onClick="location='{{ episode.link_to_podcast }}'" value='Listen it'>
       <input type=button onClick="location='{{ episode.link_to_mp3 }}'" value='Download it'>
       <input type=button onClick="location='{{ episode.text }}'" value='Show transcript'>
     </div>
+    
     <!-- <div>
       Download it <a href="{{ episode.link_to_mp3 }}">here</a>
     </div> -->
       <!-- <li> -->
-        {{ episode.idd }}
+        <!-- {{ episode.idd }} -->
+        <!-- {{ count_each_query }} -->
+        
       <!-- </li> -->
       <!-- <li> -->
         <!-- <p>{{ transcript }} </p> -->
