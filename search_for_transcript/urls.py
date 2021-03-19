@@ -7,8 +7,6 @@ urlpatterns = [
     path('search/', SearchResultsView.as_view(), name='search_results'),
     # path('main/', views.main, name='main'),
     path('', HomePageView.as_view(), name='home'),
-    # path('transcript/episode<int:episode_number>',
-    #      TranscriptView.as_view(), name='transcript')
     path('search/transcript/<int:episode_number>/',
          TranscriptView.as_view(), name='transcript')
 ]

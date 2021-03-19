@@ -148,7 +148,7 @@ a {
   float: right;
 } */
 
-.submit-button {
+/* .submit-button_go_back {
   box-shadow: inset 0px 1px 0px 0px #ffffff;
   background: linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
   background-color: #f9f9f9;
@@ -171,4 +171,54 @@ a {
 .submit-button_go_back:active {
   position: relative;
   top: 1px;
+} */
+
+.center_buttons {
+  text-align: center;
 }
+
+.submit-button {
+  /* display: inline-block; */
+  padding: 0.35em 1.2em;
+  border: 0.1em solid #ffffff;
+  margin: 0 0.3em 0.3em 0;
+  border-radius: 0.12em;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-size: small;
+  color: #000000;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.submit-button:hover {
+  color: #000000;
+  background-color: #ffffff;
+}
+
+@media all and (max-width: 30em) {
+  .submit-button {
+    display: block;
+    margin: 0.4em auto;
+  }
+}
+
+.right_align {
+  float: right;
+}
+
+/* .bouncy{
+  animation:bouncy 5s infinite linear;
+  position:relative;
+  }
+  @keyframes bouncy {
+   0%{top:0em}
+   40%{top:0em}
+   43%{top:-0.9em}
+   46%{top:0em}
+   48%{top:-0.4em}
+   50%{top:0em}
+   100%{top:0em;}
+  } */
