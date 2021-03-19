@@ -7,6 +7,9 @@
 <div class='show_results'>
   {{ count }}
 </div>
+<form action="/">
+  <button class="submit-button_go_back" >Search again</button>
+</form>
 {% for episode, countq, transcript in ep_countq_trans %}
 <div class ="show_results">
     <div class = "episode_number_result">
@@ -17,9 +20,18 @@
     </div>
     <br>
     <div>
-      <input type=button onClick="location='{{ episode.link_to_podcast }}'" value='Listen it'>
-      <input type=button onClick="location='{{ episode.link_to_mp3 }}'" value='Download it'>
-      <input type=button onClick="parent.location='transcript/{{ episode.episode_number }}'" value='Show transcript'>
+      <!-- <input type=button onClick="location='{{ episode.link_to_podcast }}'" value='Show on SGU website'> -->
+      <button class='submit-button' onClick="location='{{ episode.link_to_podcast }}'">
+        Show on SGU website
+      </button>
+      <button class='submit-button' onClick="location='{{ episode.link_to_mp3 }}'">
+        Download/Listen
+      </button>
+        <!-- <input type=button onClick="location='{{ episode.link_to_mp3 }}'" value='Download/Listen'> -->
+      <button class='submit-button' onClick="parent.location='transcript/{{ episode.episode_number }}'">
+        Show transcript
+      </button>
+        <!-- <input type=button onClick="parent.location='transcript/{{ episode.episode_number }}'" value='Show transcript'> -->
       <!-- <input type=button onClick="location="% url 'search_results' % } value='Show transcript'> -->
     </div>
     
