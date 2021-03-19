@@ -124,16 +124,8 @@ class TranscriptView(ListView):
     template_name = 'transcripts.html'
     context_object_name = 'episode_list'
 
-    # def get(self, page):
-    #     response = 'Found page {}'.format(page)
-    #     return response
-
-    current_year = datetime.datetime.now().year
-    current_month = datetime.datetime.now().month
-
     def get_context_data(self, **kwargs):
         context = super(TranscriptView, self).get_context_data(**kwargs)
-        # context['episode_number'] = self.kwargs
         episode_number = self.kwargs['episode_number']
         context['episode_number'] = episode_number
         element = Transcript.objects.filter(pk=episode_number)
