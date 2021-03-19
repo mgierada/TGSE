@@ -2,37 +2,11 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'search_for_transcript/style.css' %}">
 
-<h1>Transcript</h1>
-
-<div class='show_results'>
-    {{episode_number}}
+<h1>Episode #{{ episode_number }}</h1>
+<h2>Transcript</h2>
+<!-- <form action="/" class="button_results"> -->
+    <button class="submit-button_go_back" onclick="location.href = '/'">Go back to search</button>
+<!-- </form> -->
+<div class='show_transcript_content'>
     {{text}}
 </div>
-
-<!-- {% for episode in episode_list %}
-<p> {{ episode.text }} </p>
-{% endfor %} -->
-
-<!-- <div class='show_results'>
-  {{ count }}
-</div>
-{% for episode, countq, transcript in ep_countq_trans %}
-<div class ="show_results">
-    <div class = "episode_number_result">
-      <h1 class = "episode_number_result"> Episode #{{ episode.episode_number }}</h1>
-    </div>
-    <div>
-      Found {{ countq }} occurrences
-    </div>
-    <br>
-    <div>
-      <input type=button onClick="location='{{ episode.link_to_podcast }}'" value='Listen it'>
-      <input type=button onClick="location='{{ episode.link_to_mp3 }}'" value='Download it'>
-      <input type=button onClick="location='{{ episode.text }}'" value='Show transcript'>
-    </div>
-    
-
-    </div>
-        
-</div>
-{% endfor %} -->
