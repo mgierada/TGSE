@@ -88,9 +88,14 @@ class SearchResultsView(ListView):
         # for episode in episode_list:
         #     count += episode.text.count(query)
         each_query_count = self.get_each_query_count()
-        total_count = sum(each_query_count.values())
-        response = 'Found {} occurrences of "{}" in total'.format(
-            total_count, self.query)
+        total_episodes = len(each_query_count.keys())
+        total_queries = sum(each_query_count.values())
+        ep_form = 'episode'
+        if total_episodes > 1:
+            ep_form = 'episodes'
+        response = 'Found {} occurrences of "{}" in {} {} in total'.format(
+            total_queries, self.query, total_episodes, ep_form)
+
         return response
 
     def get_each_query_count(self):
