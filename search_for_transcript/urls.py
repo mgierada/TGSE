@@ -9,6 +9,6 @@ urlpatterns = [
     path('', HomePageView.as_view(), name='home'),
     # path('transcript/episode<int:episode_number>',
     #      TranscriptView.as_view(), name='transcript')
-    path('search_for_transcript/transcript/<int:episode_number>/',
+    path('search/transcript/<int:episode_number>/',
          TranscriptView.as_view(), name='transcript')
 ]
