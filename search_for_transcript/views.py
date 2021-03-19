@@ -71,7 +71,8 @@ class SearchResultsView(ListView):
         return text_list
 
     def count(self) -> str:
-        ''' Count how many times query appears in database
+        ''' Count how many times query appears in database in total
+        (only text attribute)
 
         Returns
         -------
@@ -85,3 +86,6 @@ class SearchResultsView(ListView):
             count += episode.text.count(query)
         response = 'Found {} occurrences of "{}" in DB'.format(count, query)
         return response
+
+    def count_each_query(self):
+        pass

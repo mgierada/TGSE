@@ -2,21 +2,31 @@
 <h1>Search Results</h1>
 
 {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'search_for_transcript/styles.css' %}">
-<div class = "show_results">
+<link rel="stylesheet" type="text/css" href="{% static 'search_for_transcript/style.css' %}">
 
-  <ul>
-    {{ count }}
-    {% for episode, transcript in episodes_and_transcripts %}
-      <li>
+<div class='show_results'>
+  {{ count }}
+</div>
+{% for episode, transcript in episodes_and_transcripts %}
+<div class ="show_results">
+    <div class = "episode_number_result">
+      <h1 class = "episode_number_result"> Episode #{{ episode.episode_number }}</h1>
+    </div>
+    <div>
+      <input type=button onClick="location='{{ episode.link_to_podcast }}'" value='Listen it'>
+      <input type=button onClick="location='{{ episode.link_to_mp3 }}'" value='Download it'>
+      <input type=button onClick="location='{{ episode.text }}'" value='Show transcript'>
+    </div>
+    <!-- <div>
+      Download it <a href="{{ episode.link_to_mp3 }}">here</a>
+    </div> -->
+      <!-- <li> -->
         {{ episode.idd }}
-      </li>
-      <li>
-        <p>{{ transcript }} </p>
-      </li>
+      <!-- </li> -->
+      <!-- <li> -->
+        <!-- <p>{{ transcript }} </p> -->
+      <!-- </li> -->
     </div>
         
-    {% endfor %}
-  </ul>
-
 </div>
+{% endfor %}
