@@ -1,7 +1,9 @@
+from django.http.request import HttpRequest
 from django.views.generic import TemplateView, ListView
 from typing import Any, Dict, List
 from django.utils.safestring import mark_safe
 from django.db.models.query import QuerySet
+import datetime
 
 from .models import Transcript
 
@@ -74,19 +76,17 @@ class SearchResultsView(ListView):
         return text_list
 
     def count_total(self) -> str:
-        # ''' Count how many times query appears in database in total
-        # (only text attribute)
+        ''' Count how many times a given query appears in database in total
+        (only text attribute) in how many distinct episodes
 
-        # Returns
-        # -------
-        # str
-        #     text with info about how many query appears in database
-        # '''
-        # query = self.request.GET.get('q')
-        # episode_list = Transcript.objects.filter(text__contains=query)
-        # count = 0
-        # for episode in episode_list:
-        #     count += episode.text.count(query)
+        Returns
+        -------
+        str
+            text with info about how many queries appears in database
+            e.g. 
+            'Found 37 occurrences of "world" in 2 episodes in total'
+
+        '''
         each_query_count = self.get_each_query_count()
         total_episodes = len(each_query_count.keys())
         total_queries = sum(each_query_count.values())
@@ -98,17 +98,18 @@ class SearchResultsView(ListView):
 
         return response
 
-    def get_each_query_count(self):
-        ''' Count how many times query appears in database in total
-        (only text attribute)
+    def get_each_query_count(self) -> Dict[str, int]:
+        '''Get dict with info about how any occurrences of a given query
+        appears per episode
 
         Returns
         -------
-        str
-            text with info about how many query appears in database
+        Dict[str, int]
+            e.g.
+
+            >>> each_query_count = {'815': 2, '816': 35}
 
         '''
-        # query = self.request.GET.get('q')
         episode_list = Transcript.objects.filter(text__contains=self.query)
         count = 0
         each_query_count = {}
@@ -116,3 +117,27 @@ class SearchResultsView(ListView):
             count = episode.text.count(self.query)
             each_query_count[episode.episode_number] = count
         return each_query_count
+
+
+class TranscriptView(ListView):
+    model = Transcript
+    template_name = 'transcripts.html'
+    context_object_name = 'episode_list'
+
+    # def get(self, page):
+    #     response = 'Found page {}'.format(page)
+    #     return response
+
+    current_year = datetime.datetime.now().year
+    current_month = datetime.datetime.now().month
+
+    def get_context_data(self, **kwargs):
+        context = super(TranscriptView, self).get_context_data(**kwargs)
+        # context['episode_number'] = self.kwargs
+        episode_number = self.kwargs['episode_number']
+        context['episode_number'] = episode_number
+        element = Transcript.objects.filter(pk=episode_number)
+        context['element'] = element
+        text = mark_safe(element[0].text)
+        context['text'] = text
+        return context

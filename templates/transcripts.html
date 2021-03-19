@@ -1,10 +1,19 @@
 <!-- templates/search_results.html -->
-<h1>Search Results</h1>
-
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'search_for_transcript/style.css' %}">
 
+<h1>Transcript</h1>
+
 <div class='show_results'>
+    {{episode_number}}
+    {{text}}
+</div>
+
+<!-- {% for episode in episode_list %}
+<p> {{ episode.text }} </p>
+{% endfor %} -->
+
+<!-- <div class='show_results'>
   {{ count }}
 </div>
 {% for episode, countq, transcript in ep_countq_trans %}
@@ -19,22 +28,11 @@
     <div>
       <input type=button onClick="location='{{ episode.link_to_podcast }}'" value='Listen it'>
       <input type=button onClick="location='{{ episode.link_to_mp3 }}'" value='Download it'>
-      <input type=button onClick="parent.location='/transcript/?q=world/'" value='Show transcript'>
-      <!-- <input type=button onClick="location="% url 'search_results' % } value='Show transcript'> -->
+      <input type=button onClick="location='{{ episode.text }}'" value='Show transcript'>
     </div>
     
-    <!-- <div>
-      Download it <a href="{{ episode.link_to_mp3 }}">here</a>
-    </div> -->
-      <!-- <li> -->
-        <!-- {{ episode.idd }} -->
-        <!-- {{ count_each_query }} -->
-        
-      <!-- </li> -->
-      <!-- <li> -->
-        <!-- <p>{{ transcript }} </p> -->
-      <!-- </li> -->
+
     </div>
         
 </div>
-{% endfor %}
+{% endfor %} -->
