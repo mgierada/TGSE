@@ -48,7 +48,6 @@ class SearchResultsView(ListView):
         each_query_count = self.get_each_query_count().values()
         episodes_and_transcripts = zip(
             episode_list, each_query_count, transcripts_list)
-        # context['count_each_query'] = self.count_each_query()
         context['ep_countq_trans'] = episodes_and_transcripts
         context['query'] = self.query
         return context
@@ -127,29 +126,28 @@ class TranscriptView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(TranscriptView, self).get_context_data(**kwargs)
-        episode_number = self.kwargs['episode_number']
         self.query = self.kwargs['query']
+        episode_number = self.kwargs['episode_number']
         context['episode_number'] = episode_number
         element = Transcript.objects.filter(pk=episode_number)
-        context['element'] = element
+        # context['element'] = element
+        # element[0] because element is a list of one element
         text = mark_safe(element[0].text)
-        highlighted_text = self.highlight(text)
+        highlighted_text = self.get_highlighted_text(text)
         context['highlighted_text'] = highlighted_text
         context['query'] = self.query
         return context
 
-    def highlight(self, text, **kwargs) -> str:
+    def get_highlighted_text(self, text, **kwargs) -> str:
         ''' Highlight query in transcript text
 
         Returns
         -------
-        List[str]
+        highlighted_text : str
             Formated transcript with html tags that displays hightlights while
             rendering
 
         '''
-        # context = super(TranscriptView, self).get_context_data(**kwargs)
-        # query = self.request.GET.get('q')
         replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
             self.query)
         text = text.replace(self.query, replacing_query)
