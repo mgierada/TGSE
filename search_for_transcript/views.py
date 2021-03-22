@@ -55,19 +55,35 @@ class SearchResultsView(ListView):
     def get_short_test(self):
         short_texts = []
         for episode in self.episode_list:
-            text = episode.text
-            index = text.find(self.query)
+            self.text = episode.text
+            index = self.text.find(self.query)
             idx_query_word = index + len(self.query)
             around_idx = 200
-            short_text = text[index -
-                              around_idx:around_idx + idx_query_word]
+
+            start_idx = around_idx + idx_query_word
+            last_char_idx = self.append_end_of_string(start_idx)
+
+            short_text = self.text[index -
+                                   around_idx:last_char_idx]
             replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
                 self.query)
             short_text_highlighted = short_text.replace(
                 self.query, replacing_query)
+            short_text_highlighted = '(...) ' + short_text_highlighted
+            short_text_highlighted += '(...)'
             short_text_highlighted = mark_safe(short_text_highlighted)
+
             short_texts.append(short_text_highlighted)
         return short_texts
+
+    def append_end_of_string(self, start_idx):
+        better_idx = 0
+        while self.text[start_idx+better_idx] != ' ':
+            better_idx += 1
+        return better_idx + start_idx
+
+    def append_beginning_of_string(self, start_idx):
+        pass
 
     def highlight(self, **kwargs) -> List[str]:
         ''' Highlight query in transcript text
