@@ -45,11 +45,29 @@ class SearchResultsView(ListView):
         episode_list = context['episode_list']
         transcripts_list = self.highlight()
         each_query_count = self.get_each_query_count().values()
+        short_texts = self.get_short_test()
         episodes_and_transcripts = zip(
-            episode_list, each_query_count, transcripts_list)
+            episode_list, each_query_count, transcripts_list, short_texts)
         context['ep_countq_trans'] = episodes_and_transcripts
         context['query'] = self.query
         return context
+
+    def get_short_test(self):
+        short_texts = []
+        for episode in self.episode_list:
+            text = episode.text
+            index = text.find(self.query)
+            idx_query_word = index + len(self.query)
+            around_idx = 200
+            short_text = text[index -
+                              around_idx:around_idx + idx_query_word]
+            replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
+                self.query)
+            short_text_highlighted = short_text.replace(
+                self.query, replacing_query)
+            short_text_highlighted = mark_safe(short_text_highlighted)
+            short_texts.append(short_text_highlighted)
+        return short_texts
 
     def highlight(self, **kwargs) -> List[str]:
         ''' Highlight query in transcript text
