@@ -144,21 +144,15 @@ class SGUTrans:
         Parameters
         ----------
         first_episode : int, optional
-            an index of the latest episode, by default 0
+            an index of the first episode to be transcribed (in a range)
         last_episode : int, optional
-            an index of the episodes up to which transcription will be
-            submitted ], by default 1
+            an index of the last episode to be transcribed (in a range)
 
         '''
-        # links = self.get_links_to_mp3()[first_episode:last_episode]
         if first_episode >= last_episode:
             raise ValueError('first_episode cannot be smaller then '
                              'last_episode')
         links_to_mp3 = self.get_links_to_mp3()
-        # n_episodes = len(links_to_mp3)
-        # start_idx = n_episodes - first_episode
-        # end_idx = n_episodes - last_episode
-        # selected_links = self.get_links_to_mp3().keys()[start_idx:end_idx]
 
         for episode_number, link in links_to_mp3.items():
             if first_episode <= int(episode_number) <= last_episode:
@@ -172,7 +166,7 @@ class SGUTrans:
     def downlad_all_transcripts(self):
         ids = self.get_all_ids_submitted()
         for id in ids:
-            print('Getting translation for {}'.format(id))
+            print('Getting transcript for {}'.format(id))
             self.get(id)
             print('Done!')
         print('All transcripts downloaded successfully')
