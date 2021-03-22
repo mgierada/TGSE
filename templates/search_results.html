@@ -29,7 +29,7 @@
   
   
 <div class='main_search_results'>
-  {% for episode, countq, transcript in ep_countq_trans %}
+  {% for episode, countq, transcript, text_short in ep_countq_trans %}
   <div class ="show_results">
     <div class='link_sgu_website'>
       <a href="{{ episode.link_to_podcast }}"> {{ episode.link_to_podcast }}</a>
@@ -41,6 +41,9 @@
         Found {{ countq }} occurrences
       </div>
       <br>
+      <div>
+        {{ text_short }}
+      </div>
       <div class='center_buttons bouncy'>
         <button class='submit-button' onClick="location='{{ episode.link_to_podcast }}'">
           Show on SGU website
@@ -50,7 +53,7 @@
         </button>
           <!-- <input type=button onClick="location='{{ episode.link_to_mp3 }}'" value='Download/Listen'> -->
         <button class='submit-button' onClick="parent.location='transcript/{{ episode.episode_number }}/ {{ query }}'">
-          Show transcript
+          Show full transcript
         </button>
       </div>
     </div>
