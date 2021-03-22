@@ -36,14 +36,22 @@ class SGUTrans:
         '''
         self.headers['content-type'] = 'application/json'
 
-        json = {
+        json_submit = {
             "audio_url": audio_url
         }
 
-        response = requests.post(self.url, json=json, headers=self.headers)
+        response = requests.post(
+            self.url, json=json_submit, headers=self.headers)
         print(response.json())
-        res = json.dumps(response.json(), indent=4)
-        print(res)
+
+        id = response.json()['id']
+        response_path = os.path.join(
+            self.response_dir, id + '_' + self.response_fname)
+        with open(response_path, 'w') as f:
+            json.dump(response.json(), f, indent=4)
+
+        # res = json.dumps(response.json(), indent=4)
+        # print(res)
 
     def get(
             self,
