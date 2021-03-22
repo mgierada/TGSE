@@ -50,9 +50,6 @@ class SGUTrans:
         with open(response_path, 'w') as f:
             json.dump(response.json(), f, indent=4)
 
-        # res = json.dumps(response.json(), indent=4)
-        # print(res)
-
     def get(
             self,
             id: str) -> None:
@@ -131,3 +128,38 @@ class SGUTrans:
                         for episode in all_podcasts.values()]
 
         return links_to_mp3
+
+    def get_all_ids_submitted(self):
+        all_ids = [id.replace('_response.json', '')
+                   for id in os.listdir(self.response_dir)]
+        return all_ids
+
+    def downlad_all_transcripts(self):
+        ids = self.get_all_ids_submitted()
+        for id in ids:
+            print('Getting translation for {}'.format(id))
+            self.get(id)
+            print('Done!')
+        print('All transcripts downloaded successfully')
+
+    def submit_all_transcripts(
+            self,
+            first_episode: int = 0,
+            last_episode: int = 1) -> None:
+        ''' Submit episodes for transcription. By default, only the newest
+        episode will be submitted.
+
+        Parameters
+        ----------
+        first_episode : int, optional
+            an index of the latest episode, by default 0
+        last_episode : int, optional
+            an index of the episodes up to which transcription will be submitted ], by default 1
+
+        '''
+        links = self.read_all_podcasts_data_json()[first_episode:last_episode]
+        date_published = ''
+        for link in links:
+            print('Submitting an episode published at {}'.format(date_published))
+            self.submit(link)
+            print('Done!')
