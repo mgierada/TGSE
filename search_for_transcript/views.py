@@ -1,9 +1,7 @@
-from django.http.request import HttpRequest
 from django.views.generic import TemplateView, ListView
 from typing import Any, Dict, List
 from django.utils.safestring import mark_safe
 from django.db.models.query import QuerySet
-import datetime
 
 from .models import Transcript
 
@@ -27,8 +25,9 @@ class SearchResultsView(ListView):
 
         '''
         self.query = self.request.GET.get('q')
-        episode_list = Transcript.objects.filter(text__contains=self.query)
-        return episode_list
+        self.episode_list = Transcript.objects.filter(
+            text__icontains=self.query)
+        return self.episode_list
 
     def get_context_data(
             self,
@@ -83,7 +82,7 @@ class SearchResultsView(ListView):
         -------
         str
             text with info about how many queries appears in database
-            e.g. 
+            e.g.
             'Found 37 occurrences of "world" in 2 episodes in total'
 
         '''
@@ -110,11 +109,10 @@ class SearchResultsView(ListView):
             >>> each_query_count = {'815': 2, '816': 35}
 
         '''
-        episode_list = Transcript.objects.filter(text__contains=self.query)
         count = 0
         each_query_count = {}
-        for episode in episode_list:
-            count = episode.text.count(self.query)
+        for episode in self.episode_list:
+            count = episode.text.lower().count(self.query)
             each_query_count[episode.episode_number] = count
         return each_query_count
 
@@ -130,7 +128,6 @@ class TranscriptView(ListView):
         episode_number = self.kwargs['episode_number']
         context['episode_number'] = episode_number
         element = Transcript.objects.filter(pk=episode_number)
-        # context['element'] = element
         # element[0] because element is a list of one element
         text = mark_safe(element[0].text)
         highlighted_text = self.get_highlighted_text(text)
@@ -138,7 +135,10 @@ class TranscriptView(ListView):
         context['query'] = self.query
         return context
 
-    def get_highlighted_text(self, text, **kwargs) -> str:
+    def get_highlighted_text(
+            self,
+            text,
+            **kwargs) -> str:
         ''' Highlight query in transcript text
 
         Returns
@@ -148,8 +148,11 @@ class TranscriptView(ListView):
             rendering
 
         '''
+        import re
         replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
-            self.query)
-        text = text.replace(self.query, replacing_query)
-        highlighted_text = mark_safe(text)
+            self.query.upper())
+        insensitive_query = re.compile(
+            re.escape(str(self.query)), re.IGNORECASE)
+        insensitive_text = insensitive_query.sub(replacing_query, text)
+        highlighted_text = mark_safe(insensitive_text)
         return highlighted_text
