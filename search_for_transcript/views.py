@@ -70,7 +70,7 @@ class SearchResultsView(ListView):
             replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
                 self.query)
             short_text_highlighted = short_text.replace(
-                self.query, replacing_query)
+                self.query.lower(), replacing_query)
 
             # the edge case where the query is at the beginning
             # of the transcript

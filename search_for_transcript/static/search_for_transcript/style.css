@@ -7,6 +7,7 @@
 .search_results {
   width: 70%;
   position: relative;
+  margin-left: 1%;
 }
 
 .searchTerm {
@@ -275,7 +276,7 @@ body a {
 .link_sgu_website {
   padding-top: 1px;
   margin-bottom: -20px;
-  font-size: 12px;
+  font-size: 12px;ą
 }
 
 .show_occurances {
@@ -285,4 +286,8 @@ body a {
 
 .short_text {
   margin-bottom: 1%;
+  justify-content: justify;
+  text-justify: inter-word;
+  font-style: italic;
+
 }
