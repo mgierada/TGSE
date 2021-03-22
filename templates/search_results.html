@@ -5,9 +5,9 @@
 <link rel="stylesheet" type="text/css" href="{% static 'search_for_transcript/style.css' %}">
 
 <div>
-  <div class="wrap_search_results">
+  <div>
     <form method="GET" action="{% url 'search_results' %}">
-        <div class="search">
+        <div class="search_results">
             <input type="text" class="searchTerm" placeholder="{{ query }}" name="q">
             <input type="submit" class="searchButton">
         </div>
