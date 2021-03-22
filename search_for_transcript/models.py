@@ -97,9 +97,16 @@ def add_response_results():
         status = data['status']
         idd = data['id']
         text = data['text']
-
-        Transcript.objects.filter(
-            link_to_mp3=link_to_mp3).update(status=status, idd=idd, text=text)
+        try:
+            Transcript.objects.filter(
+                link_to_mp3=link_to_mp3).update(status=status,
+                                                idd=idd,
+                                                text=text)
+        except IntegrityError:
+            Transcript.objects.filter(
+                link_to_mp3=link_to_mp3).update(status=status,
+                                                idd=idd,
+                                                text='in progress...')
 
 
 def clear_db():
