@@ -1,6 +1,7 @@
 import requests
 import json
 import os
+import re
 
 
 class SGUTrans:
@@ -154,12 +155,14 @@ class SGUTrans:
         first_episode : int, optional
             an index of the latest episode, by default 0
         last_episode : int, optional
-            an index of the episodes up to which transcription will be submitted ], by default 1
+            an index of the episodes up to which transcription will be
+            submitted ], by default 1
 
         '''
         links = self.read_all_podcasts_data_json()[first_episode:last_episode]
-        date_published = ''
         for link in links:
-            print('Submitting an episode published at {}'.format(date_published))
+            date_published = re.search('cast(.*).mp3', link).group(1)
+            print('Submitting an episode published at '
+                  '{}'.format(date_published))
             self.submit(link)
             print('Done!')
