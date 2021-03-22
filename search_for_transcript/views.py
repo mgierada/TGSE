@@ -60,11 +60,12 @@ class SearchResultsView(ListView):
             idx_query_word = index + len(self.query)
             around_idx = 200
 
-            start_idx = around_idx + idx_query_word
-            last_char_idx = self.append_end_of_string(start_idx)
+            start_idx = index - around_idx
+            end_idx = around_idx + idx_query_word
+            first_char_idx = self.append_beginning_of_string(start_idx)
+            last_char_idx = self.append_end_of_string(end_idx)
 
-            short_text = self.text[index -
-                                   around_idx:last_char_idx]
+            short_text = self.text[first_char_idx:last_char_idx]
             replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
                 self.query)
             short_text_highlighted = short_text.replace(
@@ -76,14 +77,17 @@ class SearchResultsView(ListView):
             short_texts.append(short_text_highlighted)
         return short_texts
 
-    def append_end_of_string(self, start_idx):
+    def append_end_of_string(self, end_idx):
         better_idx = 0
-        while self.text[start_idx+better_idx] != ' ':
+        while self.text[end_idx+better_idx] != ' ':
             better_idx += 1
-        return better_idx + start_idx
+        return better_idx + end_idx
 
     def append_beginning_of_string(self, start_idx):
-        pass
+        better_idx = 0
+        while self.text[start_idx-better_idx] != ' ':
+            better_idx -= 1
+        return start_idx - better_idx
 
     def highlight(self, **kwargs) -> List[str]:
         ''' Highlight query in transcript text
