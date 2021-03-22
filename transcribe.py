@@ -113,3 +113,13 @@ class SGUTrans:
             text = data['text']
         with open(transcript_path, 'w') as ff:
             ff.write(text)
+
+    def read_all_podcasts_data_json(self, json_fname='all_podcasts_data.json'):
+        path_to_json = os.path.join(os.getcwd(), 'source', json_fname)
+        with open(path_to_json, 'r') as f:
+            all_podcasts = json.load(f)
+
+        links_to_mp3 = [episode['link_to_mp3']
+                        for episode in all_podcasts.values()]
+
+        return links_to_mp3

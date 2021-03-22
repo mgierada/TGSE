@@ -1,6 +1,9 @@
 from transcribe import SGUTrans
 
-SGUTrans().get_status('ic074h0f7-39f8-4550-b347-d645dcb3b2a6')
+sgutrans = SGUTrans()
+links = sgutrans.read_all_podcasts_data_json()[:2]
+print(links)
+# SGUTrans().get_status('ic074h0f7-39f8-4550-b347-d645dcb3b2a6')
 # # SGUTrans().submit('https://media.libsyn.com/media/skepticsguide/skepticast2021-02-27.mp3')
 
 # SGUTrans().get('ic074h0f7-39f8-4550-b347-d645dcb3b2a6')
