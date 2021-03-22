@@ -55,17 +55,18 @@ class SearchResultsView(ListView):
     def get_short_text_highlighted(self):
         short_texts = []
         for episode in self.episode_list:
-            self.text = episode.text
-            index = self.text.find(self.query)
+            text = episode.text
+            index = text.find(self.query)
             idx_query_word = index + len(self.query)
             around_idx = 200
 
             start_idx = index - around_idx
             end_idx = around_idx + idx_query_word
-            first_char_idx = self.prepend_beginning_of_string(start_idx)
-            last_char_idx = self.append_end_of_string(end_idx)
+            first_char_idx = self.prepend_beginning_of_string(text, start_idx)
+            last_char_idx = self.append_end_of_string(text, end_idx)
 
-            short_text = self.text[first_char_idx:last_char_idx]
+            short_text = text[first_char_idx:last_char_idx]
+
             replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
                 self.query)
             short_text_highlighted = short_text.replace(
@@ -77,24 +78,26 @@ class SearchResultsView(ListView):
                 short_text_highlighted = '(...) ' + short_text_highlighted
 
             # the edge case where the query is at the end of the transcript
-            if last_char_idx != len(self.text):
+            if last_char_idx != len(text):
                 short_text_highlighted += '(...)'
             short_text_highlighted = mark_safe(short_text_highlighted)
             short_texts.append(short_text_highlighted)
         return short_texts
 
-    def append_end_of_string(self, end_idx):
+    def append_end_of_string(self, text, end_idx):
         better_idx = 0
+
         # the edge case where the query is at the end of the transcript
-        if end_idx+better_idx > len(self.text):
-            return(len(self.text))
-        while self.text[end_idx+better_idx] != ' ':
+        if end_idx + better_idx > len(text):
+            return(len(text))
+
+        while text[end_idx+better_idx] != ' ':
             better_idx += 1
         return better_idx + end_idx
 
-    def prepend_beginning_of_string(self, start_idx):
+    def prepend_beginning_of_string(self, text, start_idx):
         better_idx = 0
-        while self.text[start_idx-better_idx] != ' ':
+        while text[start_idx-better_idx] != ' ':
             better_idx -= 1
 
         # the edge case where the query is at the beginning of the transcript
@@ -138,6 +141,7 @@ class SearchResultsView(ListView):
 
         '''
         each_query_count = self.get_each_query_count()
+        print(each_query_count)
         total_episodes = len(each_query_count.keys())
         total_queries = sum(each_query_count.values())
         ep_form = 'episode'
@@ -163,7 +167,8 @@ class SearchResultsView(ListView):
         count = 0
         each_query_count = {}
         for episode in self.episode_list:
-            count = episode.text.lower().count(self.query)
+            count = episode.text.lower().count(self.query.lower())
+            print(count)
             each_query_count[episode.episode_number] = count
         return each_query_count
 
