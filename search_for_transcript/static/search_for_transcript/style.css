@@ -4,6 +4,10 @@
   width: 100%;
   position: relative;
 }
+.search_results {
+  width: 70%;
+  position: relative;
+}
 
 .searchTerm {
   float: left;
@@ -31,6 +35,20 @@
 }
 
 .search:before {
+  position: absolute;
+  right: -40px;
+  width: 45px;
+  height: 36px;
+  line-height: 36px;
+  background: #cc3a00;
+  text-align: center;
+  color: #fff;
+  border-radius: 5px;
+  font-family: "FontAwesome";
+  content: "\f002";
+}
+
+.search_results:before {
   position: absolute;
   right: -40px;
   width: 45px;
