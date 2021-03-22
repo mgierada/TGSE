@@ -200,16 +200,18 @@ body a {
 
 .submit-button {
   /* display: inline-block; */
+  background-color: rgb(17, 127, 201);
   padding: 0.35em 1.2em;
   border: 0.1em solid #ffffff;
   margin: 0 0.3em 0.3em 0;
   border-radius: 0.12em;
+
   box-sizing: border-box;
   text-decoration: none;
   font-family: "Roboto", sans-serif;
   font-weight: 400;
   font-size: small;
-  color: #000000;
+  color: #ffffff;
   text-align: center;
   transition: all 0.2s;
 }
@@ -259,7 +261,7 @@ body a {
 .link_sgu_website {
   padding-top: 1px;
   margin-bottom: -20px;
-  font-size: 12px;ą
+  font-size: 12px;
 }
 
 .show_occurances {
@@ -272,5 +274,4 @@ body a {
   justify-content: justify;
   text-justify: inter-word;
   font-style: italic;
-
 }
