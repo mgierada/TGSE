@@ -71,11 +71,12 @@ class SearchResultsView(ListView):
             short_text_highlighted = short_text.replace(
                 self.query, replacing_query)
 
-            # the edge case where the query is in the beginning
+            # the edge case where the query is at the beginning
             # of the transcript
             if first_char_idx != 0:
                 short_text_highlighted = '(...) ' + short_text_highlighted
 
+            # the edge case where the query is at the end of the transcript
             if last_char_idx != len(self.text):
                 short_text_highlighted += '(...)'
             short_text_highlighted = mark_safe(short_text_highlighted)
@@ -84,6 +85,7 @@ class SearchResultsView(ListView):
 
     def append_end_of_string(self, end_idx):
         better_idx = 0
+        # the edge case where the query is at the end of the transcript
         if end_idx+better_idx > len(self.text):
             return(len(self.text))
         while self.text[end_idx+better_idx] != ' ':
@@ -95,7 +97,7 @@ class SearchResultsView(ListView):
         while self.text[start_idx-better_idx] != ' ':
             better_idx -= 1
 
-        # the edge case where the query is in the beginning of the transcript
+        # the edge case where the query is at the beginning of the transcript
         if start_idx - better_idx < 0:
             return 0
         return start_idx - better_idx
