@@ -43,11 +43,11 @@ class SearchResultsView(ListView):
         context = super(SearchResultsView, self).get_context_data(**kwargs)
         context['count'] = self.count_total()
         episode_list = context['episode_list']
-        transcripts_list = self.highlight()
+        # transcripts_list = self.highlight()
         each_query_count = self.get_each_query_count().values()
         short_texts = self.get_short_text_highlighted()
         episodes_and_transcripts = zip(
-            episode_list, each_query_count, transcripts_list, short_texts)
+            episode_list, each_query_count, short_texts)
         context['ep_countq_trans'] = episodes_and_transcripts
         context['query'] = self.query
         return context
@@ -55,8 +55,8 @@ class SearchResultsView(ListView):
     def get_short_text_highlighted(self):
         short_texts = []
         for episode in self.episode_list:
-            text = episode.text
-            index = text.find(self.query)
+            text = episode.text.lower()
+            index = text.find(self.query.lower())
             idx_query_word = index + len(self.query)
             around_idx = 200
 
@@ -105,28 +105,28 @@ class SearchResultsView(ListView):
             return 0
         return start_idx - better_idx
 
-    def highlight(self, **kwargs) -> List[str]:
-        ''' Highlight query in transcript text
+    # def highlight(self, **kwargs) -> List[str]:
+    #     ''' Highlight query in transcript text
 
-        Returns
-        -------
-        List[str]
-            Formated transcript with html tags that displays hightlights while
-            rendering
+    #     Returns
+    #     -------
+    #     List[str]
+    #         Formated transcript with html tags that displays hightlights while
+    #         rendering
 
-        '''
-        context = super(SearchResultsView, self).get_context_data(**kwargs)
-        # query = self.request.GET.get('q')
-        episode_list = context['episode_list']
-        text_list = []
-        for episode in episode_list:
-            text = episode.text
-            replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
-                self.query)
-            text = text.replace(self.query, replacing_query)
-            text = mark_safe(text)
-            text_list.append(text)
-        return text_list
+    #     '''
+    #     context = super(SearchResultsView, self).get_context_data(**kwargs)
+    #     # query = self.request.GET.get('q')
+    #     episode_list = context['episode_list']
+    #     text_list = []
+    #     for episode in episode_list:
+    #         text = episode.text
+    #         replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
+    #             self.query)
+    #         text = text.replace(self.query, replacing_query)
+    #         text = mark_safe(text)
+    #         text_list.append(text)
+    #     return text_list
 
     def count_total(self) -> str:
         ''' Count how many times a given query appears in database in total
@@ -141,7 +141,6 @@ class SearchResultsView(ListView):
 
         '''
         each_query_count = self.get_each_query_count()
-        print(each_query_count)
         total_episodes = len(each_query_count.keys())
         total_queries = sum(each_query_count.values())
         ep_form = 'episode'
@@ -168,7 +167,6 @@ class SearchResultsView(ListView):
         each_query_count = {}
         for episode in self.episode_list:
             count = episode.text.lower().count(self.query.lower())
-            print(count)
             each_query_count[episode.episode_number] = count
         return each_query_count
 
@@ -184,6 +182,7 @@ class TranscriptView(ListView):
         episode_number = self.kwargs['episode_number']
         context['episode_number'] = episode_number
         element = Transcript.objects.filter(pk=episode_number)
+
         # element[0] because element is a list of one element
         text = mark_safe(element[0].text)
         highlighted_text = self.get_highlighted_text(text)
