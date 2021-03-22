@@ -3,6 +3,7 @@
 
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'search_for_transcript/style.css' %}">
+ 
 
 <div>
   <div>
@@ -14,40 +15,45 @@
     </form>
   </div>
   <br><br>
-  <div class='show_results'>
+  <div class='show_total_occurances'>
     {{ count }}
   </div>
 </div>
-
-
-
-<!-- 
-<form action="/">
-  <button class="submit-button right_align" >Search again</button>
-</form> -->
-
-
-{% for episode, countq, transcript in ep_countq_trans %}
-<div class ="show_results">
-    <div class = "episode_number_result">
-      <h1 class = "episode_number_result"> Episode #{{ episode.episode_number }}</h1>
+  
+  
+  
+  <!-- 
+  <form action="/">
+    <button class="submit-button right_align" >Search again</button>
+  </form> -->
+  
+  
+<div class='main_search_results'>
+  {% for episode, countq, transcript in ep_countq_trans %}
+  <div class ="show_results">
+    <div class='link_sgu_website'>
+      <a href="{{ episode.link_to_podcast }}"> {{ episode.link_to_podcast }}</a>
     </div>
-    <div>
-      Found {{ countq }} occurrences
+      <div class = "episode_number_result">
+        <h1 class = "episode_number_result"> Episode #{{ episode.episode_number }}</h1>
+      </div>
+      <div class='show_occurances'>
+        Found {{ countq }} occurrences
+      </div>
+      <br>
+      <div class='center_buttons bouncy'>
+        <button class='submit-button' onClick="location='{{ episode.link_to_podcast }}'">
+          Show on SGU website
+        </button>
+        <button class='submit-button' onClick="location='{{ episode.link_to_mp3 }}'">
+          Download/Listen
+        </button>
+          <!-- <input type=button onClick="location='{{ episode.link_to_mp3 }}'" value='Download/Listen'> -->
+        <button class='submit-button' onClick="parent.location='transcript/{{ episode.episode_number }}/ {{ query }}'">
+          Show transcript
+        </button>
+      </div>
     </div>
-    <br>
-    <div class='center_buttons bouncy'>
-      <button class='submit-button' onClick="location='{{ episode.link_to_podcast }}'">
-        Show on SGU website
-      </button>
-      <button class='submit-button' onClick="location='{{ episode.link_to_mp3 }}'">
-        Download/Listen
-      </button>
-        <!-- <input type=button onClick="location='{{ episode.link_to_mp3 }}'" value='Download/Listen'> -->
-      <button class='submit-button' onClick="parent.location='transcript/{{ episode.episode_number }}/ {{ query }}'">
-        Show transcript
-      </button>
-    </div>
+    {% endfor %}
   </div>
 </div>
-{% endfor %}
