@@ -1,12 +1,13 @@
 from transcribe import SGUTrans
 
 sgutrans = SGUTrans()
-# sgutrans.submit_all_transcripts()
+sgutrans.submit_all_transcripts(812, 814)
 # sgutrans.downlad_all_transcripts()
 
 
 # to_be_removed
-# links = sgutrans.read_all_podcasts_data_json()[1:2]
+# links = sgutrans.read_all_podcasts_data_json()
+# print(len(links))
 # print(links)
 # for link in links:
 #     sgutrans.submit(link)
