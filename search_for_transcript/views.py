@@ -1,5 +1,5 @@
 from django.views.generic import TemplateView, ListView
-from typing import Any, Dict, List
+from typing import Any, Dict
 from django.utils.safestring import mark_safe
 from django.db.models.query import QuerySet
 
@@ -104,29 +104,6 @@ class SearchResultsView(ListView):
         if start_idx - better_idx < 0:
             return 0
         return start_idx - better_idx
-
-    # def highlight(self, **kwargs) -> List[str]:
-    #     ''' Highlight query in transcript text
-
-    #     Returns
-    #     -------
-    #     List[str]
-    #         Formated transcript with html tags that displays hightlights while
-    #         rendering
-
-    #     '''
-    #     context = super(SearchResultsView, self).get_context_data(**kwargs)
-    #     # query = self.request.GET.get('q')
-    #     episode_list = context['episode_list']
-    #     text_list = []
-    #     for episode in episode_list:
-    #         text = episode.text
-    #         replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
-    #             self.query)
-    #         text = text.replace(self.query, replacing_query)
-    #         text = mark_safe(text)
-    #         text_list.append(text)
-    #     return text_list
 
     def count_total(self) -> str:
         ''' Count how many times a given query appears in database in total

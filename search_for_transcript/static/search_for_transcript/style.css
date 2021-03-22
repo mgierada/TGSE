@@ -129,23 +129,6 @@ body a {
   color: #809fff;
 }
 
-/* @media (prefers-color-scheme: dark) {
-  body {
-    color: #eee;
-    background: rgb(255, 255, 255);
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 1) 0%,
-      rgba(9, 73, 121, 1) 52%,
-      rgba(0, 0, 0, 1) 100%
-    );
-  }
-
-  body a {
-    color: #809fff;
-  }
-} */
-
 .figure {
   align-items: center;
   justify-content: center;
