@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.fields import CharField, IntegerField
+from django.db.utils import IntegrityError
 
 
 class City(models.Model):
@@ -53,7 +54,7 @@ def populate_db():
         )
 
 
-def add_links_and_episode_number():
+def add_links_and_episodes_number():
     import os
     import json
 
@@ -68,12 +69,17 @@ def add_links_and_episode_number():
         date_published = inner_dict['date_published']
         link_to_mp3 = inner_dict['link_to_mp3']
         link_to_podcast = inner_dict['link_to_podcast']
-        Transcript.objects.create(
-            episode_number=episode_number,
-            date_published=date_published,
-            link_to_mp3=link_to_mp3,
-            link_to_podcast=link_to_podcast,
-        )
+        try:
+            Transcript.objects.create(
+                episode_number=episode_number,
+                date_published=date_published,
+                link_to_mp3=link_to_mp3,
+                link_to_podcast=link_to_podcast,
+            )
+        except IntegrityError:
+            print('Skipping episode #{} - episode already exists'.format(
+                episode_number))
+            pass
 
 
 def add_response_results():
@@ -102,5 +108,5 @@ def clear_db():
 
 
 # add_response_results()
-# add_links_and_episode_number()
+# add_links_and_episodes_number()
 # populate_db()

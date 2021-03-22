@@ -135,14 +135,6 @@ class SGUTrans:
                    for id in os.listdir(self.response_dir)]
         return all_ids
 
-    def downlad_all_transcripts(self):
-        ids = self.get_all_ids_submitted()
-        for id in ids:
-            print('Getting translation for {}'.format(id))
-            self.get(id)
-            print('Done!')
-        print('All transcripts downloaded successfully')
-
     def submit_all_transcripts(
             self,
             first_episode: int = 0,
@@ -166,3 +158,11 @@ class SGUTrans:
                   '{}'.format(date_published))
             self.submit(link)
             print('Done!')
+
+    def downlad_all_transcripts(self):
+        ids = self.get_all_ids_submitted()
+        for id in ids:
+            print('Getting translation for {}'.format(id))
+            self.get(id)
+            print('Done!')
+        print('All transcripts downloaded successfully')
