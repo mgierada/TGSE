@@ -45,14 +45,14 @@ class SearchResultsView(ListView):
         episode_list = context['episode_list']
         transcripts_list = self.highlight()
         each_query_count = self.get_each_query_count().values()
-        short_texts = self.get_short_test()
+        short_texts = self.get_short_text_highlighted()
         episodes_and_transcripts = zip(
             episode_list, each_query_count, transcripts_list, short_texts)
         context['ep_countq_trans'] = episodes_and_transcripts
         context['query'] = self.query
         return context
 
-    def get_short_test(self):
+    def get_short_text_highlighted(self):
         short_texts = []
         for episode in self.episode_list:
             self.text = episode.text
@@ -62,7 +62,7 @@ class SearchResultsView(ListView):
 
             start_idx = index - around_idx
             end_idx = around_idx + idx_query_word
-            first_char_idx = self.append_beginning_of_string(start_idx)
+            first_char_idx = self.prepend_beginning_of_string(start_idx)
             last_char_idx = self.append_end_of_string(end_idx)
 
             short_text = self.text[first_char_idx:last_char_idx]
@@ -73,7 +73,6 @@ class SearchResultsView(ListView):
             short_text_highlighted = '(...) ' + short_text_highlighted
             short_text_highlighted += '(...)'
             short_text_highlighted = mark_safe(short_text_highlighted)
-
             short_texts.append(short_text_highlighted)
         return short_texts
 
@@ -83,7 +82,7 @@ class SearchResultsView(ListView):
             better_idx += 1
         return better_idx + end_idx
 
-    def append_beginning_of_string(self, start_idx):
+    def prepend_beginning_of_string(self, start_idx):
         better_idx = 0
         while self.text[start_idx-better_idx] != ' ':
             better_idx -= 1
