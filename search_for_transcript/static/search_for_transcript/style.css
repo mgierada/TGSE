@@ -50,6 +50,11 @@
   margin: 10% auto;
 }
 
+.wrap_search_results {
+  width: 50%;
+  margin: 5% auto;
+}
+
 .highlighted {
   background-color: yellow;
   color: black;

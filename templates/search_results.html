@@ -4,12 +4,29 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'search_for_transcript/style.css' %}">
 
-<div class='show_results'>
-  {{ count }}
+<div>
+  <div class="wrap_search_results">
+    <form method="GET" action="{% url 'search_results' %}">
+        <div class="search">
+            <input type="text" class="searchTerm" placeholder="{{ query }}" name="q">
+            <input type="submit" class="searchButton">
+        </div>
+    </form>
+  </div>
+  <br><br>
+  <div class='show_results'>
+    {{ count }}
+  </div>
 </div>
+
+
+
+<!-- 
 <form action="/">
   <button class="submit-button right_align" >Search again</button>
-</form>
+</form> -->
+
+
 {% for episode, countq, transcript in ep_countq_trans %}
 <div class ="show_results">
     <div class = "episode_number_result">
