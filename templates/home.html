@@ -1,25 +1,38 @@
 <!-- templates/home.html -->
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'search_for_transcript/style.css' %}">
-<br><br><br><br>
 
-<div class='container'>
-    <div class='figure'>
-        <img src="{% static 'search_for_transcript/Skepticsguideweb.png' %}"" alt='https://www.theskepticsguide.org'>
-    </div>
-</div>
-
-<div class='container'>
-    <div class='center'>
-        <h1>Search SGU</h1>
-        <h2>A transcript search engine for the Skeptics' Guide to the Universe podcasts</h2>
-    </div>
-</div>
-<div class="wrap">
-    <form class="SearchBar" method="GET" action="{% url 'search_results' %}">
-        <div class="search">
-            <input type="text" class="searchTerm" placeholder="What are you looking for?" name="q">
-            <input type="submit" class="searchButton">
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <br><br><br><br>
+        <div class='container'>
+            <div class='figure'>
+                <img src="{% static 'search_for_transcript/Skepticsguideweb.png' %}"" alt='https://www.theskepticsguide.org'>
+            </div>
         </div>
-    </form>
-</div>
+
+        <div class='container'>
+            <div class='center'>
+                <h1>Search SGU</h1>
+                <h2>A transcript search engine for the Skeptics' Guide to the Universe podcasts</h2>
+            </div>
+        </div>
+        <div class="wrap">
+            <form class="SearchBar" method="GET" action="{% url 'search_results' %}">
+                <div class="search">
+                    <input type="text" class="searchTerm" placeholder="What are you looking for?" name="q">
+                    <input type="submit" class="searchButton">
+                </div>
+            </form>
+        </div>
+<br>
+</body>
+{% include "footer.html" %} 
+</html>
