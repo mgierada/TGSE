@@ -66,6 +66,7 @@
   <span class="step-links">
       {% if page_obj.has_previous %}
           <a href="?{% url_replace request 'page' 1 %}">&laquo; first</a>
+          <!-- <button class='nav-button' onClick="location='?{% url_replace request 'page' page_obj.previous_page_number %}'">previous</button> -->
           <a href="?{% url_replace request 'page' page_obj.previous_page_number %}">previous</a>
       {% endif %}
 
@@ -74,6 +75,7 @@
       </span>
 
       {% if page_obj.has_next %}
+          <!-- <button class='nav-button' onClick="location='?{% url_replace request 'page' page_obj.next_page_number %}'"> next</button> -->
           <a href="?{% url_replace request 'page' page_obj.next_page_number %}">next</a>
           <a href="?{% url_replace request 'page' page_obj.paginator.num_pages %}">last &raquo;</a>
       {% endif %}
