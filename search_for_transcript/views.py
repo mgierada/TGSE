@@ -15,6 +15,7 @@ class SearchResultsView(ListView):
     model = Transcript
     template_name = 'search_results.html'
     context_object_name = 'episode_list'
+    paginate_by = 2
 
     def get_queryset(self) -> QuerySet:
         ''' Get Transcript objects containing query in text filed
