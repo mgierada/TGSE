@@ -30,7 +30,7 @@ class Transcript(models.Model):
         return self.date_published
 
 
-def populate_db():
+def populate_db_old():
     import os
     import re
     import json
