@@ -160,13 +160,15 @@ class SGUTrans:
                 print('Submitting an episode #{} published at '
                       '{}...'.format(episode_number, date_published))
                 self.submit(link)
+                print('')
                 print('Done!')
                 print('')
 
     def downlad_all_transcripts(self):
         ids = self.get_all_ids_submitted()
         for id in ids:
-            print('Getting transcript for {}'.format(id))
-            self.get(id)
-            print('Done!')
-        print('All transcripts downloaded successfully')
+            print(id)
+        #     print('Getting transcript for {}'.format(id))
+        #     self.get(id)
+        #     print('Done!')
+        # print('All transcripts downloaded successfully')
