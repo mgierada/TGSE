@@ -316,3 +316,7 @@ body a {
 .copyright {
   font-size: x-small;
 }
+
+.pagination {
+  margin-left: 1%;
+}
