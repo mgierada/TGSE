@@ -197,6 +197,21 @@ body a {
 .center_buttons {
   text-align: center;
 }
+.nav-button {
+  background-color: rgb(177, 35, 10);
+  padding: 0.35em 1.2em;
+  margin: 0 0.3em 0.3em 0;
+  border-radius: 0.12em;
+
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-size: small;
+  color: #ffffff;
+  text-align: center;
+  transition: all 0.2s;
+}
 
 .submit-button {
   /* display: inline-block; */
@@ -221,8 +236,20 @@ body a {
   background-color: #ffffff;
 }
 
+.nav-button:hover {
+  color: #ffffff;
+  background-color: #000000;
+}
+
 @media all and (max-width: 30em) {
   .submit-button {
+    display: block;
+    margin: 0.4em auto;
+  }
+}
+
+@media all and (max-width: 30em) {
+  .nav-button {
     display: block;
     margin: 0.4em auto;
   }
