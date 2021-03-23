@@ -2,6 +2,7 @@ from django.views.generic import TemplateView, ListView
 from typing import Any, Dict
 from django.utils.safestring import mark_safe
 from django.db.models.query import QuerySet
+import operator
 
 from .models import Transcript
 
@@ -46,11 +47,27 @@ class SearchResultsView(ListView):
         # transcripts_list = self.highlight()
         each_query_count = self.get_each_query_count().values()
         short_texts = self.get_short_text_highlighted()
-        episodes_and_transcripts = zip(
-            episode_list, each_query_count, short_texts)
+
+        episodes_and_transcripts = self.sort_by_occurrence_descending(
+            each_query_count,
+            episode_list,
+            short_texts)
+
         context['ep_countq_trans'] = episodes_and_transcripts
         context['query'] = self.query
         return context
+
+    def sort_by_occurrence_descending(
+            self,
+            each_query_count,
+            episode_list,
+            short_texts):
+        unsorted = zip(
+            each_query_count, episode_list, short_texts)
+        zipped = list(unsorted)
+        episodes_and_transcripts = reversed(
+            sorted(zipped, key=operator.itemgetter(0)))
+        return episodes_and_transcripts
 
     def get_short_text_highlighted(self):
         short_texts = []
