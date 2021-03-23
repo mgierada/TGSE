@@ -4,6 +4,7 @@
 {% load static %}
 {% load extras %}
 <link rel="stylesheet" type="text/css" href="{% static 'search_for_transcript/style.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
  
 
 <div>
@@ -65,9 +66,14 @@
 <div class="pagination">
   <span class="step-links">
       {% if page_obj.has_previous %}
-          <a href="?{% url_replace request 'page' 1 %}">&laquo; first</a>
-          <!-- <button class='nav-button' onClick="location='?{% url_replace request 'page' page_obj.previous_page_number %}'">previous</button> -->
-          <a href="?{% url_replace request 'page' page_obj.previous_page_number %}">previous</a>
+          <button style="font-size:15px" onClick="location='?{% url_replace request 'page' 1 %}'">
+            <i class="fa fa-angle-double-left"></i>
+            First
+          </button>
+          <button style="font-size:15px" onClick="location='?{% url_replace request 'page' page_obj.previous_page_number %}'">
+            <i class="fa fa-arrow-circle-left"></i>
+            Previous
+          </button>
       {% endif %}
 
       <span class="current">
@@ -75,10 +81,17 @@
       </span>
 
       {% if page_obj.has_next %}
-          <!-- <button class='nav-button' onClick="location='?{% url_replace request 'page' page_obj.next_page_number %}'"> next</button> -->
-          <a href="?{% url_replace request 'page' page_obj.next_page_number %}">next</a>
-          <a href="?{% url_replace request 'page' page_obj.paginator.num_pages %}">last &raquo;</a>
+          <button style="font-size:15px" onClick="location='?{% url_replace request 'page' page_obj.next_page_number %}'">
+            Next
+            <i class="fa fa-arrow-circle-right"></i>
+          </button>
+          <button style="font-size:15px" onClick="location='?{% url_replace request 'page' page_obj.paginator.num_pages %}'">
+            Last
+            <i class="fa fa-angle-double-right"></i>
+          </button>
+          <!-- <a href="?{% url_replace request 'page' page_obj.paginator.num_pages %}">last &raquo;</a> -->
       {% endif %}
   </span>
 </div>
-
+  
+  
