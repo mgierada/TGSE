@@ -1,8 +1,8 @@
 from transcribe import SGUTrans
 
 sgutrans = SGUTrans()
-sgutrans.submit_all_transcripts(806, 811)
-# sgutrans.downlad_all_transcripts()
+# sgutrans.submit_all_transcripts(806, 811)
+sgutrans.downlad_all_transcripts()
 
 
 # to_be_removed

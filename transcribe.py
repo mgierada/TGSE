@@ -92,7 +92,7 @@ class SGUTrans:
 
         with open(response_path, 'r') as f:
             data = json.load(f)
-        print(data['status'])
+        return data['status']
 
     def get_transcript(
             self,
@@ -167,8 +167,8 @@ class SGUTrans:
     def downlad_all_transcripts(self):
         ids = self.get_all_ids_submitted()
         for id in ids:
-            print(id)
-        #     print('Getting transcript for {}'.format(id))
-        #     self.get(id)
-        #     print('Done!')
-        # print('All transcripts downloaded successfully')
+            if self.get_status(id) != 'completed':
+                print('Getting transcript for {}'.format(id))
+                self.get(id)
+                print('Done!')
+        print('All transcripts downloaded successfully')
