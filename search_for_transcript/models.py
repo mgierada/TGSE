@@ -82,14 +82,13 @@ def add_links_and_episodes_number():
             pass
 
 
-def add_response_results():
+def populate_db():
     import os
     import json
 
     response_path = os.path.join(os.getcwd(), 'responses')
 
     for episode in os.listdir(response_path):
-        print(episode)
         with open(os.path.join(response_path, episode), 'r') as f:
             data = json.load(f)
 
@@ -114,6 +113,6 @@ def clear_db():
     entries.delete()
 
 
-# add_response_results()
+# populate_db()
 # add_links_and_episodes_number()
 # populate_db()
