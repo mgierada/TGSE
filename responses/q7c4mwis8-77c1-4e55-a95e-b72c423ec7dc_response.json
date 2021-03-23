@@ -4,7 +4,7 @@
     "words": null,
     "utterances": null,
     "confidence": null,
-    "status": "queued",
+    "status": "processing",
     "audio_duration": null,
     "audio_url": "https://media.libsyn.com/media/skepticsguide/skepticast2021-01-23.mp3",
     "language_model": "assemblyai_default",
