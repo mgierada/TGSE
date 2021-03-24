@@ -47,9 +47,14 @@
         <div class = "episode_number_result">
           <h1 class = "episode_number_result"> Episode #{{ episode.episode_number }}</h1>
         </div>
+        <div class='date_published'>
+          {{ episode.date_published }}
+        </div>
+        <br>
         <div class='show_occurances'>
           Found {{ countq }} occurrences
         </div>
+        <br>
         <br>
         <div class='short_text'>
           {{ text_short }}
@@ -59,7 +64,7 @@
           <!-- <button class='submit-button' onClick="location='{{ episode.link_to_podcast }}'">
             Show on SGU website
           </button> -->
-          
+
           <button class='submit-button' onClick="location='{{ episode.link_to_mp3 }}'">
             Download/Listen
           </button>
