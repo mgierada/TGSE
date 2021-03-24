@@ -1,10 +1,13 @@
 <!-- templates/search_results.html -->
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'search_for_transcript/style.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <h1>Episode #{{ episode.episode_number }}</h1>
 <h2>Transcript</h2>
-    <button class="submit-button right_align" onclick="location.href = '/'">Go back to search</button>
+<button class="submit-button right_align" onclick="location.href = '/'">
+    <span class="fa fa-home fa-2x"></span>
+</button>
 <div class='show_transcript_content'>
     {{ episode.text }}
 </div>
