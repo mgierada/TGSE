@@ -29,12 +29,38 @@ class SearchResultsView(ListView):
         '''
         self.query = self.request.GET.get('q')
         splitted = self.query.split(' ')
-        print(splitted)
-        print(len(splitted))
-        crit1 = Q(text__icontains=splitted[0])
-        crit2 = Q(text__icontains=splitted[1])
-        self.episode_list = Transcript.objects.filter(
-            crit1, crit2)
+
+        q = [Q(text__icontains=splitted[i]) for i in range(len(splitted))]
+
+        if len(q) == 1:
+            self.episode_list = Transcript.objects.filter(
+                text__icontains=self.query)
+        elif len(q) == 2:
+            c0, c1 = [i for i in q]
+            self.episode_list = Transcript.objects.filter(
+                c0, c1)
+        elif len(q) == 3:
+            c0, c1, c2 = [i for i in q]
+            self.episode_list = Transcript.objects.filter(
+                c0, c1, c2)
+        elif len(q) == 4:
+            c0, c1, c2, c3 = [i for i in q]
+            self.episode_list = Transcript.objects.filter(
+                c0, c1, c2, c3)
+        elif len(q) == 5:
+            c0, c1, c2, c3, c4 = [i for i in q]
+            self.episode_list = Transcript.objects.filter(
+                c0, c1, c2, c3, c4)
+        elif len(q) == 6:
+            c0, c1, c2, c3, c4, c5 = [i for i in q]
+            self.episode_list = Transcript.objects.filter(
+                c0, c1, c2, c3, c4, c5)
+        elif len(q) == 7:
+            c0, c1, c2, c3, c4, c5, c6 = [
+                i for i in q]
+            self.episode_list = Transcript.objects.filter(
+                c0, c1, c2, c3, c4, c5, c6)
+
         return self.episode_list
 
     def get_context_data(
