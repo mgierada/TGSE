@@ -2,6 +2,7 @@ from django.views.generic import TemplateView, ListView
 from typing import Any, Dict
 from django.utils.safestring import mark_safe
 from django.db.models.query import QuerySet
+from django.db.models import Q
 import operator
 
 from .models import Transcript
@@ -27,8 +28,13 @@ class SearchResultsView(ListView):
 
         '''
         self.query = self.request.GET.get('q')
+        splitted = self.query.split(' ')
+        print(splitted)
+        print(len(splitted))
+        crit1 = Q(text__icontains=splitted[0])
+        crit2 = Q(text__icontains=splitted[1])
         self.episode_list = Transcript.objects.filter(
-            text__icontains=self.query)
+            crit1, crit2)
         return self.episode_list
 
     def get_context_data(
