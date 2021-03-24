@@ -55,16 +55,24 @@
           {{ text_short }}
         </div>
         <div class='center_buttons bouncy'>
-          <button class='submit-button' onClick="location='{{ episode.link_to_podcast }}'">
+          
+          <!-- <button class='submit-button' onClick="location='{{ episode.link_to_podcast }}'">
             Show on SGU website
-          </button>
+          </button> -->
+          
           <button class='submit-button' onClick="location='{{ episode.link_to_mp3 }}'">
             Download/Listen
           </button>
             <!-- <input type=button onClick="location='{{ episode.link_to_mp3 }}'" value='Download/Listen'> -->
+          
           <button class='submit-button' onClick="parent.location='transcript/{{ episode.episode_number }}/ {{ query }}'">
             Show full transcript
           </button>
+
+          <button class='submit-button' onClick="parent.location='transcript_plain/{{ episode.episode_number }}/ {{ query }}'">
+            Show full transcript(no highlight)
+          </button>
+
         </div>
       </div>
       {% endfor %}
