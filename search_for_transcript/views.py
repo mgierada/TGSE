@@ -168,7 +168,7 @@ class SearchResultsView(ListView):
 
 class TranscriptView(ListView):
     model = Transcript
-    template_name = 'transcripts.html'
+    template_name = 'transcript.html'
     context_object_name = 'episode_list'
 
     def get_context_data(self, **kwargs):
@@ -206,3 +206,21 @@ class TranscriptView(ListView):
         insensitive_text = insensitive_query.sub(replacing_query, text)
         highlighted_text = mark_safe(insensitive_text)
         return highlighted_text
+
+
+class TranscriptPlainView(ListView):
+    model = Transcript
+    template_name = 'transcript_plain.html'
+    # context_object_name = 'episode'
+
+    def get_context_data(self, **kwargs):
+        context = super(TranscriptPlainView, self).get_context_data(**kwargs)
+        self.query = self.kwargs['query']
+        episode_number = self.kwargs['episode_number']
+        context['episode_number'] = episode_number
+        element = Transcript.objects.filter(pk=episode_number)
+        context['episode'] = element[0]
+        # context['text'] = text
+        # element[0] because element is a list of one element
+        context['query'] = self.query
+        return context
