@@ -83,7 +83,8 @@ class SearchResultsView(ListView):
         context['count'] = self.count_total()
         episode_list = context['episode_list']
         # transcripts_list = self.highlight()
-        each_query_count = self.get_exact_match().values()
+        # each_query_count = self.get_exact_match().values()
+        each_query_count = self.get_queries_sum().values()
         short_texts = self.get_short_text_highlighted()
 
         episodes_and_transcripts = self.sort_by_occurrence_descending(
