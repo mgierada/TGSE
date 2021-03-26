@@ -93,7 +93,7 @@ class SearchResultsView(ListView):
 
         context['ep_countq_trans'] = episodes_and_transcripts
         context['query'] = self.query
-        self.get_each_word_in_query_count()
+        # self.get_each_word_in_query_count()
         return context
 
     def sort_by_occurrence_descending(
@@ -173,9 +173,15 @@ class SearchResultsView(ListView):
             'Found 37 occurrences of "world" in 2 episodes in total'
 
         '''
-        each_query_count = self.get_exact_match()
+        each_query_count = self.get_each_word_in_query_count()
+        print(each_query_count)
+        # print(each_query_count.keys())
         total_episodes = len(each_query_count.keys())
+        # print(total_episodes)
+        queries_sum = self.get_queries_sum()
+        print(queries_sum)
         total_queries = sum(each_query_count.values())
+        # print(total_queries)
         ep_form = 'episode'
         if total_episodes > 1:
             ep_form = 'episodes'
@@ -183,6 +189,16 @@ class SearchResultsView(ListView):
             total_queries, self.query, total_episodes, ep_form)
 
         return response
+
+    def get_queries_sum(self):
+        queries_sum = {}
+        each_query_count = self.get_each_word_in_query_count()
+        for episode_number, inner_dict in each_query_count.items():
+            total_queries_count = 0
+            for occurence in inner_dict.values():
+                total_queries_count += int(occurence)
+                queries_sum[episode_number] = total_queries_count
+        return queries_sum
 
     def get_exact_match(self) -> Dict[str, int]:
         '''Get dict with info about how any occurrences of a given query
@@ -212,7 +228,7 @@ class SearchResultsView(ListView):
                 count = episode.text.lower().count(word.lower())
                 inner_dict[word] = count
             each_query_count[episode.episode_number] = inner_dict
-        print(each_query_count)
+        return each_query_count
 
 
 class TranscriptView(ListView):
