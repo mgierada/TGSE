@@ -174,22 +174,26 @@ class SearchResultsView(ListView):
 
         '''
         each_query_count = self.get_each_word_in_query_count()
-        print(each_query_count)
-        # print(each_query_count.keys())
         total_episodes = len(each_query_count.keys())
-        # print(total_episodes)
         queries_sum = self.get_queries_sum()
-        print(queries_sum)
-        # total_queries = sum(each_query_count.values())
         total_queries = sum(queries_sum.values())
-        # print(total_queries)
         ep_form = 'episode'
+        self.get_formatted_query()
         if total_episodes > 1:
             ep_form = 'episodes'
-        response = 'Found {} occurrences of "{}" in {} {} in total'.format(
-            total_queries, self.query, total_episodes, ep_form)
+        formatted_query = self.get_formatted_query()
+        response = 'Found {} occurrences of {} in {} {} in total'.format(
+            total_queries, formatted_query, total_episodes, ep_form)
 
         return response
+
+    def get_formatted_query(self):
+        splitted_query = self.query.split(' ')
+        formatted_query_string = ''
+        for q in splitted_query:
+            formatted = '"{}" '.format(q)
+            formatted_query_string += formatted
+        return formatted_query_string
 
     def get_queries_sum(self):
         queries_sum = {}
