@@ -180,7 +180,8 @@ class SearchResultsView(ListView):
         # print(total_episodes)
         queries_sum = self.get_queries_sum()
         print(queries_sum)
-        total_queries = sum(each_query_count.values())
+        # total_queries = sum(each_query_count.values())
+        total_queries = sum(queries_sum.values())
         # print(total_queries)
         ep_form = 'episode'
         if total_episodes > 1:
