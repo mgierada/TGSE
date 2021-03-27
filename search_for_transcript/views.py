@@ -1,3 +1,4 @@
+from re import I
 from django.views.generic import TemplateView, ListView
 from typing import Any, Dict, List
 from django.utils.safestring import mark_safe
@@ -141,14 +142,41 @@ class SearchResultsView(ListView):
             sorted(zipped, key=operator.itemgetter(0)))
         return sorted_q_e_st
 
-    def get_short_text_highlighted(self):
+    def get_index_dict_first_occurence(self):
+        index_dict = {}
+        for episode in self.episode_list:
+            inner_dict = {}
+            for word in self.query.split(' '):
+                text = episode.text.lower()
+                index = text.find(word.lower())
+                idx_query_word = index + len(word)
+                inner_dict[word] = idx_query_word
+            index_dict[episode.episode_number] = inner_dict
+        return index_dict
+
+    def get_lowest_idx(self):
+        index_dict = self.get_index_dict_first_occurence()
+        pass
+
+    def get_most_common_query_word(self, episode_number):
+        each_query_count = self.get_each_word_in_query_count()
+        print(each_query_count)
+
+        for word, occurance in each_query_count[episode_number].items():
+            if occurance == max(each_query_count[episode_number].values()):
+                return word
+        # most_common_word = max(each_query_count[episode_number].keys())
+        # return most_common_word
+
+    def get_short_text_highlighted(self, around_idx=200):
         short_texts = []
+
+        print(self.get_most_common_query_word(790))
+
         for episode in self.episode_list:
             text = episode.text.lower()
             index = text.find(self.query.lower())
             idx_query_word = index + len(self.query)
-            around_idx = 200
-
             start_idx = index - around_idx
             end_idx = around_idx + idx_query_word
             first_char_idx = self.prepend_beginning_of_string(text, start_idx)
