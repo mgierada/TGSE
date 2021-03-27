@@ -88,18 +88,27 @@ class SearchResultsView(ListView):
         episode_list = context['episode_list']
         # transcripts_list = self.highlight()
         # each_query_count = self.get_exact_match().values()
-        each_query_count = self.get_queries_sum().values()
+        each_query_count = list(self.get_queries_sum().values())
+        short_texts = self.get_short_text_highlighted()
 
-        paginator = Paginator(episode_list, 3)
-        page = self.request.GET.get('page')
-        ep_c = paginator.get_page(page)
+        paginator1 = Paginator(episode_list, 3)
+        page1 = self.request.GET.get('page')
+        ep_c = paginator1.get_page(page1)
+
+        paginator2 = Paginator(each_query_count, 3)
+        page2 = self.request.GET.get('page')
+        eqc = paginator2.get_page(page2)
+
+        paginator3 = Paginator(short_texts, 3)
+        page3 = self.request.GET.get('page')
+        st = paginator3.get_page(page3)
 
         short_texts = self.get_short_text_highlighted()
 
         episodes_and_transcripts = self.sort_by_occurrence_descending(
-            each_query_count,
+            eqc,
             ep_c,
-            short_texts)
+            st)
 
         context['ep_countq_trans'] = episodes_and_transcripts
         context['query'] = self.query
