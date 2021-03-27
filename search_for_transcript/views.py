@@ -17,7 +17,7 @@ class SearchResultsView(ListView):
     model = Transcript
     template_name = 'search_results.html'
     context_object_name = 'episode_list'
-    paginate_idx = 6
+    paginate_idx = 3
 
     def get_queryset(self) -> QuerySet:
         ''' Get Transcript objects containing query in text filed
@@ -33,6 +33,7 @@ class SearchResultsView(ListView):
 
         q = [Q(text__icontains=splitted[i]) for i in range(len(splitted))]
 
+        # that if-else statement is a nasty part of the code #TODO refactor it
         if len(q) == 1:
             self.episode_list = Transcript.objects.filter(
                 text__icontains=self.query)
@@ -72,7 +73,7 @@ class SearchResultsView(ListView):
     def get_context_data(
             self,
             **kwargs: Any) -> Dict[str, Any]:
-        ''' Update context_data to be used in html
+        ''' Update context_data to be used in html template
 
         Returns
         -------
@@ -82,48 +83,44 @@ class SearchResultsView(ListView):
         '''
         context = super(SearchResultsView, self).get_context_data(**kwargs)
 
-        # print(context['object_list'])
-
-        context['count'] = self.count_total()
-        episode_list = context['episode_list']
-        # transcripts_list = self.highlight()
         # each_query_count = self.get_exact_match().values()
-        each_query_count = list(self.get_queries_sum().values())
-        short_texts = self.get_short_text_highlighted()
+        each_query_count_list = list(self.get_queries_sum().values())
+        short_texts_lists = self.get_short_text_highlighted()
 
-        sorted_epis_and_trans = self.sort_by_occurrence_descending(
-            each_query_count,
-            episode_list,
-            short_texts)
+        # sort queries, episodes_list and transcritps by query occurrence
+        sorted_q_e_st = self.sort_by_occurrence_descending(
+            each_query_count_list,
+            self.episode_list,
+            short_texts_lists)
 
-        ep_c_sort, eqc_sort, st_sort = zip(*sorted_epis_and_trans)
+        # unzip sorted list
+        q_sorted, e_sorted, st_sorted = zip(
+            *sorted_q_e_st)
 
-        # 'paginator': <django.core.paginator.Paginator object at 0x1065254e0>, 'page_obj': <Page 1 of 90>, 'is_paginated': True,
+        paginator_q = Paginator(q_sorted, self.paginate_idx)
+        page_q = self.request.GET.get('page')
+        page_obj_q = paginator_q.get_page(page_q)
 
-        paginator1 = Paginator(ep_c_sort, self.paginate_idx)
-        page1 = self.request.GET.get('page')
-        ep_c = paginator1.get_page(page1)
+        paginator_e = Paginator(e_sorted, self.paginate_idx)
+        page_e = self.request.GET.get('page')
+        page_obj_e = paginator_e.get_page(page_e)
 
-        paginator2 = Paginator(eqc_sort, self.paginate_idx)
-        page2 = self.request.GET.get('page')
-        eqc = paginator2.get_page(page2)
+        paginator_st = Paginator(st_sorted, self.paginate_idx)
+        page_st = self.request.GET.get('page')
+        page_obj_st = paginator_st.get_page(page_st)
 
-        paginator3 = Paginator(st_sort, self.paginate_idx)
-        page3 = self.request.GET.get('page')
-        st = paginator3.get_page(page3)
+        q_e_st_paginated = zip(
+            page_obj_q, page_obj_e, page_obj_st)
+        context['queries_episodes_short_texts'] = q_e_st_paginated
 
-        context['paginator'] = paginator1
-        context['page_obj'] = ep_c
+        # update page_obj as it is manually edited
+        context['paginator'] = paginator_q
+        context['page_obj'] = page_obj_q
         context['is_paginated'] = True
 
-        # episodes_and_transcripts = self.sort_by_occurrence_descending(
-        #     eqc,
-        #     ep_c,
-        #     st)
-        episodes_and_transcripts_paginated = zip(ep_c, eqc, st)
-        context['ep_countq_trans'] = episodes_and_transcripts_paginated
+        # add other usefull variables
         context['query'] = self.query
-        print(context)
+        context['count'] = self.count_total()
         return context
 
     def sort_by_occurrence_descending(

@@ -32,16 +32,9 @@
       {{ count }}
     </div>
   </div>
-    
-    
-    
-    <!-- 
-    <form action="/">
-      <button class="submit-button right_align" >Search again</button>
-    </form> -->
   
   <div class='main_search_results'>
-    {% for countq, episode, text_short in ep_countq_trans %}
+    {% for query_count, episode, short_text in queries_episodes_short_texts %}
     <div class ="show_results">
       <div class='link_sgu_website'>
         <a href="{{ episode.link_to_podcast }}"> {{ episode.link_to_podcast }}</a>
@@ -54,19 +47,15 @@
         </div>
         <br>
         <div class='show_occurances'>
-          Found {{ countq }} occurrences
+          Found {{ query_count }} occurrences
         </div>
         <br>
         <br>
         <div class='short_text'>
-          {{ text_short }}
+          {{ short_text }}
         </div>
         <div class='center_buttons bouncy'>
-          
-          <!-- <button class='submit-button' onClick="location='{{ episode.link_to_podcast }}'">
-            Show on SGU website
-          </button> -->
-
+        
           <button class='submit-button' onClick="location='{{ episode.link_to_mp3 }}'">
             Download/Listen
           </button>
