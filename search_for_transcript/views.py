@@ -17,7 +17,7 @@ class SearchResultsView(ListView):
     model = Transcript
     template_name = 'search_results.html'
     context_object_name = 'episode_list'
-    # paginate_by = 6
+    paginate_idx = 6
 
     def get_queryset(self) -> QuerySet:
         ''' Get Transcript objects containing query in text filed
@@ -91,26 +91,31 @@ class SearchResultsView(ListView):
         each_query_count = list(self.get_queries_sum().values())
         short_texts = self.get_short_text_highlighted()
 
-        paginator1 = Paginator(episode_list, 3)
+        sorted_epis_and_trans = self.sort_by_occurrence_descending(
+            each_query_count,
+            episode_list,
+            short_texts)
+
+        ep_c_sort, eqc_sort, st_sort = zip(*sorted_epis_and_trans)
+
+        paginator1 = Paginator(ep_c_sort, self.paginate_idx)
         page1 = self.request.GET.get('page')
         ep_c = paginator1.get_page(page1)
 
-        paginator2 = Paginator(each_query_count, 3)
+        paginator2 = Paginator(eqc_sort, self.paginate_idx)
         page2 = self.request.GET.get('page')
         eqc = paginator2.get_page(page2)
 
-        paginator3 = Paginator(short_texts, 3)
+        paginator3 = Paginator(st_sort, self.paginate_idx)
         page3 = self.request.GET.get('page')
         st = paginator3.get_page(page3)
 
-        short_texts = self.get_short_text_highlighted()
-
-        episodes_and_transcripts = self.sort_by_occurrence_descending(
-            eqc,
-            ep_c,
-            st)
-
-        context['ep_countq_trans'] = episodes_and_transcripts
+        # episodes_and_transcripts = self.sort_by_occurrence_descending(
+        #     eqc,
+        #     ep_c,
+        #     st)
+        episodes_and_transcripts_paginated = zip(ep_c, eqc, st)
+        context['ep_countq_trans'] = episodes_and_transcripts_paginated
         context['query'] = self.query
         return context
 
