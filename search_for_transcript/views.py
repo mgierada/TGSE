@@ -1,9 +1,9 @@
 from django.views.generic import TemplateView, ListView
-from typing import Any, Dict
+from typing import Any, Dict, List
 from django.utils.safestring import mark_safe
 from django.db.models.query import QuerySet
 from django.db.models import Q
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.core.paginator import Paginator
 import operator
 
 from .models import Transcript
@@ -84,14 +84,13 @@ class SearchResultsView(ListView):
         context = super(SearchResultsView, self).get_context_data(**kwargs)
 
         # each_query_count = self.get_exact_match().values()
-        each_query_count_list = list(self.get_queries_sum().values())
-        short_texts_lists = self.get_short_text_highlighted()
+        self.each_query_count_list = list(self.get_queries_sum().values())
+        self.short_texts_list = self.get_short_text_highlighted()
 
         # sort queries, episodes_list and transcritps by query occurrence
-        sorted_q_e_st = self.sort_by_occurrence_descending(
-            each_query_count_list,
-            self.episode_list,
-            short_texts_lists)
+        sorted_q_e_st = self.sort_by_occurrence_descending()
+        print(sorted_q_e_st)
+        print(type(sorted_q_e_st))
 
         # unzip sorted list
         q_sorted, e_sorted, st_sorted = zip(
@@ -109,6 +108,7 @@ class SearchResultsView(ListView):
         page_st = self.request.GET.get('page')
         page_obj_st = paginator_st.get_page(page_st)
 
+        # zip the final and sorted objects and add it to context
         q_e_st_paginated = zip(
             page_obj_q, page_obj_e, page_obj_st)
         context['queries_episodes_short_texts'] = q_e_st_paginated
@@ -123,17 +123,25 @@ class SearchResultsView(ListView):
         context['count'] = self.count_total()
         return context
 
-    def sort_by_occurrence_descending(
-            self,
-            each_query_count,
-            episode_list,
-            short_texts):
+    def sort_by_occurrence_descending(self) -> List[object]:
+        ''' Sort queries count, episodes and short text together by decending
+        occurrence of query
+
+        Returns
+        -------
+        List[object]
+            a reversed list iterator (zip) holding sorted
+            queries count, episodes and short texts
+
+        '''
         unsorted = zip(
-            each_query_count, episode_list, short_texts)
+            self.each_query_count_list,
+            self.episode_list,
+            self.short_texts_list)
         zipped = list(unsorted)
-        episodes_and_transcripts = reversed(
+        sorted_q_e_st = reversed(
             sorted(zipped, key=operator.itemgetter(0)))
-        return episodes_and_transcripts
+        return sorted_q_e_st
 
     def get_short_text_highlighted(self):
         short_texts = []
