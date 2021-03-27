@@ -98,6 +98,8 @@ class SearchResultsView(ListView):
 
         ep_c_sort, eqc_sort, st_sort = zip(*sorted_epis_and_trans)
 
+        # 'paginator': <django.core.paginator.Paginator object at 0x1065254e0>, 'page_obj': <Page 1 of 90>, 'is_paginated': True,
+
         paginator1 = Paginator(ep_c_sort, self.paginate_idx)
         page1 = self.request.GET.get('page')
         ep_c = paginator1.get_page(page1)
@@ -110,6 +112,10 @@ class SearchResultsView(ListView):
         page3 = self.request.GET.get('page')
         st = paginator3.get_page(page3)
 
+        context['paginator'] = paginator1
+        context['page_obj'] = ep_c
+        context['is_paginated'] = True
+
         # episodes_and_transcripts = self.sort_by_occurrence_descending(
         #     eqc,
         #     ep_c,
@@ -117,6 +123,7 @@ class SearchResultsView(ListView):
         episodes_and_transcripts_paginated = zip(ep_c, eqc, st)
         context['ep_countq_trans'] = episodes_and_transcripts_paginated
         context['query'] = self.query
+        print(context)
         return context
 
     def sort_by_occurrence_descending(
