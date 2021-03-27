@@ -372,33 +372,15 @@ class TranscriptView(ListView):
         '''
         import re
         splitted_list = self.query.split(' ')[1:]
-        print(splitted_list)
-        # splitted_list = ['COVID', 'usa']
-        index = 0
-        t = self.element[0].text
-        for word in splitted_list:
-            word = str(word)
-            replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
-                str(word))
-            t = t.replace(
-                str(word), replacing_query)
-            # replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
-            #     splitted_list[index].upper())
-            # insensitive_query = re.compile(
-            #     re.escape(str(splitted_list[index])), re.IGNORECASE)
-            # insensitive_text = insensitive_query.sub(
-            #     replacing_query, text)
-            index += 1
-            short_text_highlighted = t
-        highlighted_text = mark_safe(short_text_highlighted)
 
-        # for word in self.query.split(' '):
-        #     replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
-        #         word.upper())
-        #     insensitive_query = re.compile(
-        #         re.escape(str(word)), re.IGNORECASE)
-        #     insensitive_text = insensitive_query.sub(replacing_query, text)
-        #     highlighted_text = mark_safe(insensitive_text)
+        for word in splitted_list:
+            replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
+                word.upper())
+            insensitive_query = re.compile(
+                re.escape(str(word)), re.IGNORECASE)
+            insensitive_text = insensitive_query.sub(replacing_query, text)
+            text = insensitive_text
+        highlighted_text = mark_safe(insensitive_text)
 
         return highlighted_text
 
