@@ -159,36 +159,35 @@ class SearchResultsView(ListView):
         pass
 
     def get_most_common_query_word(self, episode_number):
-        each_query_count = self.get_each_word_in_query_count()
-        print(each_query_count)
-
-        for word, occurance in each_query_count[episode_number].items():
-            if occurance == max(each_query_count[episode_number].values()):
+        for word, occurance in self.each_query_count[episode_number].items():
+            if occurance == max(self.each_query_count[episode_number].values()):
                 return word
-        # most_common_word = max(each_query_count[episode_number].keys())
-        # return most_common_word
 
     def get_short_text_highlighted(self, around_idx=200):
         short_texts = []
-
-        print(self.get_most_common_query_word(790))
-
+        self.each_query_count = self.get_each_word_in_query_count()
         for episode in self.episode_list:
+            most_common_word = self.get_most_common_query_word(
+                episode.episode_number)
             text = episode.text.lower()
-            index = text.find(self.query.lower())
-            idx_query_word = index + len(self.query)
+
+            index = text.find(most_common_word.lower())
+            idx_query_word = index + len(most_common_word)
             start_idx = index - around_idx
             end_idx = around_idx + idx_query_word
+
             first_char_idx = self.prepend_beginning_of_string(text, start_idx)
             last_char_idx = self.append_end_of_string(text, end_idx)
 
             short_text = text[first_char_idx:last_char_idx]
 
-            replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
-                self.query)
-            short_text_highlighted = short_text.replace(
-                self.query.lower(), replacing_query)
-
+            # highlight all query words
+            for word in self.query.split(' '):
+                replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
+                    word)
+                short_text = short_text.replace(
+                    word.lower(), replacing_query)
+            short_text_highlighted = short_text
             # the edge case where the query is at the beginning
             # of the transcript
             if first_char_idx != 0:
@@ -321,9 +320,9 @@ class SearchResultsView(ListView):
 
             >>> query = 'covid vaccine usa'
 
-            >>> each_query_count = 
+            >>> each_query_count =
             {
-                790: 
+                790:
                     {'covid': 10, 'vaccine': 5, 'usa': 19},
                 551:
                     {'covid': 1, 'vaccine': 6, 'usa': 7}
@@ -374,11 +373,18 @@ class TranscriptView(ListView):
 
         '''
         import re
-        replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
-            self.query.upper())
-        insensitive_query = re.compile(
-            re.escape(str(self.query)), re.IGNORECASE)
-        insensitive_text = insensitive_query.sub(replacing_query, text)
+        for word in self.query.split(' '):
+            print(word)
+            # replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
+            #     word.upper())
+            replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
+                word)
+            text = text.replace(
+                word, replacing_query)
+            # insensitive_query = re.compile(
+            #     re.escape(str(word)), re.IGNORECASE)
+            # text = insensitive_query.sub(replacing_query, text)
+        insensitive_text = text
         highlighted_text = mark_safe(insensitive_text)
         return highlighted_text
 
