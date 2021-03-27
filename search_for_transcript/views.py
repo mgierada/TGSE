@@ -89,8 +89,6 @@ class SearchResultsView(ListView):
 
         # sort queries, episodes_list and transcritps by query occurrence
         sorted_q_e_st = self.sort_by_occurrence_descending()
-        print(sorted_q_e_st)
-        print(type(sorted_q_e_st))
 
         # unzip sorted list
         q_sorted, e_sorted, st_sorted = zip(
@@ -230,7 +228,19 @@ class SearchResultsView(ListView):
             formatted_query_string += formatted
         return formatted_query_string
 
-    def get_queries_sum(self):
+    def get_queries_sum(self) -> Dict[int, int]:
+        ''' Get a dict showing how many occurance of all words in query
+        are there per episode
+
+        Returns
+        -------
+        Dict[int, int]
+            a dict like that
+            >>> query = 'covid vaccine usa'
+
+            >>> queries_sum = {790: 34, 551: 14}
+
+        '''
         queries_sum = {}
         each_query_count = self.get_each_word_in_query_count()
         for episode_number, inner_dict in each_query_count.items():
@@ -259,7 +269,27 @@ class SearchResultsView(ListView):
             exact_match[episode.episode_number] = count
         return exact_match
 
-    def get_each_word_in_query_count(self):
+    def get_each_word_in_query_count(self) -> Dict[int, Dict[str, int]]:
+        ''' Get a dictionary showing how many times given word in query
+        occures per episode
+
+        Returns
+        -------
+        Dict[int, Dict[str, int]]
+            a dict like that
+            e.g.
+
+            >>> query = 'covid vaccine usa'
+
+            >>> each_query_count = 
+            {
+                790: 
+                    {'covid': 10, 'vaccine': 5, 'usa': 19},
+                551:
+                    {'covid': 1, 'vaccine': 6, 'usa': 7}
+            }
+
+        '''
         count = 0
         each_query_count = {}
         for episode in self.episode_list:
