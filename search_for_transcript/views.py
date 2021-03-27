@@ -3,6 +3,7 @@ from typing import Any, Dict
 from django.utils.safestring import mark_safe
 from django.db.models.query import QuerySet
 from django.db.models import Q
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 import operator
 
 from .models import Transcript
@@ -16,7 +17,7 @@ class SearchResultsView(ListView):
     model = Transcript
     template_name = 'search_results.html'
     context_object_name = 'episode_list'
-    paginate_by = 3
+    # paginate_by = 6
 
     def get_queryset(self) -> QuerySet:
         ''' Get Transcript objects containing query in text filed
@@ -80,21 +81,28 @@ class SearchResultsView(ListView):
 
         '''
         context = super(SearchResultsView, self).get_context_data(**kwargs)
+
+        # print(context['object_list'])
+
         context['count'] = self.count_total()
         episode_list = context['episode_list']
         # transcripts_list = self.highlight()
         # each_query_count = self.get_exact_match().values()
         each_query_count = self.get_queries_sum().values()
+
+        paginator = Paginator(episode_list, 3)
+        page = self.request.GET.get('page')
+        ep_c = paginator.get_page(page)
+
         short_texts = self.get_short_text_highlighted()
 
         episodes_and_transcripts = self.sort_by_occurrence_descending(
             each_query_count,
-            episode_list,
+            ep_c,
             short_texts)
 
         context['ep_countq_trans'] = episodes_and_transcripts
         context['query'] = self.query
-        # self.get_each_word_in_query_count()
         return context
 
     def sort_by_occurrence_descending(
