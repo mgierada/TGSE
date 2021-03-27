@@ -350,10 +350,10 @@ class TranscriptView(ListView):
         self.query = self.kwargs['query']
         episode_number = self.kwargs['episode_number']
         context['episode_number'] = episode_number
-        element = Transcript.objects.filter(pk=episode_number)
+        self.element = Transcript.objects.filter(pk=episode_number)
 
         # element[0] because element is a list of one element
-        text = mark_safe(element[0].text)
+        text = (self.element[0].text)
         highlighted_text = self.get_highlighted_text(text)
         context['highlighted_text'] = highlighted_text
         context['query'] = self.query
@@ -364,28 +364,42 @@ class TranscriptView(ListView):
             text,
             **kwargs) -> str:
         ''' Highlight query in transcript text
-
         Returns
         -------
         highlighted_text : str
             Formated transcript with html tags that displays hightlights while
             rendering
-
         '''
         import re
-        for word in self.query.split(' '):
-            print(word)
-            # replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
-            #     word.upper())
+        splitted_list = self.query.split(' ')[1:]
+        print(splitted_list)
+        # splitted_list = ['COVID', 'usa']
+        index = 0
+        t = self.element[0].text
+        for word in splitted_list:
+            word = str(word)
             replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
-                word)
-            text = text.replace(
-                word, replacing_query)
+                str(word))
+            t = t.replace(
+                str(word), replacing_query)
+            # replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
+            #     splitted_list[index].upper())
             # insensitive_query = re.compile(
-            #     re.escape(str(word)), re.IGNORECASE)
-            # text = insensitive_query.sub(replacing_query, text)
-        insensitive_text = text
-        highlighted_text = mark_safe(insensitive_text)
+            #     re.escape(str(splitted_list[index])), re.IGNORECASE)
+            # insensitive_text = insensitive_query.sub(
+            #     replacing_query, text)
+            index += 1
+            short_text_highlighted = t
+        highlighted_text = mark_safe(short_text_highlighted)
+
+        # for word in self.query.split(' '):
+        #     replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
+        #         word.upper())
+        #     insensitive_query = re.compile(
+        #         re.escape(str(word)), re.IGNORECASE)
+        #     insensitive_text = insensitive_query.sub(replacing_query, text)
+        #     highlighted_text = mark_safe(insensitive_text)
+
         return highlighted_text
 
 
