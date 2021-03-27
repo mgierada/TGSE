@@ -220,7 +220,19 @@ class SearchResultsView(ListView):
 
         return response
 
-    def get_formatted_query(self):
+    def get_formatted_query(self) -> str:
+        ''' Split query to each word and add ""
+
+        Returns
+        -------
+        str
+            a formatted query with ""
+            e.g.
+            >>> self.query = 'covid vaccine usa'
+            >>> self.get_formatted_query()
+            >>> "covid" "vaccine" "usa"
+
+        '''
         splitted_query = self.query.split(' ')
         formatted_query_string = ''
         for q in splitted_query:
