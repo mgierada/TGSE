@@ -1,11 +1,12 @@
-import re
 from django.views.generic import TemplateView, ListView
 from typing import Any, Dict, List
 from django.utils.safestring import mark_safe
 from django.db.models.query import QuerySet
 from django.db.models import Q
 from django.core.paginator import Paginator
+import re
 import operator
+from .utils import forbiden_words
 
 from .models import Transcript
 
@@ -29,8 +30,9 @@ class SearchResultsView(ListView):
             transcript objects containing query in text filed
 
         '''
-        self.query = self.request.GET.get('q')
-        splitted = self.query.split(' ')
+        query = self.request.GET.get('q')
+        splitted = query.split(' ')
+        self.query = self.check_for_forbidden_words(splitted)
 
         q = [Q(text__icontains=splitted[i]) for i in range(len(splitted))]
 
@@ -70,6 +72,11 @@ class SearchResultsView(ListView):
                 c0, c1, c2, c3, c4, c5, c6)
 
         return self.episode_list
+
+    def check_for_forbidden_words(self, splitted_query):
+        splitted_query_cleaned = [
+            word for word in splitted_query if word not in forbiden_words]
+        return ' '.join(splitted_query_cleaned)
 
     def get_context_data(
             self,
