@@ -1,4 +1,4 @@
-from re import I
+import re
 from django.views.generic import TemplateView, ListView
 from typing import Any, Dict, List
 from django.utils.safestring import mark_safe
@@ -169,7 +169,8 @@ class SearchResultsView(ListView):
         for episode in self.episode_list:
             most_common_word = self.get_most_common_query_word(
                 episode.episode_number)
-            text = episode.text.lower()
+            # text = episode.text.lower()
+            text = episode.text
 
             index = text.find(most_common_word.lower())
             idx_query_word = index + len(most_common_word)
@@ -185,9 +186,18 @@ class SearchResultsView(ListView):
             for word in self.query.split(' '):
                 replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
                     word)
-                short_text = short_text.replace(
-                    word.lower(), replacing_query)
+                insensitive_query = re.compile(
+                    re.escape(str(word)), re.IGNORECASE)
+                insensitive_text = insensitive_query.sub(
+                    replacing_query, short_text)
+                short_text = insensitive_text
             short_text_highlighted = short_text
+            # text = insensitive_text
+            #     replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
+            #         word)
+            #     short_text = short_text.replace(
+            #         word.lower(), replacing_query)
+            # short_text_highlighted = short_text
             # the edge case where the query is at the beginning
             # of the transcript
             if first_char_idx != 0:
