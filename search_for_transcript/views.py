@@ -36,7 +36,7 @@ class SearchResultsView(ListView):
         if self.is_exact_match_requested():
             self.get_exact_match()
         else:
-            self.get_each_word_match()
+            self.get_partial_match()
 
     def is_exact_match_requested(self):
         if (
@@ -47,7 +47,13 @@ class SearchResultsView(ListView):
             return True
         return False
 
-    def get_each_word_match(self):
+    def get_exact_match(self):
+        self.query = self.unmodified_query[1:-1]
+        self.episode_list = Transcript.objects.filter(
+            text__icontains=self.query)
+        return self.episode_list
+
+    def get_partial_match(self):
         splitted_query = self.unmodified_query.split(' ')
         self.query = self.check_for_forbidden_words(splitted_query)
 
@@ -322,7 +328,7 @@ class SearchResultsView(ListView):
                 queries_sum[episode_number] = total_queries_count
         return queries_sum
 
-    def get_exact_match(self) -> Dict[str, int]:
+    def get_exact_match_dict(self) -> Dict[str, int]:
         '''Get dict with info about how any occurrences of a given query
         appears per episode
 
