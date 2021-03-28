@@ -122,7 +122,43 @@ class SearchResultsView(ListView):
             self,
             **kwargs: Any) -> Dict[str, Any]:
         context = super(SearchResultsView, self).get_context_data(**kwargs)
+        self.each_query_count_list = list(self.get_queries_sum().values())
         self.short_texts_list = self.get_short_text_highlighted()
+        sorted_q_e_st = self.sort_by_occurrence_descending()
+
+        # unzip sorted list
+        q_sorted, e_sorted, st_sorted = zip(
+            *sorted_q_e_st)
+
+        paginator_q = Paginator(q_sorted, self.paginate_idx)
+        page_q = self.request.GET.get('page')
+        page_obj_q = paginator_q.get_page(page_q)
+
+        paginator_e = Paginator(e_sorted, self.paginate_idx)
+        page_e = self.request.GET.get('page')
+        page_obj_e = paginator_e.get_page(page_e)
+
+        paginator_st = Paginator(st_sorted, self.paginate_idx)
+        page_st = self.request.GET.get('page')
+        page_obj_st = paginator_st.get_page(page_st)
+
+        # zip the final and sorted objects and add it to context
+        q_e_st_paginated = zip(
+            page_obj_q, page_obj_e, page_obj_st)
+        context['queries_episodes_short_texts'] = q_e_st_paginated
+
+        # update page_obj as it is manually edited
+        context['paginator'] = paginator_q
+        context['page_obj'] = page_obj_q
+        context['is_paginated'] = True
+
+        # add other usefull variables
+        context['query'] = self.query
+        context['initial_query'] = self.unmodified_query
+        context['count'] = self.count_total()
+
+        # print(self.get_exact_match())
+        return context
 
     def get_context_data_partial_match(
             self,
