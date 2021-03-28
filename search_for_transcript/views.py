@@ -30,8 +30,25 @@ class SearchResultsView(ListView):
             transcript objects containing query in text filed
 
         '''
-        self.initial_query = self.request.GET.get('q').lower()
-        splitted_query = self.initial_query.split(' ')
+        self.unmodified_query = self.request.GET.get('q').lower()
+
+        # check if exact match execution can be started
+        if self.is_exact_match_requested():
+            self.get_exact_match()
+        else:
+            self.get_each_word_match()
+
+    def is_exact_match_requested(self):
+        if (
+            self.unmodified_query[0] == "\""
+            and
+            self.unmodified_query[len(self.unmodified_query) - 1] == "\""
+        ):
+            return True
+        return False
+
+    def get_each_word_match(self):
+        splitted_query = self.unmodified_query.split(' ')
         self.query = self.check_for_forbidden_words(splitted_query)
 
         q = [Q(text__icontains=splitted_query[i])
@@ -127,8 +144,10 @@ class SearchResultsView(ListView):
 
         # add other usefull variables
         context['query'] = self.query
-        context['initial_query'] = self.initial_query
+        context['initial_query'] = self.unmodified_query
         context['count'] = self.count_total()
+
+        # print(self.get_exact_match())
         return context
 
     def sort_by_occurrence_descending(self) -> List[object]:
@@ -318,7 +337,7 @@ class SearchResultsView(ListView):
         count = 0
         exact_match = {}
         for episode in self.episode_list:
-            count = episode.text.lower().count(self.query.lower())
+            count = episode.text.count(self.query)
             exact_match[episode.episode_number] = count
         return exact_match
 
