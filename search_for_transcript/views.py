@@ -30,11 +30,12 @@ class SearchResultsView(ListView):
             transcript objects containing query in text filed
 
         '''
-        query = self.request.GET.get('q').lower()
-        splitted = query.split(' ')
-        self.query = self.check_for_forbidden_words(splitted)
+        self.initial_query = self.request.GET.get('q').lower()
+        splitted_query = self.initial_query.split(' ')
+        self.query = self.check_for_forbidden_words(splitted_query)
 
-        q = [Q(text__icontains=splitted[i]) for i in range(len(splitted))]
+        q = [Q(text__icontains=splitted_query[i])
+             for i in range(len(splitted_query))]
 
         # that if-else statement is a nasty part of the code #TODO refactor it
         if len(q) == 1:
@@ -126,6 +127,7 @@ class SearchResultsView(ListView):
 
         # add other usefull variables
         context['query'] = self.query
+        context['initial_query'] = self.initial_query
         context['count'] = self.count_total()
         return context
 
@@ -199,12 +201,7 @@ class SearchResultsView(ListView):
                     replacing_query, short_text)
                 short_text = insensitive_text
             short_text_highlighted = short_text
-            # text = insensitive_text
-            #     replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
-            #         word)
-            #     short_text = short_text.replace(
-            #         word.lower(), replacing_query)
-            # short_text_highlighted = short_text
+
             # the edge case where the query is at the beginning
             # of the transcript
             if first_char_idx != 0:

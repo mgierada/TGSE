@@ -19,7 +19,7 @@
     <div>
       <form method="GET" action="{% url 'search_results' %}">
           <div class="search_results">
-              <input type="text" class="searchTerm" placeholder="{{ query }}" name="q">
+              <input type="text" class="searchTerm" placeholder="{{ initial_query }}" name="q">
               <input type="submit" class="searchButton">
           </div>
       </form>
