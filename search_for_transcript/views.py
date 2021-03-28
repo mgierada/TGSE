@@ -22,12 +22,13 @@ class SearchResultsView(ListView):
     paginate_idx = 3
 
     def get_queryset(self) -> QuerySet:
-        ''' Get Transcript objects containing query in text filed
+        ''' Get Transcripts objects where query can by found in the
+        text field. Case insensitive seaerch
 
         Returns
         -------
         QuerySet
-            transcript objects containing query in text filed
+            transcript objects containing query in the text filed
 
         '''
         self.unmodified_query = self.request.GET.get('q').lower()
@@ -39,6 +40,17 @@ class SearchResultsView(ListView):
             self.get_partial_match()
 
     def is_exact_match_requested(self):
+        ''' Check if exact search is requested by placing query in
+        quotation marks
+
+        Returns
+        -------
+        True
+            if there are matching quotation marks around the query
+        False
+            otherwise
+
+        '''
         if (
             self.unmodified_query[0] == "\""
             and
@@ -47,15 +59,35 @@ class SearchResultsView(ListView):
             return True
         return False
 
-    def get_exact_match(self):
+    def get_exact_match(self) -> QuerySet:
+        ''' Get QuerySet with and exact match found
+
+        Returns
+        -------
+        QuerySet
+            all Transcripts objects for which there is an exact
+            match (query) in the text field
+
+        '''
         self.query = self.unmodified_query[1:-1]
         self.episode_list = Transcript.objects.filter(
             text__icontains=self.query)
         return self.episode_list
 
-    def get_partial_match(self):
+    def get_partial_match(self) -> QuerySet:
+        ''' Get a QuerySet with partial match found
+
+        Returns
+        -------
+        QuerySet
+            all Transcripts objects for which there is an partial match, i.e.
+            each query words apperad in the text field of a given episode but
+            not necessary, and usually not, close to each otehr
+
+        '''
         splitted_query = self.unmodified_query.split(' ')
-        self.query = self.check_for_forbidden_words(splitted_query)
+        self.query = SearchResultsView.check_for_forbidden_words(
+            splitted_query)
 
         q = [Q(text__icontains=splitted_query[i])
              for i in range(len(splitted_query))]
@@ -94,10 +126,26 @@ class SearchResultsView(ListView):
                 i for i in q]
             self.episode_list = Transcript.objects.filter(
                 c0, c1, c2, c3, c4, c5, c6)
-
         return self.episode_list
 
-    def check_for_forbidden_words(self, splitted_query):
+    @staticmethod
+    def check_for_forbidden_words(
+            splitted_query: List[str]) -> str:
+        ''' Check if there is a forbidden words in query. If so, remove it.
+        Some words like 'the', 'in', 'I' are not allowed to be in the query
+        as a search engine will struggle to organize relevant matches
+
+        Parameters
+        ----------
+        splitted_query : List[str]
+            a list with all words as put in query
+
+        Returns
+        -------
+        str
+            a query string free of forbidden words
+
+        '''
         splitted_query_cleaned = [
             word for word in splitted_query if word not in forbiden_words]
         return ' '.join(splitted_query_cleaned)
@@ -113,56 +161,6 @@ class SearchResultsView(ListView):
             updated context_data
 
         '''
-        if self.is_exact_match_requested():
-            return self.get_context_data_exact_match(**kwargs)
-        else:
-            return self.get_context_data_partial_match(**kwargs)
-
-    def get_context_data_exact_match(
-            self,
-            **kwargs: Any) -> Dict[str, Any]:
-        context = super(SearchResultsView, self).get_context_data(**kwargs)
-        self.each_query_count_list = list(self.get_queries_sum().values())
-        self.short_texts_list = self.get_short_text_highlighted()
-        sorted_q_e_st = self.sort_by_occurrence_descending()
-
-        # unzip sorted list
-        q_sorted, e_sorted, st_sorted = zip(
-            *sorted_q_e_st)
-
-        paginator_q = Paginator(q_sorted, self.paginate_idx)
-        page_q = self.request.GET.get('page')
-        page_obj_q = paginator_q.get_page(page_q)
-
-        paginator_e = Paginator(e_sorted, self.paginate_idx)
-        page_e = self.request.GET.get('page')
-        page_obj_e = paginator_e.get_page(page_e)
-
-        paginator_st = Paginator(st_sorted, self.paginate_idx)
-        page_st = self.request.GET.get('page')
-        page_obj_st = paginator_st.get_page(page_st)
-
-        # zip the final and sorted objects and add it to context
-        q_e_st_paginated = zip(
-            page_obj_q, page_obj_e, page_obj_st)
-        context['queries_episodes_short_texts'] = q_e_st_paginated
-
-        # update page_obj as it is manually edited
-        context['paginator'] = paginator_q
-        context['page_obj'] = page_obj_q
-        context['is_paginated'] = True
-
-        # add other usefull variables
-        context['query'] = self.query
-        context['initial_query'] = self.unmodified_query
-        context['count'] = self.count_total()
-
-        # print(self.get_exact_match())
-        return context
-
-    def get_context_data_partial_match(
-            self,
-            **kwargs: Any) -> Dict[str, Any]:
         context = super(SearchResultsView, self).get_context_data(**kwargs)
         self.each_query_count_list = list(self.get_queries_sum().values())
         self.short_texts_list = self.get_short_text_highlighted()
@@ -496,7 +494,6 @@ class TranscriptView(ListView):
 class TranscriptPlainView(ListView):
     model = Transcript
     template_name = 'transcript_plain.html'
-    # context_object_name = 'episode'
 
     def get_context_data(self, **kwargs):
         context = super(TranscriptPlainView, self).get_context_data(**kwargs)
@@ -505,7 +502,6 @@ class TranscriptPlainView(ListView):
         context['episode_number'] = episode_number
         element = Transcript.objects.filter(pk=episode_number)
         context['episode'] = element[0]
-        # context['text'] = text
         # element[0] because element is a list of one element
         context['query'] = self.query
         return context
