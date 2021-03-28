@@ -222,28 +222,44 @@ class SearchResultsView(ListView):
             sorted(zipped, key=operator.itemgetter(0)))
         return sorted_q_e_st
 
-    def get_index_dict_first_occurence(self):
-        index_dict = {}
-        for episode in self.episode_list:
-            inner_dict = {}
-            for word in self.query.split(' '):
-                text = episode.text.lower()
-                index = text.find(word.lower())
-                idx_query_word = index + len(word)
-                inner_dict[word] = idx_query_word
-            index_dict[episode.episode_number] = inner_dict
-        return index_dict
+    def get_most_common_query_word(
+            self,
+            episode_number: int) -> str:
+        ''' Get the a word from query which is the most common for a given
+        episode_number
 
-    def get_lowest_idx(self):
-        index_dict = self.get_index_dict_first_occurence()
-        pass
+        Parameters
+        ----------
+        episode_number : int
+            number of the episode
 
-    def get_most_common_query_word(self, episode_number):
+        Returns
+        -------
+        str
+            the most common word in query for a given episode_number
+        '''
         for word, occurance in self.each_query_count[episode_number].items():
             if occurance == max(self.each_query_count[episode_number].values()):
                 return word
 
-    def get_short_text_highlighted(self, around_idx=200):
+    def get_short_text_highlighted(
+            self,
+            around_idx=200) -> List[str]:
+        ''' Get short_text showing matched and highlighted query with some
+        text before and after the query occurence for context. 
+
+        Parameters
+        ----------
+        around_idx : int, optional
+            how many characters before and after the first character of
+            the query include in short_text by default 200
+
+        Returns
+        -------
+        List[str]
+            a list with short_text with some html tags for highlighting
+
+        '''
         short_texts = []
         self.each_query_count = self.get_each_word_in_query_count()
 
@@ -256,18 +272,20 @@ class SearchResultsView(ListView):
             # text = episode.text.lower()
             text = episode.text
 
-            index, _ = re.search(most_common_word, text, re.IGNORECASE).span()
+            index, _ = re.search(
+                most_common_word, text, re.IGNORECASE).span()
             idx_query_word = index + len(most_common_word)
             start_idx = index - around_idx
             end_idx = around_idx + idx_query_word
 
-            first_char_idx = self.prepend_beginning_of_string(text, start_idx)
-            last_char_idx = self.append_end_of_string(text, end_idx)
+            first_char_idx = SearchResultsView.prepend_beginning_of_string(
+                text, start_idx)
+            last_char_idx = SearchResultsView.append_end_of_string(
+                text, end_idx)
 
             short_text = text[first_char_idx:last_char_idx]
 
             # highlight all query words
-
             if self.is_exact_match_requested():
                 replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
                     self.query)
@@ -300,7 +318,26 @@ class SearchResultsView(ListView):
             short_texts.append(short_text_highlighted)
         return short_texts
 
-    def append_end_of_string(self, text, end_idx):
+    @staticmethod
+    def append_end_of_string(
+            text: str,
+            end_idx: int) -> int:
+        ''' Append a end of a text string to prevent cutting a word in part.
+        The method will increase an end_index until the word ends
+
+        Parameters
+        ----------
+        text : str
+            text to analze
+        end_idx : int
+            an index which should be increase until word ends
+
+        Returns
+        -------
+        int
+            a better index which will give text that ends with the full word
+
+        '''
         better_idx = 0
 
         # the edge case where the query is at the end of the transcript
@@ -311,7 +348,26 @@ class SearchResultsView(ListView):
             better_idx += 1
         return better_idx + end_idx
 
-    def prepend_beginning_of_string(self, text, start_idx):
+    @staticmethod
+    def prepend_beginning_of_string(
+            text: str,
+            start_idx: int) -> int:
+        ''' Prepend a beginning of a text string to prevent cutting a word
+        in part. The method will decrease an start_index until the word ends
+
+        Parameters
+        ----------
+        text : str
+            text to analze
+        start_idx : int
+            an index which should be decrease until word ends
+
+        Returns
+        -------
+        int
+            a better index which will give text that ends with the full word
+
+        '''
         better_idx = 0
         while text[start_idx-better_idx] != ' ':
             better_idx -= 1
