@@ -113,9 +113,22 @@ class SearchResultsView(ListView):
             updated context_data
 
         '''
-        context = super(SearchResultsView, self).get_context_data(**kwargs)
+        if self.is_exact_match_requested():
+            return self.get_context_data_exact_match(**kwargs)
+        else:
+            return self.get_context_data_partial_match(**kwargs)
 
-        # each_query_count = self.get_exact_match().values()
+    def get_context_data_exact_match(
+            self,
+            **kwargs: Any) -> Dict[str, Any]:
+        context = super(SearchResultsView, self).get_context_data(**kwargs)
+        self.short_texts_list = self.get_short_text_highlighted()
+        print(self.short_texts_list)
+
+    def get_context_data_partial_match(
+            self,
+            **kwargs: Any) -> Dict[str, Any]:
+        context = super(SearchResultsView, self).get_context_data(**kwargs)
         self.each_query_count_list = list(self.get_queries_sum().values())
         self.short_texts_list = self.get_short_text_highlighted()
 
@@ -200,6 +213,8 @@ class SearchResultsView(ListView):
     def get_short_text_highlighted(self, around_idx=200):
         short_texts = []
         self.each_query_count = self.get_each_word_in_query_count()
+        if self.is_exact_match_requested():
+
         for episode in self.episode_list:
             most_common_word = self.get_most_common_query_word(
                 episode.episode_number)
