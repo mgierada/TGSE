@@ -35,5 +35,8 @@ forbiden_words = ['about',
                   'an',
                   'the',
                   'is',
-                  'this'
+                  'this',
+                  'i',
+                  'that',
+                  'our',
                   ]
