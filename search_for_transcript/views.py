@@ -123,7 +123,6 @@ class SearchResultsView(ListView):
             **kwargs: Any) -> Dict[str, Any]:
         context = super(SearchResultsView, self).get_context_data(**kwargs)
         self.short_texts_list = self.get_short_text_highlighted()
-        print(self.short_texts_list)
 
     def get_context_data_partial_match(
             self,
@@ -213,11 +212,13 @@ class SearchResultsView(ListView):
     def get_short_text_highlighted(self, around_idx=200):
         short_texts = []
         self.each_query_count = self.get_each_word_in_query_count()
-        if self.is_exact_match_requested():
 
         for episode in self.episode_list:
-            most_common_word = self.get_most_common_query_word(
-                episode.episode_number)
+            if self.is_exact_match_requested():
+                most_common_word = self.query
+            else:
+                most_common_word = self.get_most_common_query_word(
+                    episode.episode_number)
             # text = episode.text.lower()
             text = episode.text
 
@@ -232,15 +233,26 @@ class SearchResultsView(ListView):
             short_text = text[first_char_idx:last_char_idx]
 
             # highlight all query words
-            for word in self.query.split(' '):
+
+            if self.is_exact_match_requested():
                 replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
-                    word)
+                    self.query)
                 insensitive_query = re.compile(
-                    re.escape(str(word)), re.IGNORECASE)
+                    re.escape(str(self.query)), re.IGNORECASE)
                 insensitive_text = insensitive_query.sub(
                     replacing_query, short_text)
                 short_text = insensitive_text
-            short_text_highlighted = short_text
+                short_text_highlighted = short_text
+            else:
+                for word in self.query.split(' '):
+                    replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
+                        word)
+                    insensitive_query = re.compile(
+                        re.escape(str(word)), re.IGNORECASE)
+                    insensitive_text = insensitive_query.sub(
+                        replacing_query, short_text)
+                    short_text = insensitive_text
+                short_text_highlighted = short_text
 
             # the edge case where the query is at the beginning
             # of the transcript
