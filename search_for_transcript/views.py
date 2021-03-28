@@ -340,7 +340,6 @@ class SearchResultsView(ListView):
         queries_sum = self.get_queries_sum()
         total_queries = sum(queries_sum.values())
         ep_form = 'episode'
-        self.get_formatted_query()
         if total_episodes > 1:
             ep_form = 'episodes'
         formatted_query = self.get_formatted_query()
@@ -362,11 +361,14 @@ class SearchResultsView(ListView):
             >>> "covid" "vaccine" "usa"
 
         '''
-        splitted_query = self.query.split(' ')
-        formatted_query_string = ''
-        for q in splitted_query:
-            formatted = '"{}" '.format(q)
-            formatted_query_string += formatted
+        if self.is_exact_match_requested():
+            formatted_query_string = '"{}" '.format(self.query)
+        else:
+            splitted_query = self.query.split(' ')
+            formatted_query_string = ''
+            for q in splitted_query:
+                formatted = '"{}" '.format(q)
+                formatted_query_string += formatted
         return formatted_query_string
 
     def get_queries_sum(self) -> Dict[int, int]:
