@@ -30,7 +30,7 @@ class SearchResultsView(ListView):
             transcript objects containing query in text filed
 
         '''
-        query = self.request.GET.get('q')
+        query = self.request.GET.get('q').lower()
         splitted = query.split(' ')
         self.query = self.check_for_forbidden_words(splitted)
 
@@ -179,7 +179,7 @@ class SearchResultsView(ListView):
             # text = episode.text.lower()
             text = episode.text
 
-            index = text.find(most_common_word.lower())
+            index, _ = re.search(most_common_word, text, re.IGNORECASE).span()
             idx_query_word = index + len(most_common_word)
             start_idx = index - around_idx
             end_idx = around_idx + idx_query_word
@@ -212,7 +212,7 @@ class SearchResultsView(ListView):
 
             # the edge case where the query is at the end of the transcript
             if last_char_idx != len(text):
-                short_text_highlighted += '(...)'
+                short_text_highlighted += ' (...)'
             short_text_highlighted = mark_safe(short_text_highlighted)
             short_texts.append(short_text_highlighted)
         return short_texts
