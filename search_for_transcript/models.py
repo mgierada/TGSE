@@ -113,6 +113,6 @@ def clear_db():
     entries.delete()
 
 
-# populate_db()
+populate_db()
 # add_links_and_episodes_number()
 # populate_db()
