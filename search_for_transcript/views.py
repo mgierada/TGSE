@@ -435,9 +435,13 @@ class SearchResultsView(ListView):
         each_query_count = {}
         for episode in self.episode_list:
             inner_dict = {}
-            for word in self.query.split(' '):
-                count = episode.text.lower().count(word.lower())
-                inner_dict[word] = count
+            if self.is_exact_match_requested():
+                count = episode.text.lower().count(self.query)
+                inner_dict[self.query] = count
+            else:
+                for word in self.query.split(' '):
+                    count = episode.text.lower().count(word.lower())
+                    inner_dict[word] = count
             each_query_count[episode.episode_number] = inner_dict
         return each_query_count
 
