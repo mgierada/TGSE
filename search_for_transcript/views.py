@@ -31,8 +31,8 @@ class SearchResultsView(ListView):
             transcript objects containing query in the text filed
 
         '''
-        self.unmodified_query = self.request.GET.get('q').lower()
-        if not self.unmodified_query:
+        self.initial_query = self.request.GET.get('q').lower()
+        if not self.initial_query:
             self.episode_list = None
             return self.episode_list
             # print('p')
@@ -56,9 +56,9 @@ class SearchResultsView(ListView):
 
         '''
         if (
-            self.unmodified_query[0] == "\""
+            self.initial_query[0] == "\""
             and
-            self.unmodified_query[len(self.unmodified_query) - 1] == "\""
+            self.initial_query[len(self.initial_query) - 1] == "\""
         ):
             return True
         return False
@@ -73,7 +73,7 @@ class SearchResultsView(ListView):
             match (query) in the text field
 
         '''
-        self.query = self.unmodified_query[1:-1]
+        self.query = self.initial_query[1:-1]
         self.episode_list = Transcript.objects.filter(
             text__icontains=self.query)
         return self.episode_list
@@ -89,7 +89,7 @@ class SearchResultsView(ListView):
             not necessary, and usually not, close to each otehr
 
         '''
-        splitted_query = self.unmodified_query.split(' ')
+        splitted_query = self.initial_query.split(' ')
         self.query = SearchResultsView.check_for_forbidden_words(
             splitted_query)
 
@@ -167,8 +167,8 @@ class SearchResultsView(ListView):
         '''
         context = super(SearchResultsView, self).get_context_data(**kwargs)
 
-        # update context only if self.unmodified_query is not empty
-        if self.unmodified_query and self.episode_list:
+        # update context only if self.initial_query is not empty
+        if self.initial_query and self.episode_list:
             self.each_query_count_list = list(self.get_queries_sum().values())
             self.short_texts_list = self.get_short_text_highlighted()
 
@@ -203,12 +203,15 @@ class SearchResultsView(ListView):
 
             # add other usefull variables
             context['query'] = self.query
-            context['initial_query'] = self.unmodified_query
+            context['initial_query'] = self.initial_query
             context['count'] = self.count_total()
+            context['highlighted_txt_trigger'] = self.query
+            if self.is_exact_match_requested():
+                context['highlighted_txt_trigger'] = self.initial_query
 
             # print(self.get_exact_match())
             return context
-        elif not self.unmodified_query:
+        elif not self.initial_query:
             response = 'No results found. Please search again using different query'
             context['response'] = response
             return context
@@ -218,7 +221,7 @@ class SearchResultsView(ListView):
                         Please search again using
                         different query.'''.format(
                 self.get_formatted_query())
-            context['initial_query'] = self.unmodified_query
+            context['initial_query'] = self.initial_query
             context['response'] = response
             return context
 
@@ -540,29 +543,71 @@ class TranscriptView(ListView):
         context['query'] = self.query
         return context
 
+    def is_exact_match_requested(self):
+        ''' Check if exact search is requested by placing query in
+        quotation marks
+
+        Returns
+        -------
+        True
+            if there are matching quotation marks around the query
+        False
+            otherwise
+
+        '''
+        if (
+            self.query[0] == "\""
+            and
+            self.query[len(self.query) - 1] == "\""
+        ):
+            return True
+        return False
+
     def get_highlighted_text(
             self,
             text,
             **kwargs) -> str:
         ''' Highlight query in transcript text
+
         Returns
         -------
         highlighted_text : str
             Formated transcript with html tags that displays hightlights while
             rendering
-        '''
-        import re
-        splitted_list = self.query.split(' ')[1:]
 
+        '''
+
+        if self.is_exact_match_requested():
+            return self.get_highlighted_text_exact_match(text)
+        else:
+            return self.get_highlighted_text_partial_match(text)
+
+    def get_highlighted_text_exact_match(
+            self,
+            text):
+        self.query = self.query[1:len(self.query) - 1]
+        replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
+            self.query.upper())
+        insensitive_query = re.compile(
+            re.escape(str(self.query)), re.IGNORECASE)
+        insensitive_text = insensitive_query.sub(replacing_query, text)
+        text = insensitive_text
+        highlighted_text = mark_safe(insensitive_text)
+        return highlighted_text
+
+    def get_highlighted_text_partial_match(
+            self,
+            text):
+        splitted_list = self.query.split(' ')
         for word in splitted_list:
+            print(word)
             replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
                 word.upper())
             insensitive_query = re.compile(
                 re.escape(str(word)), re.IGNORECASE)
             insensitive_text = insensitive_query.sub(replacing_query, text)
             text = insensitive_text
-        highlighted_text = mark_safe(insensitive_text)
-
+            highlighted_text = mark_safe(insensitive_text)
         return highlighted_text
 
 
