@@ -166,8 +166,9 @@ class SearchResultsView(ListView):
 
         '''
         context = super(SearchResultsView, self).get_context_data(**kwargs)
+
         # update context only if self.unmodified_query is not empty
-        if self.unmodified_query:
+        if self.unmodified_query and self.episode_list:
             self.each_query_count_list = list(self.get_queries_sum().values())
             self.short_texts_list = self.get_short_text_highlighted()
 
