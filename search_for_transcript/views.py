@@ -600,7 +600,6 @@ class TranscriptView(ListView):
             text):
         splitted_list = self.query.split(' ')
         for word in splitted_list:
-            print(word)
             replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
                 word.upper())
             insensitive_query = re.compile(
