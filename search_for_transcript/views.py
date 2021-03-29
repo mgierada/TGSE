@@ -208,8 +208,17 @@ class SearchResultsView(ListView):
 
             # print(self.get_exact_match())
             return context
+        elif not self.unmodified_query:
+            response = 'No results found. Please search again using different query'
+            context['response'] = response
+            return context
         else:
-            response = 'No results found. Please search again using different query.'
+            response = '''
+                        No results found for {}. 
+                        Please search again using
+                        different query.'''.format(
+                self.get_formatted_query())
+            context['initial_query'] = self.unmodified_query
             context['response'] = response
             return context
 
