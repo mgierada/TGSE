@@ -1,0 +1,1 @@
+web: gunicorn sgu_search.wsgi
