@@ -29,6 +29,7 @@
     </div>
     <br><br>
     <div class='show_total_occurances'>
+      {{ response }}
       {{ count }}
     </div>
   </div>
@@ -88,12 +89,12 @@
               Previous
             </button>
         {% endif %}
-  
+        
+        {% if page_obj.has_next %}
         <span class="current">
             Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
         </span>
-  
-        {% if page_obj.has_next %}
+        
             <button style="font-size:15px" onClick="location='?{% url_replace request 'page' page_obj.next_page_number %}'">
               Next
               <i class="fa fa-arrow-circle-right"></i>

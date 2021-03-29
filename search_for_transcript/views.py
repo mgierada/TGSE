@@ -32,6 +32,10 @@ class SearchResultsView(ListView):
 
         '''
         self.unmodified_query = self.request.GET.get('q').lower()
+        if not self.unmodified_query:
+            self.episode_list = None
+            return self.episode_list
+            # print('p')
 
         # check if exact match execution can be started
         if self.is_exact_match_requested():
@@ -162,45 +166,51 @@ class SearchResultsView(ListView):
 
         '''
         context = super(SearchResultsView, self).get_context_data(**kwargs)
-        self.each_query_count_list = list(self.get_queries_sum().values())
-        self.short_texts_list = self.get_short_text_highlighted()
+        # update context only if self.unmodified_query is not empty
+        if self.unmodified_query:
+            self.each_query_count_list = list(self.get_queries_sum().values())
+            self.short_texts_list = self.get_short_text_highlighted()
 
-        # sort queries, episodes_list and transcritps by query occurrence
-        sorted_q_e_st = self.sort_by_occurrence_descending()
+            # sort queries, episodes_list and transcritps by query occurrence
+            sorted_q_e_st = self.sort_by_occurrence_descending()
 
-        # unzip sorted list
-        q_sorted, e_sorted, st_sorted = zip(
-            *sorted_q_e_st)
+            # unzip sorted list
+            q_sorted, e_sorted, st_sorted = zip(
+                *sorted_q_e_st)
 
-        paginator_q = Paginator(q_sorted, self.paginate_idx)
-        page_q = self.request.GET.get('page')
-        page_obj_q = paginator_q.get_page(page_q)
+            paginator_q = Paginator(q_sorted, self.paginate_idx)
+            page_q = self.request.GET.get('page')
+            page_obj_q = paginator_q.get_page(page_q)
 
-        paginator_e = Paginator(e_sorted, self.paginate_idx)
-        page_e = self.request.GET.get('page')
-        page_obj_e = paginator_e.get_page(page_e)
+            paginator_e = Paginator(e_sorted, self.paginate_idx)
+            page_e = self.request.GET.get('page')
+            page_obj_e = paginator_e.get_page(page_e)
 
-        paginator_st = Paginator(st_sorted, self.paginate_idx)
-        page_st = self.request.GET.get('page')
-        page_obj_st = paginator_st.get_page(page_st)
+            paginator_st = Paginator(st_sorted, self.paginate_idx)
+            page_st = self.request.GET.get('page')
+            page_obj_st = paginator_st.get_page(page_st)
 
-        # zip the final and sorted objects and add it to context
-        q_e_st_paginated = zip(
-            page_obj_q, page_obj_e, page_obj_st)
-        context['queries_episodes_short_texts'] = q_e_st_paginated
+            # zip the final and sorted objects and add it to context
+            q_e_st_paginated = zip(
+                page_obj_q, page_obj_e, page_obj_st)
+            context['queries_episodes_short_texts'] = q_e_st_paginated
 
-        # update page_obj as it is manually edited
-        context['paginator'] = paginator_q
-        context['page_obj'] = page_obj_q
-        context['is_paginated'] = True
+            # update page_obj as it is manually edited
+            context['paginator'] = paginator_q
+            context['page_obj'] = page_obj_q
+            context['is_paginated'] = True
 
-        # add other usefull variables
-        context['query'] = self.query
-        context['initial_query'] = self.unmodified_query
-        context['count'] = self.count_total()
+            # add other usefull variables
+            context['query'] = self.query
+            context['initial_query'] = self.unmodified_query
+            context['count'] = self.count_total()
 
-        # print(self.get_exact_match())
-        return context
+            # print(self.get_exact_match())
+            return context
+        else:
+            response = 'No results found. Please search again using different query.'
+            context['response'] = response
+            return context
 
     def sort_by_occurrence_descending(self) -> List[object]:
         ''' Sort queries count, episodes and short text together by decending
@@ -269,7 +279,6 @@ class SearchResultsView(ListView):
             else:
                 most_common_word = self.get_most_common_query_word(
                     episode.episode_number)
-            # text = episode.text.lower()
             text = episode.text
 
             index, _ = re.search(
