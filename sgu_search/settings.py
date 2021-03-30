@@ -81,14 +81,15 @@ WSGI_APPLICATION = 'sgu_search.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# Heroku DB
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'sgu_db',
-        'USER': 'sgu_db_user',
-        'PASSWORD': 'dzin111majonez',
-        'HOST': 'localhost',
-        'PORT': '',
+        'NAME': 'd44vc5lca707ko',
+        'USER': 'vglbnyxiqotssy',
+        'PASSWORD': '6c2ed58dfbfc48dfcb0005ebb633c2f89bb5b625fecf2b7baa78465cdfcb8762',
+        'HOST': 'ec2-18-206-20-102.compute-1.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
