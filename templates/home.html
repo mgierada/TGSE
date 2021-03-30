@@ -26,7 +26,8 @@
         </div>
         <div class="wrap">
             <form class="SearchBar" method="GET" action="{% url 'search_results' %}">
-                <div class="search">
+                <div class="search tooltip">
+                    <span class="tooltiptext">use quotation marks for an exact search e.g. 'covid vaccine'</span>
                     <input type="text" class="searchTerm" placeholder="What are you looking for?" name="q">
                     <input type="submit" class="searchButton">
                 </div>
