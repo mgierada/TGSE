@@ -1,6 +1,6 @@
-![GitHub repo size](https://img.shields.io/github/repo-size/mgierada/sgu_transcript_generator)
 ![Python package](https://github.com/mgierada/sgu_transcript_generator/actions/workflows/python-package.yml/badge.svg)
 ![GitHub last commit](https://img.shields.io/github/last-commit/mgierada/sgu_transcript_generator?label=last%20modified)
+![GitHub repo size](https://img.shields.io/github/repo-size/mgierada/sgu_transcript_generator)
 ![GitHub](https://img.shields.io/badge/License-GPLv3-orange)
 ![GitHub top language](https://img.shields.io/github/languages/top/mgierada/sgu_transcript_generator?color=brightgreen)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/mgierada/sgu_transcript_generator.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/mgierada/sgu_transcript_generator/context:python)
