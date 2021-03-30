@@ -35,7 +35,6 @@ class SearchResultsView(ListView):
         if not self.initial_query:
             self.episode_list = None
             return self.episode_list
-            # print('p')
 
         # check if exact match execution can be started
         if self.is_exact_match_requested():
@@ -55,10 +54,11 @@ class SearchResultsView(ListView):
             otherwise
 
         '''
+        quotation_marks = ['\'', '"', '“', '”', '‘', '’']
         if (
-            self.initial_query[0] == "\""
+            self.initial_query[0] in quotation_marks
             and
-            self.initial_query[len(self.initial_query) - 1] == "\""
+            self.initial_query[len(self.initial_query) - 1] in quotation_marks
         ):
             return True
         return False
