@@ -208,7 +208,9 @@ class SearchResultsView(ListView):
             context['count'] = self.count_total()
             context['highlighted_txt_trigger'] = self.query
             if self.is_exact_match_requested():
-                context['highlighted_txt_trigger'] = self.initial_query
+                # context['highlighted_txt_trigger'] = self.initial_query
+                context['highlighted_txt_trigger'] = '"{}"'.format(
+                    self.query[:len(self.initial_query) - 1])
 
             # print(self.get_exact_match())
             return context
@@ -556,10 +558,12 @@ class TranscriptView(ListView):
             otherwise
 
         '''
+        quotation_marks = ['\'', '"', '“', '”',
+                           '‘', '’', '”', '“', '\u201e', '\u201c']
         if (
-            self.query[0] == "\""
+            self.query[0] in quotation_marks
             and
-            self.query[len(self.query) - 1] == "\""
+            self.query[len(self.query) - 1] in quotation_marks
         ):
             return True
         return False
