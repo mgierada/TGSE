@@ -54,7 +54,7 @@ class SearchResultsView(ListView):
             otherwise
 
         '''
-        quotation_marks = ['\'', '"', '“', '”', '‘', '’']
+        quotation_marks = ['\'', '"', '“', '”', '‘', '’', '”', '“']
         if (
             self.initial_query[0] in quotation_marks
             and
