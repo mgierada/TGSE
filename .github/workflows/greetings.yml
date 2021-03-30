@@ -1,0 +1,13 @@
+name: Greetings
+
+on: [pull_request, issues]
+
+jobs:
+  greeting:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/first-interaction@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        issue-message: 'Hello! Feel free to reach out to me at @mgierada or maciek.gierada@gmail.com'
+        pr-message: 'Hello! Feel free to reach out to me at @mgierada or maciek.gierada@gmail.com'
