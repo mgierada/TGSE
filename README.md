@@ -1,8 +1,5 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/mgierada/sgu_transcript_generator)
-[![Python package](https://github.com/mgierada/sgu_transcript_generator/actions/workflows/python-package.yml/badge.svg)](https://github.com/mgierada/sgu_transcipt_generator/actions/workflows/python-package.yml
-
-![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/mgierada/sgu_transcript_generator
-?label=version)
+![Python package](https://github.com/mgierada/sgu_transcript_generator/actions/workflows/python-package.yml/badge.svg)
 ![GitHub last commit](https://img.shields.io/github/last-commit/mgierada/sgu_transcript_generator?label=last%20modified)
 ![GitHub](https://img.shields.io/badge/License-GPLv3-orange)
 ![GitHub top language](https://img.shields.io/github/languages/top/mgierada/sgu_transcript_generator?color=brightgreen)
