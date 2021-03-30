@@ -7,7 +7,7 @@
 ![GitHub](https://img.shields.io/badge/License-GPLv3-orange)
 ![GitHub top language](https://img.shields.io/github/languages/top/mgierada/sgu_transcript_generator?color=brightgreen)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/mgierada/sgu_transcript_generator.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/mgierada/sgu_transcript_generator/context:python)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/zadorlab/pynta.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/mgierada/sgu_transcript_generator/alerts/)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/mgierada/sgu_transcript_generator.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/mgierada/sgu_transcript_generator/alerts/)
 
 # SGU Transcripts & Search Engine (**SGU-TSE**)
 
