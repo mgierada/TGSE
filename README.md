@@ -28,12 +28,25 @@ Consider becoming a patreon by clicking https://www.patreon.com/maciejgierada
 
 Contributions are highly welcome! There is still a lot of work to be done!
 
+# Wish List
+
+- [ ] better design
+- [ ] set up an event listiner to check for new episodes, get detials, submit for transcription, get transcript and populate DB in automated fashion
+- [ ] use timestaps to navigate to the exact moment in the audio file matching the query
+- [ ] better transcripts quality
+- [ ] improved search-engine by implementing a method to search for an almost exact match
+- [ ] refactoring
+- [ ] documentation
+
 # Tech Stack
 
 - Python
 - HTML/CSS
 - JavaScript
 - Django
+- PostgreSQL
 - Selenium
 - Assemblyai
 - Haystack
+- Heroku
+- CI/CD pipelines
