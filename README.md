@@ -6,7 +6,17 @@ A Django based search engine and transcripts generator for the Skeptics Guide to
 
 # Functionality
 
-![Functionality](animation.gif)
+## Submit for transcription
+
+![SubmitTranscripts](./media/submit_eps.gif)
+
+## Get transcripts
+
+![GetTranscripts](./media/download_eps.gif)
+
+## Search
+
+![Functionality](./media/functionality.gif)
 
 <!-- ffmpeg -i screen_rec.mov -s 800x600 -pix_fmt rgb24 -r 10 -f gif - | gifsicle --optimize=3 --delay=1 > out.gif -->
 
