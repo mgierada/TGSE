@@ -7,6 +7,8 @@ source
 *.pyc
 __pycache__
 db.sqlite3
+responses
+transcripts
 
 # Backup files # 
 *.bak 
