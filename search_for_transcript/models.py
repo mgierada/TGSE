@@ -3,17 +3,6 @@ from django.db.models.fields import CharField, IntegerField
 from django.db.utils import IntegrityError
 
 
-class City(models.Model):
-    name = models.CharField(max_length=250)
-    state = models.CharField(max_length=250)
-
-    class Meta:
-        verbose_name_plural = 'cities'
-
-    def __str__(self):
-        return self.name
-
-
 class Transcript(models.Model):
     episode_number = IntegerField(primary_key=True)
     date_published = CharField(max_length=10)
