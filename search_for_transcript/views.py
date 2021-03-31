@@ -637,7 +637,7 @@ class TranscriptPlainView(ListView):
         return context
 
 
-class APIViewList(TemplateView):
+class APIGetAllEpisodes(TemplateView):
     model = Transcript
 
     def get(self, request):
@@ -648,14 +648,12 @@ class APIViewList(TemplateView):
                             json_dumps_params={'indent': 4})
 
 
-class APIViewListEpisode(TemplateView):
+class APIGetEpisode(TemplateView):
     model = Transcript
 
     def get(self, request, episode_number):
         episode = Transcript.objects.get(pk=episode_number)
-        print(episode)
         serializer = TranscriptSerializers(episode)
-        print(type(JsonResponse(serializer.data, safe=False)))
         return JsonResponse(serializer.data,
                             safe=False,
                             json_dumps_params={'indent': 4})

@@ -1,11 +1,11 @@
 from django.urls import path
 
-from .views import (APIViewListEpisode, HomePageView,
+from .views import (HomePageView,
                     SearchResultsView,
                     TranscriptView,
                     TranscriptPlainView,
-                    APIViewList,
-                    APIViewListEpisode)
+                    APIGetAllEpisodes,
+                    APIGetEpisode)
 
 urlpatterns = [
     path('search/', SearchResultsView.as_view(), name='search_results'),
@@ -15,7 +15,7 @@ urlpatterns = [
          TranscriptView.as_view(), name='transcript'),
     path('search/transcript_plain/<int:episode_number>/<str:query>',
          TranscriptPlainView.as_view(), name='transcript_plain'),
-    path('api_list/', APIViewList.as_view(), name='api_list'),
-    path('api_list/<int:episode_number>/',
-         APIViewListEpisode.as_view(), name='api_list_episode')
+    path('episodes/', APIGetAllEpisodes.as_view(), name='api_list'),
+    path('episodes/<int:episode_number>/',
+         APIGetEpisode.as_view(), name='api_list_episode')
 ]
