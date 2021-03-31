@@ -7,15 +7,13 @@ from django.core.paginator import Paginator
 import re
 import operator
 
-from rest_framework import serializers
-import json
+# from rest_framework import serializers
 from .utils import forbiden_words
 
 from .models import Transcript
 
 from .serializers import TranscriptSerializers
-from rest_framework.parsers import JSONParser
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 
 
 class HomePageView(TemplateView):
