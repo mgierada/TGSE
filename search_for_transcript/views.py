@@ -6,9 +6,16 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 import re
 import operator
+
+from rest_framework import serializers
+import json
 from .utils import forbiden_words
 
 from .models import Transcript
+
+from .serializers import TranscriptSerializers
+from rest_framework.parsers import JSONParser
+from django.http import HttpResponse, JsonResponse
 
 
 class HomePageView(TemplateView):
@@ -628,3 +635,27 @@ class TranscriptPlainView(ListView):
         # element[0] because element is a list of one element
         context['query'] = self.query
         return context
+
+
+class APIViewList(TemplateView):
+    model = Transcript
+
+    def get(self, request):
+        episodes = Transcript.objects.all()
+        serializer = TranscriptSerializers(episodes, many=True)
+        return JsonResponse(serializer.data,
+                            safe=False,
+                            json_dumps_params={'indent': 4})
+
+
+class APIViewListEpisode(TemplateView):
+    model = Transcript
+
+    def get(self, request, episode_number):
+        episode = Transcript.objects.get(pk=episode_number)
+        print(episode)
+        serializer = TranscriptSerializers(episode)
+        print(type(JsonResponse(serializer.data, safe=False)))
+        return JsonResponse(serializer.data,
+                            safe=False,
+                            json_dumps_params={'indent': 4})
