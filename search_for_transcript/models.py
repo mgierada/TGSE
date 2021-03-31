@@ -79,7 +79,6 @@ def add_links_and_episodes_number():
         except IntegrityError:
             print('Skipping episode #{} - episode already exists'.format(
                 episode_number))
-            pass
 
 
 def populate_db():

@@ -596,7 +596,6 @@ class TranscriptView(ListView):
         insensitive_query = re.compile(
             re.escape(str(self.query)), re.IGNORECASE)
         insensitive_text = insensitive_query.sub(replacing_query, text)
-        text = insensitive_text
         highlighted_text = mark_safe(insensitive_text)
         return highlighted_text
 

@@ -1,4 +1,3 @@
-from os import path
 from selenium import webdriver
 import json
 import re
@@ -67,4 +66,5 @@ class SGU_scrape():
             json.dump(podcast_info, f, indent=4)
 
 
-SGU_scrape().get_json()
+if __name__ == '__main__':
+    SGU_scrape().get_json()
