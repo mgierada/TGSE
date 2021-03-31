@@ -9,6 +9,7 @@ __pycache__
 db.sqlite3
 responses
 transcripts
+settings.py
 
 # Backup files # 
 *.bak 
