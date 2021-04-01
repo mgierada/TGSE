@@ -34,6 +34,30 @@ Consider becoming a patreon by clicking https://www.patreon.com/maciejgierada
 
 Contributions are highly welcome! There is still a lot of work to be done!
 
+# How to run local
+
+SGU-TSA backend is Django based, so to run locally do:
+
+```bash
+# navigate to path where you will keep the project
+cd path_to_install
+# clone the repo
+git clone https://github.com/mgierada/sgu_transcript_generator.git
+# enter the repo's root directory
+cd sgu_transcript_generator
+# create a virtual environment
+python3 -m venv sgu-tse_venv
+# activate the environment
+source tse_venv/bin/activate
+# upgrade pip
+python3 -m pip install --upgrade pip
+# install sgu-tse
+python3 -m pip install -r requirements.txt
+# run local server
+python3 manage.py runserver
+# open browser at http://127.0.0.1:8000/
+```
+
 # Wish List
 
 - [ ] better design
