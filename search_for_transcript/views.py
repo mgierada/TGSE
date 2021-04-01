@@ -550,8 +550,9 @@ class TranscriptView(ListView):
 
         # element[0] because element is a list of one element
         text = (self.element[0].text)
-        highlighted_text = self.get_highlighted_text(text)
-        highlighted_text_spitted = highlighted_text.split(' ', 30)
+        self.highlighted_text = self.get_highlighted_text(text)
+        # highlighted_text_spitted = highlighted_text.split(' ', 30)
+        highlighted_text_spitted = self.split_text()
         # context['highlighted_text'] = highlighted_text
 
         paginator_q = Paginator(highlighted_text_spitted, self.paginate_idx)
@@ -569,6 +570,18 @@ class TranscriptView(ListView):
         context['zipped'] = zipped
         context['query'] = self.query
         return context
+
+    def split_text(self):
+        max_characters_per_page = 5000
+        splitted_text = []
+        max_idx = len(self.highlighted_text)
+        start_idx = 0
+        while start_idx < max_idx:
+            end_idx = start_idx + max_characters_per_page
+            text = self.highlighted_text[start_idx:end_idx]
+            splitted_text.append(text)
+            start_idx += max_characters_per_page
+        return splitted_text
 
     def is_exact_match_requested(self):
         ''' Check if exact search is requested by placing query in
