@@ -185,6 +185,9 @@ class SearchResultsView(ListView):
             q_sorted, e_sorted, st_sorted = zip(
                 *sorted_q_e_st)
 
+            # print(type(q_sorted))
+            # print(q_sorted)
+
             paginator_q = Paginator(q_sorted, self.paginate_idx)
             page_q = self.request.GET.get('page')
             page_obj_q = paginator_q.get_page(page_q)
@@ -536,6 +539,7 @@ class TranscriptView(ListView):
     model = Transcript
     template_name = 'transcript.html'
     context_object_name = 'episode_list'
+    paginate_idx = 1
 
     def get_context_data(self, **kwargs):
         context = super(TranscriptView, self).get_context_data(**kwargs)
@@ -547,7 +551,22 @@ class TranscriptView(ListView):
         # element[0] because element is a list of one element
         text = (self.element[0].text)
         highlighted_text = self.get_highlighted_text(text)
-        context['highlighted_text'] = highlighted_text
+        highlighted_text_spitted = highlighted_text.split(' ', 30)
+        # context['highlighted_text'] = highlighted_text
+
+        paginator_q = Paginator(highlighted_text_spitted, self.paginate_idx)
+        page_q = self.request.GET.get('page')
+        page_obj_q = paginator_q.get_page(page_q)
+
+        # update page_obj as it is manually edited
+        context['paginator'] = paginator_q
+        context['page_obj'] = page_obj_q
+        context['is_paginated'] = True
+
+        zipped = zip(page_obj_q, highlighted_text_spitted)
+
+        context['highlighted_text'] = highlighted_text_spitted
+        context['zipped'] = zipped
         context['query'] = self.query
         return context
 

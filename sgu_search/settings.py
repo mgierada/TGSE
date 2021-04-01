@@ -74,6 +74,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries':{
+                'readmore': 'search_for_transcript.templatetags.readmore',
+            }
         },
     },
 ]
