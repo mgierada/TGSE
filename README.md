@@ -41,7 +41,7 @@ SGU-TSA backend is Django based, so to run locally do:
 ```bash
 # navigate to path where you will keep the project
 cd path_to_install
-# clone the repo
+# clone the repo (if you are planning to contribute, fork the repo and clone it)
 git clone https://github.com/mgierada/sgu_transcript_generator.git
 # enter the repo's root directory
 cd sgu_transcript_generator
@@ -57,6 +57,15 @@ python3 -m pip install -r requirements.txt
 python3 manage.py runserver
 # open browser at http://127.0.0.1:8000/
 ```
+
+# REST API
+
+It is not my main goal to have a nice REST API at this moment, however, there are a couple of enpoints you can access. More will come later:
+
+| endpoint                         |            feature             | method |
+| -------------------------------- | :----------------------------: | -----: |
+| `episodes/`                      |  get details of all episodes   |  `GET` |
+| `episodes/<int:episode_number>/` | get details of a given episode |  `GET` |
 
 # Wish List
 
