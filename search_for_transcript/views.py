@@ -577,11 +577,14 @@ class TranscriptView(ListView):
         splitted_text = []
         max_idx = len(self.text) - 1
         start_idx = 0
+        # end_idx = 0
+        end_idx = start_idx + max_characters_per_page
         # helper_idx = 0
         # end_idx = max_characters_per_page
+
         while start_idx <= max_idx:
             # counter += 1
-            end_idx = start_idx + max_characters_per_page
+            # end_idx += max_characters_per_page
             rendered_text = self.text[start_idx:end_idx]
             # last_char = rendered_text[-1]
 
@@ -597,19 +600,27 @@ class TranscriptView(ListView):
             # print('last char with -1', last_char,
             #       'last_char_idx', last_char_idx)
             # print(rendered_text[len(rendered_text) - 1 + counter])
+
             counter = 0
             while self.text[len(rendered_text) - 1 + counter] != '.':
                 counter += 1
+            print(counter)
             if start_idx != 0:
-                rendered_text = self.text[start_idx:end_idx + counter]
+                # start_idx += counter
+                end_idx += counter
             else:
-                rendered_text = self.text[start_idx:end_idx + counter]
+                end_idx += counter
+            print('start_idx', start_idx)
+            print('end_idx', end_idx)
+            rendered_text = self.text[start_idx:end_idx]
+
             #     print(rendered_text[len(rendered_text) - 1 + helper])
             #     rendered_text = self.text[start_idx:len(
             #         rendered_text) - 1 + helper]
             #     helper += 1
             splitted_text.append(rendered_text)
-            start_idx += max_characters_per_page
+            end_idx += max_characters_per_page + start_idx
+            start_idx += max_characters_per_page + counter
         return splitted_text
 
     def is_exact_match_requested(self):
