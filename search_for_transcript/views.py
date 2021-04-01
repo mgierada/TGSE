@@ -549,13 +549,13 @@ class TranscriptView(ListView):
         self.element = Transcript.objects.filter(pk=episode_number)
 
         # element[0] because element is a list of one element
-        text = (self.element[0].text)
-        self.highlighted_text = self.get_highlighted_text(text)
+        self.text = (self.element[0].text)
+        text_spitted = self.split_text()
+        # highlighted_text = self.get_highlighted_text(text_spitted)
         # highlighted_text_spitted = highlighted_text.split(' ', 30)
-        highlighted_text_spitted = self.split_text()
         # context['highlighted_text'] = highlighted_text
 
-        paginator_q = Paginator(highlighted_text_spitted, self.paginate_idx)
+        paginator_q = Paginator(text_spitted, self.paginate_idx)
         page_q = self.request.GET.get('page')
         page_obj_q = paginator_q.get_page(page_q)
 
@@ -564,22 +564,51 @@ class TranscriptView(ListView):
         context['page_obj'] = page_obj_q
         context['is_paginated'] = True
 
-        zipped = zip(page_obj_q, highlighted_text_spitted)
+        zipped = zip(page_obj_q, text_spitted)
 
-        context['highlighted_text'] = highlighted_text_spitted
+        context['highlighted_text'] = text_spitted
         context['zipped'] = zipped
         context['query'] = self.query
         return context
 
     def split_text(self):
-        max_characters_per_page = 5000
+        max_characters_per_page = 10000
+        # max_characters_per_page = 100
         splitted_text = []
-        max_idx = len(self.highlighted_text)
+        max_idx = len(self.text) - 1
         start_idx = 0
-        while start_idx < max_idx:
+        # helper_idx = 0
+        # end_idx = max_characters_per_page
+        while start_idx <= max_idx:
+            # counter += 1
             end_idx = start_idx + max_characters_per_page
-            text = self.highlighted_text[start_idx:end_idx]
-            splitted_text.append(text)
+            rendered_text = self.text[start_idx:end_idx]
+            # last_char = rendered_text[-1]
+
+            # print(end_idx)
+            # last_char = self.text[end_idx]
+            # try:
+            #     last_char_idx = text[end_idx]
+            # except IndexError:
+            #     last_char_idx = text[max_idx]
+            # last_char_idx = rendered_text[len(rendered_text) - 1]
+            # print('end_idx', end_idx, 'last_char_idx',
+            #       (len(rendered_text))*counter)
+            # print('last char with -1', last_char,
+            #       'last_char_idx', last_char_idx)
+            # print(rendered_text[len(rendered_text) - 1 + counter])
+            counter = 0
+            while self.text[len(rendered_text) - 1 + counter] != '.':
+                counter += 1
+            if start_idx != 0:
+                rendered_text = self.text[start_idx:end_idx + counter]
+            else:
+                rendered_text = self.text[start_idx:end_idx + counter]
+            #     print(rendered_text[len(rendered_text) - 1 + helper])
+            #     rendered_text = self.text[start_idx:len(
+            #         rendered_text) - 1 + helper]
+            #     helper += 1
+            splitted_text.append(rendered_text)
             start_idx += max_characters_per_page
         return splitted_text
 
