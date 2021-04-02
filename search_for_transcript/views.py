@@ -571,60 +571,46 @@ class TranscriptView(ListView):
         context['query'] = self.query
         return context
 
-    def split_text(self):
-        max_characters_per_page = 10000
-        # max_characters_per_page = 100
+    def split_text(
+            self,
+            characters_per_page: int = 3000) -> List[str]:
+        ''' Split long text (str) with transcript to a chunks ending
+        on a full sentence
+
+        Parameters
+        ----------
+        characters_per_page : int, optional
+            how many character, more less, per page, by default 3000
+
+        Returns
+        -------
+        List[str]
+            list with chunks of transcript to be display on page. Each chunk
+            ends on a full sentence
+
+        '''
         splitted_text = []
         max_idx = len(self.text) - 1
         start_idx = 0
-        end_idx = max_characters_per_page
-        # end_idx = start_idx + max_characters_per_page
-        # helper_idx = 0
-        # end_idx = max_characters_per_page
-        while start_idx <= max_idx:
-            # counter += 1
-            # end_idx += max_characters_per_page
-            # end_idx = start_idx + max_characters_per_page
-            print('newstart', start_idx, 'new_end', end_idx)
-            tmp_text = self.text[start_idx:end_idx]
-            n_tmp_text = len(tmp_text) - 1
-            # last_char = rendered_text[-1]
+        end_idx = characters_per_page
 
-            # print(end_idx)
-            # last_char = self.text[end_idx]
-            # try:
-            #     last_char_idx = text[end_idx]
-            # except IndexError:
-            #     last_char_idx = text[max_idx]
-            # last_char_idx = rendered_text[len(rendered_text) - 1]
-            # print('end_idx', end_idx, 'last_char_idx',
-            #       (len(rendered_text))*counter)
-            # print('last char with -1', last_char,
-            #       'last_char_idx', last_char_idx)
-            # print(rendered_text[len(rendered_text) - 1 + counter])
+        while start_idx <= max_idx:
+            tmp_text = self.text[start_idx:end_idx]
+            last_char_idx = len(tmp_text) - 1
+
+            # append end_idx until sentence is finished
             counter = 0
-            # print(self.text[len(tmp_text) - 1 + counter])
-            while self.text[n_tmp_text + start_idx + counter] != '.':
+            while self.text[last_char_idx + start_idx + counter] != '.':
                 counter += 1
-            print('counter', counter)
-            # if start_idx != 0:
-            # start_idx += counter
             end_idx += counter
-            # else:
-            print('start_idx', start_idx)
-            print('end_idx', end_idx)
+
+            # rendered text including new end_idx
             rendered_text = self.text[start_idx:end_idx]
 
-            #     print(rendered_text[len(rendered_text) - 1 + helper])
-            #     rendered_text = self.text[start_idx:len(
-            #         rendered_text) - 1 + helper]
-            #     helper += 1
             splitted_text.append(rendered_text)
-            tmp = start_idx
+
             start_idx = end_idx
-            counter = 0
-            end_idx += max_characters_per_page
-            # start_idx += max_characters_per_page + counter
+            end_idx += characters_per_page
         return splitted_text
 
     def is_exact_match_requested(self):
