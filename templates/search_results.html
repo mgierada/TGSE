@@ -16,21 +16,21 @@
 </head>
 <body>
   <div>
-    <div>
+    <div >
       <form method="GET" action="{% url 'search_results' %}">
           <div class="search_results">
               <input type="text" class="searchTerm" placeholder="{{ initial_query }}" name="q">
               <input type="submit" class="searchButton">
-          </div>
-      </form>
-      <button class="submit-button right_align" onclick="location.href = '/'">
-        <span class="fa fa-home fa-2x"></span>
-      </button>
-    </div>
-    <br><br>
-    <div class='show_total_occurances'>
-      {{ response }}
-      {{ count }}
+            </div>
+          </form>
+        </div>
+        <br><br>
+        <div class='show_total_occurances'>
+          {{ response }}
+          {{ count }}
+          <button class="submit-button right_align" onclick="location.href = '/'">
+            <span class="fa fa-home fa-2x"></span>
+          </button>
     </div>
   </div>
   
