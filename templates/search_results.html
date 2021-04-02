@@ -69,6 +69,11 @@
 
         </div>
       </div>
+    </div>
+
+
+    
+    <div class='main_search_results'>
       {% endfor %}
     </div>
   
@@ -77,11 +82,11 @@
   <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <button style="font-size:15px" onClick="location='?{% url_replace request 'page' 1 %}'">
+            <button style="font-size:15px" onClick="location='?{% url_replace request ';page;' 1 %}'">
               <i class="fa fa-angle-double-left"></i>
               First
             </button>
-            <button style="font-size:15px" onClick="location='?{% url_replace request 'page' page_obj.previous_page_number %}'">
+            <button style="font-size:15px" onClick="location='?{% url_replace request ';page;' page_obj.previous_page_number %}'">
               <i class="fa fa-arrow-circle-left"></i>
               Previous
             </button>
