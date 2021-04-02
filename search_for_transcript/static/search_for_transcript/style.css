@@ -1,13 +1,34 @@
 @import url(http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
 
+/* a {
+  color: #0033cc;
+} */
+
+body {
+  /* font: 100% system-ui; */
+  color: #eee;
+  /* background: rgb(255, 255, 255); */
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(9, 73, 121, 1) 52%,
+    rgba(0, 0, 0, 1) 100%
+  );
+  box-sizing: border-box;
+}
+
+body a {
+  color: #809fff;
+}
+
 .search {
   width: 100%;
   position: relative;
 }
 .search_results {
-  width: 70%;
-  position: relative;
-  margin-left: 1%;
+  width: 100%;
+  /* position: relative; */
+  /* margin-left: 1%; */
 }
 
 .searchTerm {
@@ -40,27 +61,29 @@
 .search:before {
   position: absolute;
   right: 0px;
+  width: 100%;
   width: 45px;
   height: 36px;
   line-height: 47px;
   text-align: center;
   color: rgb(5, 5, 5);
   border-radius: 5px;
-  font-family: "FontAwesome";
-  content: "\f002";
+  font-family: 'FontAwesome';
+  content: '\f002';
 }
 
 .search_results:before {
   position: absolute;
   right: 0px;
-  width: 45px;
+  width: 100%;
+  width: 55px;
   height: 36px;
   line-height: 47px;
   text-align: center;
   color: rgb(5, 5, 5);
   border-radius: 5px;
-  font-family: "FontAwesome";
-  content: "\f002";
+  font-family: 'FontAwesome';
+  content: '\f002';
 }
 
 /*Resize the wrap to see the search bar change!*/
@@ -106,28 +129,6 @@ h2 {
   text-align: center;
   color: black;
 }
-body {
-  font: 100% system-ui;
-}
-
-a {
-  color: #0033cc;
-}
-
-body {
-  color: #eee;
-  /* background: rgb(255, 255, 255); */
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 1) 0%,
-    rgba(9, 73, 121, 1) 52%,
-    rgba(0, 0, 0, 1) 100%
-  );
-}
-
-body a {
-  color: #809fff;
-}
 
 .figure {
   align-items: center;
@@ -166,9 +167,23 @@ body a {
   padding-right: 5%;
   padding-bottom: 5%;
 }
-/* .submit-button_go_back {
+
+.submit-button right_align {
+  border-radius: 25px;
+  right: 0px;
+  width: 50px;
+  height: 50px;
+  opacity: 0;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.right_align {
   float: right;
-} */
+  margin-bottom: 25px;
+  margin-right: 15px;
+  margin-top: -10px;
+}
 
 /* .submit-button_go_back {
   box-shadow: inset 0px 1px 0px 0px #ffffff;
@@ -206,7 +221,7 @@ body a {
 
   box-sizing: border-box;
   text-decoration: none;
-  font-family: "Roboto", sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-weight: 400;
   font-size: small;
   color: #ffffff;
@@ -220,13 +235,13 @@ body a {
   background-color: black;
   padding: 0.35em 1.2em;
   border: 0.1em solid #ffffff;
-  margin: 0 0.3em 0.3em 0;
+  /* margin: 0 0.3em 0.3em 0; */
   /* border-radius: 0.12em; */
   border-radius: 12px;
 
   box-sizing: border-box;
   text-decoration: none;
-  font-family: "Roboto", sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-weight: 400;
   font-size: small;
   color: #ffffff;
@@ -246,7 +261,7 @@ body a {
 
 @media all and (max-width: 30em) {
   .submit-button {
-    display: block;
+    /* display: block; */
     margin: 0.4em auto;
   }
 }
@@ -256,10 +271,6 @@ body a {
     display: block;
     margin: 0.4em auto;
   }
-}
-
-.right_align {
-  float: right;
 }
 
 /* .bouncy{
@@ -311,8 +322,8 @@ body a {
   left: 0;
   bottom: 0;
   width: 100%;
-  background-color: white;
-  color: black;
+  /* background-color: grey; */
+  color: #fff;
   text-align: center;
 }
 
@@ -363,7 +374,7 @@ body a {
 
 /* Tooltip arrow */
 .tooltip .tooltiptext::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 100%;
   left: 50%;
