@@ -34,7 +34,7 @@ body a {
 .searchTerm {
   float: left;
   width: 100%;
-  border: 1px solid #cc3a00;
+  border: 1px solid #000000;
   padding: 15px;
   height: 50px;
   border-radius: 25px;
@@ -68,8 +68,8 @@ body a {
   text-align: center;
   color: rgb(5, 5, 5);
   border-radius: 5px;
-  font-family: 'FontAwesome';
-  content: '\f002';
+  font-family: "FontAwesome";
+  content: "\f002";
 }
 
 .search_results:before {
@@ -82,8 +82,8 @@ body a {
   text-align: center;
   color: rgb(5, 5, 5);
   border-radius: 5px;
-  font-family: 'FontAwesome';
-  content: '\f002';
+  font-family: "FontAwesome";
+  content: "\f002";
 }
 
 /*Resize the wrap to see the search bar change!*/
@@ -221,7 +221,7 @@ h2 {
 
   box-sizing: border-box;
   text-decoration: none;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 400;
   font-size: small;
   color: #ffffff;
@@ -241,7 +241,7 @@ h2 {
 
   box-sizing: border-box;
   text-decoration: none;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 400;
   font-size: small;
   color: #ffffff;
@@ -374,7 +374,7 @@ h2 {
 
 /* Tooltip arrow */
 .tooltip .tooltiptext::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 100%;
   left: 50%;
