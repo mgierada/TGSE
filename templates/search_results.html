@@ -32,8 +32,8 @@
     </div>
   </div>
   
+  {% for query_count, episode, short_text in queries_episodes_short_texts %}
   <div class='main_search_results'>
-    {% for query_count, episode, short_text in queries_episodes_short_texts %}
     <div class ="show_results">
       <div class='link_sgu_website'>
         <a href="{{ episode.link_to_podcast }}"> {{ episode.link_to_podcast }}</a>
@@ -70,12 +70,9 @@
         </div>
       </div>
     </div>
+    {% endfor %}
 
 
-    
-    <div class='main_search_results'>
-      {% endfor %}
-    </div>
   
   
   
