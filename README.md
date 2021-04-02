@@ -48,7 +48,7 @@ cd sgu_transcript_generator
 # create a virtual environment
 python3 -m venv sgu-tse_venv
 # activate the environment
-source tse_venv/bin/activate
+source sgu-tse_venv/bin/activate
 # upgrade pip
 python3 -m pip install --upgrade pip
 # install sgu-tse
