@@ -681,20 +681,115 @@ class TranscriptView(ListView):
         return highlighted_text
 
 
+# class TranscriptPlainView(ListView):
+#     model = Transcript
+#     template_name = 'transcript_plain.html'
+
+#     def get_context_data(self, **kwargs):
+#         context = super(TranscriptPlainView, self).get_context_data(**kwargs)
+#         self.query = self.kwargs['query']
+#         episode_number = self.kwargs['episode_number']
+#         context['episode_number'] = episode_number
+#         element = Transcript.objects.filter(pk=episode_number)
+#         context['episode'] = element[0]
+#         # element[0] because element is a list of one element
+#         context['query'] = self.query
+#         return context
 class TranscriptPlainView(ListView):
     model = Transcript
-    template_name = 'transcript_plain.html'
+    template_name = 'transcript.html'
+    paginate_idx = 1
 
     def get_context_data(self, **kwargs):
         context = super(TranscriptPlainView, self).get_context_data(**kwargs)
         self.query = self.kwargs['query']
         episode_number = self.kwargs['episode_number']
         context['episode_number'] = episode_number
-        element = Transcript.objects.filter(pk=episode_number)
-        context['episode'] = element[0]
+        self.element = Transcript.objects.filter(pk=episode_number)
+
         # element[0] because element is a list of one element
+        self.text = (self.element[0].text)
+        text_spitted = self.split_text()
+
+        paginator_q = Paginator(text_spitted, self.paginate_idx)
+        page_q = self.request.GET.get('page')
+        page_obj_q = paginator_q.get_page(page_q)
+
+        # update page_obj as it is manually edited
+        context['paginator'] = paginator_q
+        context['page_obj'] = page_obj_q
+        context['is_paginated'] = True
+
+        zipped = zip(page_obj_q, text_spitted)
+
+        context['highlighted_text'] = text_spitted
+        context['zipped'] = zipped
         context['query'] = self.query
         return context
+
+    def split_text(
+            self,
+            characters_per_page: int = 3000) -> List[str]:
+        ''' Split long text (str) with transcript to a chunks ending
+        on a full sentence
+
+        Parameters
+        ----------
+        characters_per_page : int, optional
+            how many character, more less, per page, by default 3000
+
+        Returns
+        -------
+        List[str]
+            list with chunks of transcript to be display on page. Each chunk
+            ends on a full sentence
+
+        '''
+        splitted_text = []
+        max_idx = len(self.text) - 1
+        start_idx = 0
+        end_idx = characters_per_page
+
+        while start_idx <= max_idx:
+            tmp_text = self.text[start_idx:end_idx]
+            last_char_idx = len(tmp_text) - 1
+
+            # append end_idx until sentence is finished
+            counter = 0
+            while self.text[last_char_idx + start_idx + counter] != '.':
+                counter += 1
+            end_idx += counter
+
+            # rendered text including new end_idx
+            rendered_text = self.text[start_idx:end_idx]
+
+            splitted_text.append(rendered_text)
+
+            start_idx = end_idx
+            end_idx += characters_per_page
+        return splitted_text
+
+    def is_exact_match_requested(self):
+        ''' Check if exact search is requested by placing query in
+        quotation marks
+
+        Returns
+        -------
+        True
+            if there are matching quotation marks around the query
+        False
+            otherwise
+
+        '''
+        quotation_marks = ['\'', '"', '“', '”',
+                           '‘', '’', '”', '“', '\u201e', '\u201c']
+        if (
+            self.query[0] in quotation_marks
+            and
+            self.query[len(self.query) - 1] in quotation_marks
+        ):
+            return True
+        return False
 
 
 class APIGetAllEpisodes(TemplateView):
