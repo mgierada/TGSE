@@ -1,5 +1,7 @@
 <!-- templates/search_results.html -->
 {% load static %}
+{% load extras %}
+
 <link rel="stylesheet" type="text/css" href="{% static 'search_for_transcript/style.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -20,8 +22,7 @@
     </button>
 
     <div class='show_transcript_content'>
-        {{ highlighted_text }}
+      {{ highlighted_text }}
     </div>
-
 </body>
 </html>

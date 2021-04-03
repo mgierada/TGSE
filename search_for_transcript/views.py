@@ -1,4 +1,5 @@
 from django.views.generic import TemplateView, ListView
+from django.utils.safestring import SafeString
 from typing import Any, Dict, List
 from django.utils.safestring import mark_safe
 from django.db.models.query import QuerySet
@@ -212,8 +213,8 @@ class SearchResultsView(ListView):
             context['initial_query'] = self.initial_query
             context['count'] = self.count_total()
             context['highlighted_txt_trigger'] = self.query
+
             if self.is_exact_match_requested():
-                # context['highlighted_txt_trigger'] = self.initial_query
                 context['highlighted_txt_trigger'] = '"{}"'.format(
                     self.query[:len(self.initial_query) - 1])
 
@@ -225,7 +226,7 @@ class SearchResultsView(ListView):
             return context
         else:
             response = '''
-                        No results found for {}. 
+                        No results found for {}.
                         Please search again using
                         different query.'''.format(
                 self.get_formatted_query())
@@ -277,7 +278,7 @@ class SearchResultsView(ListView):
             self,
             around_idx=200) -> List[str]:
         ''' Get short_text showing matched and highlighted query with some
-        text before and after the query occurence for context. 
+        text before and after the query occurence for context.
 
         Parameters
         ----------
@@ -532,13 +533,24 @@ class SearchResultsView(ListView):
         return each_query_count
 
 
-class TranscriptView(ListView):
+class TranscriptHighlightView(ListView):
     model = Transcript
     template_name = 'transcript.html'
     context_object_name = 'episode_list'
 
-    def get_context_data(self, **kwargs):
-        context = super(TranscriptView, self).get_context_data(**kwargs)
+    def get_context_data(
+            self,
+            **kwargs: Any) -> Dict[str, Any]:
+        ''' Update context_data to be used in html template
+
+        Returns
+        -------
+        Dict[str, Any]
+            updated context_data
+
+        '''
+        context = super(TranscriptHighlightView,
+                        self).get_context_data(**kwargs)
         self.query = self.kwargs['query']
         episode_number = self.kwargs['episode_number']
         context['episode_number'] = episode_number
@@ -594,7 +606,8 @@ class TranscriptView(ListView):
 
     def get_highlighted_text_exact_match(
             self,
-            text):
+            text: str) -> str:
+        print(type(text))
         self.query = self.query[1:len(self.query) - 1]
         replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
             self.query.upper())
@@ -602,11 +615,25 @@ class TranscriptView(ListView):
             re.escape(str(self.query)), re.IGNORECASE)
         insensitive_text = insensitive_query.sub(replacing_query, text)
         highlighted_text = mark_safe(insensitive_text)
+        print(type(highlighted_text))
         return highlighted_text
 
     def get_highlighted_text_partial_match(
             self,
-            text):
+            text: str) -> SafeString:
+        ''' Convert text to highlighted test
+
+        Parameters
+        ----------
+        text : str
+            a long string with transcript
+
+        Returns
+        -------
+        highlighted_text : SafeString
+            a long string with transcript and html tags converted to Django's SafeString
+
+        '''
         splitted_list = self.query.split(' ')
         for word in splitted_list:
             replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
@@ -619,20 +646,90 @@ class TranscriptView(ListView):
         return highlighted_text
 
 
-class TranscriptPlainView(ListView):
+class TranscriptReadModeView(ListView):
     model = Transcript
-    template_name = 'transcript_plain.html'
+    context_object_name = 'episode'
+    template_name = 'transcript_read_mode.html'
+    paginate_idx = 1
 
-    def get_context_data(self, **kwargs):
-        context = super(TranscriptPlainView, self).get_context_data(**kwargs)
+    def get_context_data(
+            self,
+            **kwargs) -> Dict[str, Any]:
+        ''' Update context_data to be used in html template
+
+        Returns
+        -------
+        Dict[str, Any]
+            updated context_data
+
+        '''
+        context = super(TranscriptReadModeView,
+                        self).get_context_data(**kwargs)
         self.query = self.kwargs['query']
         episode_number = self.kwargs['episode_number']
-        context['episode_number'] = episode_number
-        element = Transcript.objects.filter(pk=episode_number)
-        context['episode'] = element[0]
+        self.element = Transcript.objects.filter(pk=episode_number)
+
         # element[0] because element is a list of one element
+        self.text = (self.element[0].text)
+        text_spitted = self.split_text()
+
+        paginator = Paginator(text_spitted, self.paginate_idx)
+        page = self.request.GET.get('page')
+        page_obj = paginator.get_page(page)
+        zipped = zip(page_obj, text_spitted)
+
+        # update page_obj as it is manually edited
+        context['paginator'] = paginator
+        context['page_obj'] = page_obj
+        context['is_paginated'] = True
+
+        # update contex with other details
+        context['episode_number'] = episode_number
+        context['zipped'] = zipped
         context['query'] = self.query
         return context
+
+    def split_text(
+            self,
+            characters_per_page: int = 3000) -> List[str]:
+        ''' Split long text (str) with transcript to a chunks ending
+        on a full sentence
+
+        Parameters
+        ----------
+        characters_per_page : int, optional
+            how many character, more less, per page, by default 3000
+
+        Returns
+        -------
+        List[str]
+            list with chunks of transcript to be display on page. Each chunk
+            ends on a full sentence
+
+        '''
+        splitted_text = []
+        max_idx = len(self.text) - 1
+        start_idx = 0
+        end_idx = characters_per_page
+
+        while start_idx <= max_idx:
+            tmp_text = self.text[start_idx:end_idx]
+            last_char_idx = len(tmp_text) - 1
+
+            # append end_idx until sentence is finished
+            counter = 0
+            while self.text[last_char_idx + start_idx + counter] != '.':
+                counter += 1
+            end_idx += counter
+
+            # rendered text including new end_idx
+            rendered_text = self.text[start_idx:end_idx]
+
+            splitted_text.append(rendered_text)
+
+            start_idx = end_idx
+            end_idx += characters_per_page
+        return splitted_text
 
 
 class APIGetAllEpisodes(TemplateView):
