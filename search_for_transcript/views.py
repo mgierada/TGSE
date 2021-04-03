@@ -1,4 +1,5 @@
 from django.views.generic import TemplateView, ListView
+from django.utils.safestring import SafeString
 from typing import Any, Dict, List
 from django.utils.safestring import mark_safe
 from django.db.models.query import QuerySet
@@ -185,9 +186,6 @@ class SearchResultsView(ListView):
             q_sorted, e_sorted, st_sorted = zip(
                 *sorted_q_e_st)
 
-            # print(type(q_sorted))
-            # print(q_sorted)
-
             paginator_q = Paginator(q_sorted, self.paginate_idx)
             page_q = self.request.GET.get('page')
             page_obj_q = paginator_q.get_page(page_q)
@@ -215,8 +213,8 @@ class SearchResultsView(ListView):
             context['initial_query'] = self.initial_query
             context['count'] = self.count_total()
             context['highlighted_txt_trigger'] = self.query
+
             if self.is_exact_match_requested():
-                # context['highlighted_txt_trigger'] = self.initial_query
                 context['highlighted_txt_trigger'] = '"{}"'.format(
                     self.query[:len(self.initial_query) - 1])
 
@@ -228,7 +226,7 @@ class SearchResultsView(ListView):
             return context
         else:
             response = '''
-                        No results found for {}. 
+                        No results found for {}.
                         Please search again using
                         different query.'''.format(
                 self.get_formatted_query())
@@ -280,7 +278,7 @@ class SearchResultsView(ListView):
             self,
             around_idx=200) -> List[str]:
         ''' Get short_text showing matched and highlighted query with some
-        text before and after the query occurence for context. 
+        text before and after the query occurence for context.
 
         Parameters
         ----------
@@ -540,7 +538,17 @@ class TranscriptView(ListView):
     template_name = 'transcript.html'
     context_object_name = 'episode_list'
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(
+            self,
+            **kwargs: Any) -> Dict[str, Any]:
+        ''' Update context_data to be used in html template
+
+        Returns
+        -------
+        Dict[str, Any]
+            updated context_data
+
+        '''
         context = super(TranscriptView, self).get_context_data(**kwargs)
         self.query = self.kwargs['query']
         episode_number = self.kwargs['episode_number']
@@ -597,7 +605,8 @@ class TranscriptView(ListView):
 
     def get_highlighted_text_exact_match(
             self,
-            text):
+            text: str) -> str:
+        print(type(text))
         self.query = self.query[1:len(self.query) - 1]
         replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
             self.query.upper())
@@ -605,11 +614,25 @@ class TranscriptView(ListView):
             re.escape(str(self.query)), re.IGNORECASE)
         insensitive_text = insensitive_query.sub(replacing_query, text)
         highlighted_text = mark_safe(insensitive_text)
+        print(type(highlighted_text))
         return highlighted_text
 
     def get_highlighted_text_partial_match(
             self,
-            text):
+            text: str) -> SafeString:
+        ''' Convert text to highlighted test
+
+        Parameters
+        ----------
+        text : str
+            a long string with transcript
+
+        Returns
+        -------
+        SafeString
+            a long string with transcript and html tags converted to Django's SafeString
+
+        '''
         splitted_list = self.query.split(' ')
         for word in splitted_list:
             replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
@@ -624,10 +647,21 @@ class TranscriptView(ListView):
 
 class TranscriptPlainView(ListView):
     model = Transcript
+    context_object_name = 'episode'
     template_name = 'transcript_plain.html'
     paginate_idx = 1
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(
+            self,
+            **kwargs) -> Dict[str, Any]:
+        ''' Update context_data to be used in html template
+
+        Returns
+        -------
+        Dict[str, Any]
+            updated context_data
+
+        '''
         context = super(TranscriptPlainView, self).get_context_data(**kwargs)
         self.query = self.kwargs['query']
         episode_number = self.kwargs['episode_number']
