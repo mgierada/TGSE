@@ -629,7 +629,7 @@ class TranscriptView(ListView):
 
         Returns
         -------
-        SafeString
+        highlighted_text : SafeString
             a long string with transcript and html tags converted to Django's SafeString
 
         '''
@@ -645,10 +645,10 @@ class TranscriptView(ListView):
         return highlighted_text
 
 
-class TranscriptPlainView(ListView):
+class TranscriptReadModeView(ListView):
     model = Transcript
     context_object_name = 'episode'
-    template_name = 'transcript_plain.html'
+    template_name = 'transcript_read_mode.html'
     paginate_idx = 1
 
     def get_context_data(
@@ -662,28 +662,28 @@ class TranscriptPlainView(ListView):
             updated context_data
 
         '''
-        context = super(TranscriptPlainView, self).get_context_data(**kwargs)
+        context = super(TranscriptReadModeView,
+                        self).get_context_data(**kwargs)
         self.query = self.kwargs['query']
         episode_number = self.kwargs['episode_number']
-        context['episode_number'] = episode_number
         self.element = Transcript.objects.filter(pk=episode_number)
 
         # element[0] because element is a list of one element
         self.text = (self.element[0].text)
         text_spitted = self.split_text()
 
-        paginator_q = Paginator(text_spitted, self.paginate_idx)
-        page_q = self.request.GET.get('page')
-        page_obj_q = paginator_q.get_page(page_q)
+        paginator = Paginator(text_spitted, self.paginate_idx)
+        page = self.request.GET.get('page')
+        page_obj = paginator.get_page(page)
+        zipped = zip(page_obj, text_spitted)
 
         # update page_obj as it is manually edited
-        context['paginator'] = paginator_q
-        context['page_obj'] = page_obj_q
+        context['paginator'] = paginator
+        context['page_obj'] = page_obj
         context['is_paginated'] = True
 
-        zipped = zip(page_obj_q, text_spitted)
-
-        context['highlighted_text'] = text_spitted
+        # update contex with other details
+        context['episode_number'] = episode_number
         context['zipped'] = zipped
         context['query'] = self.query
         return context
@@ -729,28 +729,6 @@ class TranscriptPlainView(ListView):
             start_idx = end_idx
             end_idx += characters_per_page
         return splitted_text
-
-    def is_exact_match_requested(self):
-        ''' Check if exact search is requested by placing query in
-        quotation marks
-
-        Returns
-        -------
-        True
-            if there are matching quotation marks around the query
-        False
-            otherwise
-
-        '''
-        quotation_marks = ['\'', '"', '“', '”',
-                           '‘', '’', '”', '“', '\u201e', '\u201c']
-        if (
-            self.query[0] in quotation_marks
-            and
-            self.query[len(self.query) - 1] in quotation_marks
-        ):
-            return True
-        return False
 
 
 class APIGetAllEpisodes(TemplateView):
