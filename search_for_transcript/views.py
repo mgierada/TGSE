@@ -533,7 +533,7 @@ class SearchResultsView(ListView):
         return each_query_count
 
 
-class TranscriptView(ListView):
+class TranscriptHighlightView(ListView):
     model = Transcript
     template_name = 'transcript.html'
     context_object_name = 'episode_list'
@@ -549,7 +549,8 @@ class TranscriptView(ListView):
             updated context_data
 
         '''
-        context = super(TranscriptView, self).get_context_data(**kwargs)
+        context = super(TranscriptHighlightView,
+                        self).get_context_data(**kwargs)
         self.query = self.kwargs['query']
         episode_number = self.kwargs['episode_number']
         context['episode_number'] = episode_number
