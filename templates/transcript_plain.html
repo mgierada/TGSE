@@ -1,5 +1,6 @@
 <!-- templates/search_results.html -->
 {% load static %}
+{% load extras %}
 <link rel="stylesheet" type="text/css" href="{% static 'search_for_transcript/style.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -19,9 +20,44 @@
         <span class="fa fa-home fa-2x"></span>
     </button>
 
-    <div class='show_transcript_content'>
-        {{ episode.text }}
+    <div>
+        {% for p, t in zipped %}
+        <div class='show_transcript_content'>
+            {{ p }}
+        </div>
+        {% endfor %}
     </div>
+    <div class="pagination">
+      <span class="step-links">
+          {% if page_obj.has_previous %}
+              <button style="font-size:15px" onClick="location='?{% url_replace request 'page' 1 %}'">
+                <i class="fa fa-angle-double-left"></i>
+                First
+              </button>
+              <button style="font-size:15px" onClick="location='?{% url_replace request 'page' page_obj.previous_page_number %}'">
+                <i class="fa fa-arrow-circle-left"></i>
+                Previous
+              </button>
+          {% endif %}
+          
+          {% if page_obj.has_next %}
+          <span class="current">
+              Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+          </span>
+          
+              <button style="font-size:15px" onClick="location='?{% url_replace request 'page' page_obj.next_page_number %}'">
+                Next
+                <i class="fa fa-arrow-circle-right"></i>
+              </button>
+              <button style="font-size:15px" onClick="location='?{% url_replace request 'page' page_obj.paginator.num_pages %}'">
+                Last
+                <i class="fa fa-angle-double-right"></i>
+              </button>
+              <!-- <a href="?{% url_replace request 'page' page_obj.paginator.num_pages %}">last &raquo;</a> -->
+          {% endif %}
+      </span>
+    </div>
+    
 
 </body>
 </html>

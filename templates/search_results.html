@@ -61,13 +61,14 @@
             Download/Listen
           </button>
             <!-- <input type=button onClick="location='{{ episode.link_to_mp3 }}'" value='Download/Listen'> -->
-          <button class='submit-button' onClick="parent.location='transcript/{{ episode.episode_number }}/{{ highlighted_txt_trigger }}'">
-            Show full transcript
-          </button>
-
-          <button class='submit-button' onClick="parent.location='transcript_plain/{{ episode.episode_number }}/ {{ query }}'">
-            Show full transcript (no highlight)
-          </button>
+            
+            <button class='submit-button' onClick="parent.location='transcript_plain/{{ episode.episode_number }}/ {{ query }}'">
+              Show full transcript (read mode)
+            </button>
+            
+            <button class='submit-button' onClick="parent.location='transcript/{{ episode.episode_number }}/{{ highlighted_txt_trigger }}'">
+              Show full transcript
+            </button>
 
         </div>
       </div>

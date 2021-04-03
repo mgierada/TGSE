@@ -624,7 +624,7 @@ class TranscriptView(ListView):
 
 class TranscriptPlainView(ListView):
     model = Transcript
-    template_name = 'transcript.html'
+    template_name = 'transcript_plain.html'
     paginate_idx = 1
 
     def get_context_data(self, **kwargs):
