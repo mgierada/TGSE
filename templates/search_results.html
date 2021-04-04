@@ -14,9 +14,9 @@
 </head>
 <body>
   <div>
-    <div >
-      <form method="GET" action="{% url 'search_results' %}">
-          <div class="search_results">
+      <div>
+          <form method="GET" action="{% url 'search_results' %}">
+            <div class="search_results">
               <input type="text" class="searchTerm" placeholder="{{ initial_query }}" name="q">
               <input type="submit" class="searchButton">
             </div>
@@ -26,55 +26,52 @@
         <div class='show_total_occurances'>
           {{ response }}
           {{ count }}
-          <button class="submit-button right_align" onclick="location.href = '/'">
+          <button class="button__home" onclick="location.href = '/'">
             <span class="fa fa-home fa-2x"></span>
           </button>
     </div>
   </div>
   
   {% for query_count, episode, short_text in queries_episodes_short_texts %}
+
   <div class='main_search_results'>
     <div class ="show_results">
+      <div class = "episode_number_result">
+        <h1 class = "episode_number_result"> Episode #{{ episode.episode_number }}</h1>
+      </div>
+      <div class='date_published'>
+        {{ episode.date_published }}
+      </div>
+      <br>
+      <div class='show_occurances'>
+        Found {{ query_count }} occurrences
+      </div>
+      <br>
+      <br>
+      <div class='short_text'>
+        {{ short_text }}
+      </div>
+      <div class='center_buttons'>
+        
+        <button id='listen_button{{episode.episode_number}}' class='button__downolad' onClick="location='{{ episode.link_to_mp3 }}'">
+          Download/Listen
+        </button>
+        <!-- <input type=button onClick="location='{{ episode.link_to_mp3 }}'" value='Download/Listen'> -->
+        <button class='button__show_full_transcript' onClick="parent.location='transcript/{{ episode.episode_number }}/{{ highlighted_txt_trigger }}'">
+          Show full transcript
+        </button>
+        
+        <button class='button__full_transcript_no_highlight' onClick="parent.location='transcript_plain/{{ episode.episode_number }}/ {{ query }}'">
+          Show full transcript (no highlight)
+        </button>
+        
+      </div>
       <div class='link_sgu_website'>
         <a href="{{ episode.link_to_podcast }}"> {{ episode.link_to_podcast }}</a>
       </div>
-        <div class = "episode_number_result">
-          <h1 class = "episode_number_result"> Episode #{{ episode.episode_number }}</h1>
-        </div>
-        <div class='date_published'>
-          {{ episode.date_published }}
-        </div>
-        <br>
-        <div class='show_occurances'>
-          Found {{ query_count }} occurrences
-        </div>
-        <br>
-        <br>
-        <div class='short_text'>
-          {{ short_text }}
-        </div>
-        <div class='center_buttons bouncy'>
-        
-          <button id='listen_button{{episode.episode_number}}' class='button-test' onClick="location='{{ episode.link_to_mp3 }}'">
-            Download/Listen
-          </button>
-            <!-- <input type=button onClick="location='{{ episode.link_to_mp3 }}'" value='Download/Listen'> -->
-          <button class='submit-button' onClick="parent.location='transcript/{{ episode.episode_number }}/{{ highlighted_txt_trigger }}'">
-            Show full transcript
-          </button>
-
-          <button class='submit-button' onClick="parent.location='transcript_plain/{{ episode.episode_number }}/ {{ query }}'">
-            Show full transcript (no highlight)
-          </button>
-
-        </div>
       </div>
     </div>
     {% endfor %}
-
-
-  
-  
   
   <div class="pagination">
     <span class="step-links">
@@ -91,7 +88,7 @@
         
         {% if page_obj.has_next %}
         <span class="current">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
         </span>
         
             <button style="font-size:15px" onClick="location='?{% url_replace request 'page' page_obj.next_page_number %}'">

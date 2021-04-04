@@ -98,7 +98,7 @@ body a {
   color: black;
 }
 
-.main {
+main {
   text-align: center;
   margin: 0 auto;
   display: flex;
@@ -143,7 +143,7 @@ h2 {
 }
 
 .episode_number_result {
-  text-align: left;
+ color: #fc6412
 }
 
 .show_transcript {
@@ -164,119 +164,59 @@ h2 {
 }
 
 
-.right_align {
+.button__home {
   float: right;
   margin-bottom: 25px;
   margin-right: 15px;
   margin-top: -10px;
+  background-color: #1a608b;
+  color: #fff; 
+  border: none;
+  border-radius: 5px;
+  width: 75px;
+  height: 35px;
+}
+.button__home:hover{
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+  cursor: pointer;
+  outline: none;
+} 
+
+.center_buttons{
+  display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-around;
+	align-items: center;
+	align-content: center;
 }
 
-
-.center_buttons {
-  text-align: center;
-}
-.nav-button {
-  background-color: rgb(177, 35, 10);
-  padding: 0.35em 1.2em;
-  margin: 0 0.3em 0.3em 0;
-  border-radius: 0.12em;
-
-  box-sizing: border-box;
-  text-decoration: none;
-  font-family: "Roboto", sans-serif;
-  font-weight: 400;
-  font-size: small;
-  color: #ffffff;
-  text-align: center;
-  transition: all 0.2s;
+.button__downolad, .button__show_full_transcript, .button__full_transcript_no_highlight {
+  background-color: #1a608b;
+  color: #fff; 
+  border: none;
+  border-radius: 5px;
+  width: 150px;
+  height: 35px;
 }
 
-.submit-button {
-  /* display: inline-block; */
-  /* background-color: rgb(17, 127, 201); */
-  background-color: black;
-  padding: 0.35em 1.2em;
-  border: 0.1em solid #ffffff;
-  /* margin: 0 0.3em 0.3em 0; */
-  /* border-radius: 0.12em; */
-  border-radius: 12px;
-
-  /* box-sizing: border-box; */
-  text-decoration: none;
-  font-family: "Roboto", sans-serif;
-  font-weight: 400;
-  font-size: small;
-  color: #ffffff;
-  text-align: center;
-  transition: all 0.2s;
+.button__downolad:hover{
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+  cursor: pointer;
+  outline: none;
 }
-/* test button */
-.button-test {
-    --size: 0;
-    --left: 0;
-    --top: 0;
+.button__show_full_transcript:hover{
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+  cursor: pointer;
+  outline: none;
 
-    border: 0;
-    padding: 10px 20px;
-    border-radius: 50px;
-    text-transform: uppercase;
-    font-family: sans-serif;
-    color: rgb(0, 0, 0);
-    overflow: hidden;
-    position: relative;
-    background-color: tomato;
 }
 
-.button-test span {
-    position: relative;
-    z-index: 1;
+.button__full_transcript_no_highlight:hover{
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+  cursor: pointer;
+  outline: none;
 }
-
-.button-test:hover { /* wielkość gradientu zwiększam na hover */
-    --size: 400px;
-}
-
-.button-test:after {
-    content: "";
-    position: absolute;
-    left: var(--left);
-    top: var(--top);
-    width: var(--size);
-    height: var(--size);
-    background: radial-gradient(circle closest-side, #4405f7, tomato 60%);
-    background-repeat: no-repeat;
-    transform: translate(-50%, -50%);
-    transition: 0.3s width, 0.3s height;
-    z-index: 0;
-}
-
-
-/* koniec test */
-
-.submit-button:hover {
-  color: #000000;
-  background-color: #ffffff;
-}
-
-.nav-button:hover {
-  color: #ffffff;
-  background-color: #000000;
-}
-
-@media all and (max-width: 30em) {
-  .submit-button {
-    /* display: block; */
-    margin: 0.4em auto;
-  }
-}
-
-@media all and (max-width: 30em) {
-  .nav-button {
-    display: block;
-    margin: 0.4em auto;
-  }
-}
-
 
 .main_search_results {
   color: #fff;
@@ -286,14 +226,10 @@ h2 {
   /* border: 1px solid #cc3a00; */
   border-radius: 10px;
   padding: 15px;
-  /* margin-left: 1%;
-  padding-left: 1%;
-  padding-right: 1%;
-  margin-right: 1%; */
 }
 
 .main_search_results:hover {
-  box-shadow: 0px 0px 15px 5px rgba(243, 243, 243, 0.75);
+  box-shadow: 1px 13px 63px 2px rgba(0,0,0,1);
   opacity: 80%;
   cursor: pointer;
 }
@@ -305,7 +241,7 @@ h2 {
 }
 
 .link_sgu_website {
-  padding-top: 1px;
+  padding-top: 5px;
   margin-bottom: -20px;
   font-size: 12px;
 }
@@ -327,7 +263,6 @@ h2 {
   left: 0;
   bottom: 0;
   width: 100%;
-  /* background-color: grey; */
   color: #fff;
   text-align: center;
 }
