@@ -1,10 +1,8 @@
-@import url(http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
-
+@import url('https://fonts.googleapis.com/css2?family=New+Tegomin&display=swap');
 
 body {
-  /* font: 100% system-ui; */
+  font-family: 'New Tegomin', serif;
   color: #eee;
-  /* background: rgb(255, 255, 255); */
   background: linear-gradient(
     180deg,
     rgba(255, 255, 255, 1) 0%,
@@ -15,7 +13,7 @@ body {
   margin: 10px;
 }
 
-body a {
+a {
   color: #809fff;
 }
 
@@ -37,10 +35,11 @@ body a {
   font-size: 15px;
   outline: none;
   color: #4d4b52f5;
+  font-family: 'New Tegomin', serif;
 }
 
 .searchTerm:focus {
-  color: #000000;
+  color: #fc6412;
 }
 
 .searchButton {
@@ -48,7 +47,7 @@ body a {
   border-radius: 25px;
   right: 0px;
   width: 50px;
-  height: 50px;
+  height: 36px;
   opacity: 0;
   cursor: pointer;
   margin: 10px;
@@ -57,29 +56,26 @@ body a {
 .search:before {
   position: absolute;
   right: 0px;
-  width: 100%;
   width: 45px;
-  height: 36px;
   line-height: 47px;
   text-align: center;
+  color: #fc6412;
   color: rgb(5, 5, 5);
   border-radius: 5px;
-  font-family: "FontAwesome";
-  content: "\f002";
+  font-family: 'FontAwesome';
+  content: '\f002';
 }
 
 .search_results:before {
   position: absolute;
   right: 0px;
-  width: 100%;
   width: 55px;
-  height: 36px;
-  line-height: 47px;
+  line-height: 50px;
   text-align: center;
   color: rgb(5, 5, 5);
   border-radius: 5px;
-  font-family: "FontAwesome";
-  content: "\f002";
+  font-family: 'FontAwesome';
+  content: '\f002';
 }
 
 /*Resize the wrap to see the search bar change!*/
@@ -143,11 +139,13 @@ h2 {
 }
 
 .episode_number_result {
- color: #fc6412
+  color: #fc6412;
+  font-weight: 800;
+  margin: 0;
+  padding: 0;
 }
 
 .show_transcript {
-  color: red;
   background-color: rgb(31, 29, 29);
 }
 
@@ -163,59 +161,68 @@ h2 {
   padding-bottom: 5%;
 }
 
-
 .button__home {
   float: right;
   margin-bottom: 25px;
   margin-right: 15px;
   margin-top: -10px;
   background-color: #1a608b;
-  color: #fff; 
+  color: #fff;
   border: none;
   border-radius: 5px;
   width: 75px;
   height: 35px;
 }
-.button__home:hover{
-  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+.button__home:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
   cursor: pointer;
   outline: none;
-} 
-
-.center_buttons{
-  display: flex;
-	flex-direction: row;
-	flex-wrap: nowrap;
-	justify-content: space-around;
-	align-items: center;
-	align-content: center;
+  color: #fc6412;
 }
 
-.button__downolad, .button__show_full_transcript, .button__full_transcript_no_highlight {
+.center_buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
+}
+
+.button__downolad,
+.button__show_full_transcript,
+.button__full_transcript_no_highlight {
   background-color: #1a608b;
-  color: #fff; 
+  color: #fff;
   border: none;
   border-radius: 5px;
   width: 150px;
-  height: 35px;
+  height: 40px;
+  font-family: 'New Tegomin', serif;
 }
 
-.button__downolad:hover{
-  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+.button__downolad:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
   cursor: pointer;
   outline: none;
+  color: #fc6412;
 }
-.button__show_full_transcript:hover{
-  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+.button__show_full_transcript:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
   cursor: pointer;
   outline: none;
-
+  color: #fc6412;
 }
 
-.button__full_transcript_no_highlight:hover{
-  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+.button__full_transcript_no_highlight:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
   cursor: pointer;
   outline: none;
+  color: #fc6412;
 }
 
 .main_search_results {
@@ -223,19 +230,17 @@ h2 {
   background-color: rgba(243, 243, 243, 0.75);
   margin-top: 10px;
   margin-bottom: 10px;
-  /* border: 1px solid #cc3a00; */
   border-radius: 10px;
   padding: 15px;
 }
 
 .main_search_results:hover {
-  box-shadow: 1px 13px 63px 2px rgba(0,0,0,1);
+  box-shadow: 1px 13px 63px 2px rgba(0, 0, 0, 1);
   opacity: 80%;
   cursor: pointer;
 }
 
 .search_resultsa {
-  /* background-color: #fff; */
   border: 1px solid #cc3a00;
   border-radius: 25px;
 }
@@ -258,12 +263,24 @@ h2 {
   font-style: italic;
 }
 
+.button_pagination {
+  background-color: #fc6412;
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+}
+.button_pagination:hover {
+  box-shadow: 1px 13px 63px 2px rgb(240, 236, 236);
+  cursor: pointer;
+}
+
 .footer {
   position: fixed;
   left: 0;
   bottom: 0;
   width: 100%;
-  color: #fff;
+  color: #fc6412;
   text-align: center;
 }
 
@@ -272,7 +289,6 @@ h2 {
 }
 
 .pagination {
-  /* margin-left: 1%; */
   display: flex;
   align-items: center;
   text-align: center;
@@ -287,7 +303,10 @@ h2 {
 /* Tooltip container */
 .tooltip {
   position: relative;
-  display: inline-block;
+  /* display: inline-block; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Tooltip text */
@@ -306,18 +325,13 @@ h2 {
   z-index: 1;
   bottom: 125%;
   box-shadow: 5px 5px 2px rgb(28, 28, 29);
-  /* left: 30%; */
-  /* margin-left: -10px; */
-  /* margin-left: 30%; */
-
-  /* Fade in tooltip */
   opacity: 0;
   transition: opacity 0.3s;
 }
 
 /* Tooltip arrow */
 .tooltip .tooltiptext::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 100%;
   left: 50%;
