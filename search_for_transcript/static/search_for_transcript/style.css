@@ -1,13 +1,8 @@
-@import url(http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
-
-/* a {
-  color: #0033cc;
-} */
+@import url("https://fonts.googleapis.com/css2?family=New+Tegomin&display=swap");
 
 body {
-  /* font: 100% system-ui; */
+  font-family: "New Tegomin", serif;
   color: #eee;
-  /* background: rgb(255, 255, 255); */
   background: linear-gradient(
     180deg,
     rgba(255, 255, 255, 1) 0%,
@@ -15,9 +10,10 @@ body {
     rgba(0, 0, 0, 1) 100%
   );
   box-sizing: border-box;
+  margin: 10px;
 }
 
-body a {
+a {
   color: #809fff;
 }
 
@@ -27,8 +23,6 @@ body a {
 }
 .search_results {
   width: 100%;
-  /* position: relative; */
-  /* margin-left: 1%; */
 }
 
 .searchTerm {
@@ -41,10 +35,11 @@ body a {
   font-size: 15px;
   outline: none;
   color: #4d4b52f5;
+  font-family: "New Tegomin", serif;
 }
 
 .searchTerm:focus {
-  color: #000000;
+  color: #fc6412;
 }
 
 .searchButton {
@@ -52,7 +47,7 @@ body a {
   border-radius: 25px;
   right: 0px;
   width: 50px;
-  height: 50px;
+  height: 36px;
   opacity: 0;
   cursor: pointer;
   margin: 10px;
@@ -61,11 +56,10 @@ body a {
 .search:before {
   position: absolute;
   right: 0px;
-  width: 100%;
   width: 45px;
-  height: 36px;
   line-height: 47px;
   text-align: center;
+  color: #fc6412;
   color: rgb(5, 5, 5);
   border-radius: 5px;
   font-family: "FontAwesome";
@@ -75,10 +69,8 @@ body a {
 .search_results:before {
   position: absolute;
   right: 0px;
-  width: 100%;
   width: 55px;
-  height: 36px;
-  line-height: 47px;
+  line-height: 50px;
   text-align: center;
   color: rgb(5, 5, 5);
   border-radius: 5px;
@@ -102,7 +94,7 @@ body a {
   color: black;
 }
 
-.main {
+main {
   text-align: center;
   margin: 0 auto;
   display: flex;
@@ -113,7 +105,6 @@ body a {
 .container {
   display: flex;
   justify-content: center;
-  /* border: 1px solid #2d2d2d; */
   align-items: center;
 }
 .center {
@@ -148,11 +139,12 @@ h2 {
 }
 
 .episode_number_result {
-  text-align: left;
+  color: #fc6412;
+  font-weight: 800;
+  padding: 0;
 }
 
 .show_transcript {
-  color: red;
   background-color: rgb(31, 29, 29);
 }
 
@@ -168,139 +160,92 @@ h2 {
   padding-bottom: 5%;
 }
 
-.submit-button right_align {
-  border-radius: 25px;
-  right: 0px;
-  width: 50px;
-  height: 50px;
-  opacity: 0;
-  cursor: pointer;
-  margin: 10px;
-}
-
-.right_align {
+.button__home {
   float: right;
   margin-bottom: 25px;
   margin-right: 15px;
   margin-top: -10px;
+  background-color: #1a608b;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  width: 75px;
+  height: 35px;
 }
-
-/* .submit-button_go_back {
-  box-shadow: inset 0px 1px 0px 0px #ffffff;
-  background: linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  border: 1px solid #dcdcdc;
-  display: inline-block;
+.button__home:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
   cursor: pointer;
-  color: #666666;
-  font-family: Arial;
-  font-size: 19px;
-  font-weight: bold;
-  padding: 6px 24px;
-  text-decoration: none;
-  text-shadow: 0px 0px 16px #ffffff;
+  outline: none;
+  color: #fc6412;
 }
-.submit-button_go_back:hover {
-  background: linear-gradient(to bottom, #e9e9e9 5%, #f9f9f9 100%);
-  background-color: #e9e9e9;
-}
-.submit-button_go_back:active {
-  position: relative;
-  top: 1px;
-} */
 
 .center_buttons {
-  text-align: center;
-}
-.nav-button {
-  background-color: rgb(177, 35, 10);
-  padding: 0.35em 1.2em;
-  margin: 0 0.3em 0.3em 0;
-  border-radius: 0.12em;
-
-  box-sizing: border-box;
-  text-decoration: none;
-  font-family: "Roboto", sans-serif;
-  font-weight: 400;
-  font-size: small;
-  color: #ffffff;
-  text-align: center;
-  transition: all 0.2s;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
 }
 
-.submit-button {
-  /* display: inline-block; */
-  /* background-color: rgb(17, 127, 201); */
-  background-color: black;
-  padding: 0.35em 1.2em;
-  border: 0.1em solid black;
-  /* margin: 0 0.3em 0.3em 0; */
-  /* border-radius: 0.12em; */
-  border-radius: 12px;
-
-  box-sizing: border-box;
-  text-decoration: none;
-  font-family: "Roboto", sans-serif;
-  font-weight: 400;
-  font-size: small;
-  color: #ffffff;
-  text-align: center;
-  transition: all 0.2s;
+.button__downolad,
+.button__show_full_transcript,
+.button__full_transcript_no_highlight {
+  background-color: #1a608b;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  width: 150px;
+  height: 40px;
+  font-family: "New Tegomin", serif;
 }
 
-.submit-button:hover {
-  color: #000000;
-  background-color: #ffffff;
+.button__downolad:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
+  cursor: pointer;
+  outline: none;
+  color: #fc6412;
+}
+.button__show_full_transcript:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
+  cursor: pointer;
+  outline: none;
+  color: #fc6412;
 }
 
-.nav-button:hover {
-  color: #ffffff;
-  background-color: #000000;
+.button__full_transcript_no_highlight:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
+  cursor: pointer;
+  outline: none;
+  color: #fc6412;
 }
-
-@media all and (max-width: 30em) {
-  .submit-button {
-    /* display: block; */
-    margin: 0.4em auto;
-  }
-}
-
-@media all and (max-width: 30em) {
-  .nav-button {
-    display: block;
-    margin: 0.4em auto;
-  }
-}
-
-/* .bouncy{
-  animation:bouncy 5s infinite linear;
-  position:relative;
-  }
-  @keyframes bouncy {
-   0%{top:0em}
-   40%{top:0em}
-   43%{top:-0.9em}
-   46%{top:0em}
-   48%{top:-0.4em}
-   50%{top:0em}
-   100%{top:0em;}
-  } */
 
 .main_search_results {
-  background-color: #fff;
-  margin-left: 1%;
-  padding-left: 1%;
-  padding-right: 1%;
-  margin-right: 1%;
+  color: #fff;
+  background-color: rgba(243, 243, 243, 0.75);
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+.main_search_results:hover {
+  box-shadow: 1px 13px 63px 2px rgba(0, 0, 0, 1);
+  opacity: 80%;
+  cursor: pointer;
 }
 
 .search_resultsa {
-  background-color: #fff;
+  border: 1px solid #cc3a00;
+  border-radius: 25px;
 }
 
 .link_sgu_website {
-  padding-top: 1px;
+  padding-top: 5px;
   margin-bottom: -20px;
   font-size: 12px;
 }
@@ -317,13 +262,24 @@ h2 {
   font-style: italic;
 }
 
+.button_pagination {
+  background-color: #fc6412;
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+}
+.button_pagination:hover {
+  box-shadow: 1px 13px 63px 2px rgb(240, 236, 236);
+  cursor: pointer;
+}
+
 .footer {
   position: fixed;
   left: 0;
   bottom: 0;
   width: 100%;
-  /* background-color: grey; */
-  color: #fff;
+  color: #fc6412;
   text-align: center;
 }
 
@@ -332,7 +288,10 @@ h2 {
 }
 
 .pagination {
-  margin-left: 1%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
 }
 
 .date_published {
@@ -343,8 +302,9 @@ h2 {
 /* Tooltip container */
 .tooltip {
   position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Tooltip text */
@@ -363,11 +323,6 @@ h2 {
   z-index: 1;
   bottom: 125%;
   box-shadow: 5px 5px 2px rgb(28, 28, 29);
-  /* left: 30%; */
-  /* margin-left: -10px; */
-  /* margin-left: 30%; */
-
-  /* Fade in tooltip */
   opacity: 0;
   transition: opacity 0.3s;
 }
