@@ -141,7 +141,6 @@ h2 {
 .episode_number_result {
   color: #fc6412;
   font-weight: 800;
-  margin: 0;
   padding: 0;
 }
 
@@ -303,7 +302,6 @@ h2 {
 /* Tooltip container */
 .tooltip {
   position: relative;
-  /* display: inline-block; */
   display: flex;
   align-items: center;
   justify-content: center;
