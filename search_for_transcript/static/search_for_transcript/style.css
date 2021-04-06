@@ -36,6 +36,7 @@ a {
   outline: none;
   color: #4d4b52f5;
   font-family: "New Tegomin", serif;
+  font-weight: bold;
 }
 
 .searchTerm:focus {
