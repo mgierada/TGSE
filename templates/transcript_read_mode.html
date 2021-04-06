@@ -16,7 +16,7 @@
     <h1>Episode #{{ episode_number }}</h1>
     <h2>Transcript</h2>
 
-    <button class="submit-button right_align" onclick="location.href = '/'">
+    <button class="button__home" onclick="location.href = '/'">
         <span class="fa fa-home fa-2x"></span>
     </button>
 
@@ -33,12 +33,12 @@
           
         {% if page_obj.has_previous %}
 
-              <button style="font-size:15px" onClick="location='?{% url_replace request 'page' 1 %}'">
+              <button class="button_pagination" onClick="location='?{% url_replace request 'page' 1 %}'">
                 <i class="fa fa-angle-double-left"></i>
                 First
               </button>
 
-              <button style="font-size:15px" onClick="location='?{% url_replace request 'page' page_obj.previous_page_number %}'">
+              <button class="button_pagination" style="font-size:15px" onClick="location='?{% url_replace request 'page' page_obj.previous_page_number %}'">
                 <i class="fa fa-arrow-circle-left"></i>
                 Previous
               </button>
@@ -51,12 +51,12 @@
               Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
           </span>
           
-              <button style="font-size:15px" onClick="location='?{% url_replace request 'page' page_obj.next_page_number %}'">
+              <button class="button_pagination" style="font-size:15px" onClick="location='?{% url_replace request 'page' page_obj.next_page_number %}'">
                 Next
                 <i class="fa fa-arrow-circle-right"></i>
               </button>
 
-              <button style="font-size:15px" onClick="location='?{% url_replace request 'page' page_obj.paginator.num_pages %}'">
+              <button class="button_pagination" onClick="location='?{% url_replace request 'page' page_obj.paginator.num_pages %}'">
                 Last
                 <i class="fa fa-angle-double-right"></i>
               </button>

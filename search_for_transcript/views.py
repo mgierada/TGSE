@@ -25,7 +25,7 @@ class SearchResultsView(ListView):
     model = Transcript
     template_name = 'search_results.html'
     context_object_name = 'episode_list'
-    paginate_idx = 2
+    paginate_idx = 3
 
     def get_queryset(self) -> QuerySet:
         ''' Get Transcripts objects where query can by found in the
@@ -276,7 +276,7 @@ class SearchResultsView(ListView):
 
     def get_short_text_highlighted(
             self,
-            around_idx=800) -> List[str]:
+            around_idx=400) -> List[str]:
         ''' Get short_text showing matched and highlighted query with some
         text before and after the query occurence for context.
 
