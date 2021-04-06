@@ -56,12 +56,12 @@
         <button id='listen_button{{episode.episode_number}}' class='button__downolad' onClick="location='{{ episode.link_to_mp3 }}'">
           Download/Listen
         </button>
-        <button class='button__show_full_transcript' onClick="parent.location='transcript_read_mode/{{ episode.episode_number }}/ {{ query }}'">
+        <button class='button__show_transcript_read_mode' onClick="parent.location='transcript_read_mode/{{ episode.episode_number }}/ {{ query }}'">
           Show full transcript (read mode)
         </button>
        
-        <button class='button__full_transcript_no_highlight' onClick="parent.location='transcript_plain/{{ episode.episode_number }}/ {{ query }}'">
-          Show full transcript (no highlight)
+        <button class='button__show_transcript_highlight' onClick="parent.location='transcript_highlight/{{ episode.episode_number }}/{{ highlighted_txt_trigger }}'">
+          Show full transcript highlighted
         </button>
         
       </div>

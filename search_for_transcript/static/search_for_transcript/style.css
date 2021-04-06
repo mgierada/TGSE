@@ -190,8 +190,8 @@ h2 {
 }
 
 .button__downolad,
-.button__show_full_transcript,
-.button__full_transcript_no_highlight {
+.button__show_transcript_read_mode,
+.button__show_transcript_highlight {
   background-color: #1a608b;
   color: #fff;
   border: none;
@@ -208,7 +208,7 @@ h2 {
   outline: none;
   color: #fc6412;
 }
-.button__show_full_transcript:hover {
+.button__show_transcript_read_mode:hover {
   box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
     0 17px 50px 0 rgba(0, 0, 0, 0.19);
   cursor: pointer;
@@ -216,7 +216,7 @@ h2 {
   color: #fc6412;
 }
 
-.button__full_transcript_no_highlight:hover {
+.button__show_transcript_highlight:hover {
   box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
     0 17px 50px 0 rgba(0, 0, 0, 0.19);
   cursor: pointer;
