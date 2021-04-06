@@ -56,7 +56,6 @@
         <button id='listen_button{{episode.episode_number}}' class='button__downolad' onClick="location='{{ episode.link_to_mp3 }}'">
           Download/Listen
         </button>
-        <!-- <input type=button onClick="location='{{ episode.link_to_mp3 }}'" value='Download/Listen'> -->
         <button class='button__show_full_transcript' onClick="parent.location='transcript_read_mode/{{ episode.episode_number }}/ {{ query }}'">
           Show full transcript (read mode)
         </button>
@@ -76,11 +75,11 @@
   <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <button class="button_pagination" onClick="location='?{% url_replace request ';page;' 1 %}'">
+            <button class="button_pagination" onClick="location='?{% url_replace request 'page' 1 %}'">
               <i class="fa fa-angle-double-left"></i>
               First
             </button>
-            <button class="button_pagination" style="font-size:15px" onClick="location='?{% url_replace request ';page;' page_obj.previous_page_number %}'">
+            <button class="button_pagination" style="font-size:15px" onClick="location='?{% url_replace request 'page' page_obj.previous_page_number %}'">
               <i class="fa fa-arrow-circle-left"></i>
               Previous
             </button>
@@ -99,7 +98,6 @@
               Last
               <i class="fa fa-angle-double-right"></i>
             </button>
-            <!-- <a href="?{% url_replace request 'page' page_obj.paginator.num_pages %}">last &raquo;</a> -->
         {% endif %}
     </span>
   </div>
