@@ -1,7 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=New+Tegomin&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=New+Tegomin&display=swap');
 
 body {
-  font-family: "New Tegomin", serif;
+  font-family: 'New Tegomin', serif;
   color: #eee;
   background: linear-gradient(
     180deg,
@@ -10,11 +10,18 @@ body {
     rgba(0, 0, 0, 1) 100%
   );
   box-sizing: border-box;
-  margin: 10px;
+  min-width: 400px;
+  height: auto;
 }
 
-a {
-  color: #809fff;
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  width: 98vw;
+  height: 100%;
 }
 
 .search {
@@ -35,7 +42,7 @@ a {
   font-size: 15px;
   outline: none;
   color: #4d4b52f5;
-  font-family: "New Tegomin", serif;
+  font-family: 'New Tegomin', serif;
   font-weight: bold;
 }
 
@@ -63,8 +70,8 @@ a {
   color: #fc6412;
   color: rgb(5, 5, 5);
   border-radius: 5px;
-  font-family: "FontAwesome";
-  content: "\f002";
+  font-family: 'FontAwesome';
+  content: '\f002';
 }
 
 .search_results:before {
@@ -75,13 +82,13 @@ a {
   text-align: center;
   color: rgb(5, 5, 5);
   border-radius: 5px;
-  font-family: "FontAwesome";
-  content: "\f002";
+  font-family: 'FontAwesome';
+  content: '\f002';
 }
 
 /*Resize the wrap to see the search bar change!*/
 .wrap {
-  width: 60%;
+  width: 70%;
   margin: 10% auto;
 }
 
@@ -103,15 +110,6 @@ main {
   justify-content: center;
 }
 
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.center {
-  width: 800px;
-}
-
 h1 {
   text-align: center;
   color: black;
@@ -122,11 +120,6 @@ h2 {
   color: black;
 }
 
-.figure {
-  align-items: center;
-  justify-content: center;
-}
-
 .show_results {
   color: black;
   margin-bottom: 1%;
@@ -134,9 +127,23 @@ h2 {
 }
 .show_total_occurances {
   color: black;
-  margin-top: 25px;
-  margin-bottom: 1%;
-  margin-left: 1%;
+
+  width: 90vw;
+  height: 70px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 400px;
+}
+
+.show_total_occurances_info,
+.show_total_occurances_button {
+  flex-shrink: 1;
+
 }
 
 .episode_number_result {
@@ -162,10 +169,6 @@ h2 {
 }
 
 .button__home {
-  float: right;
-  margin-bottom: 25px;
-  margin-right: 15px;
-  margin-top: -10px;
   background-color: #1a608b;
   color: #fff;
   border: none;
@@ -179,6 +182,20 @@ h2 {
   cursor: pointer;
   outline: none;
   color: #fc6412;
+}
+
+.button__home_read_more{
+  float: right;
+  background-color: #1a608b;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  width: 75px;
+  height: 35px;
+  right: -20px;
+  margin: 10px;
+  /* margin-top:20px;
+  margin-right: 25px; */
 }
 
 .center_buttons {
@@ -199,7 +216,7 @@ h2 {
   border-radius: 5px;
   width: 150px;
   height: 40px;
-  font-family: "New Tegomin", serif;
+  font-family: 'New Tegomin', serif;
   font-size: 14px;
 }
 
@@ -280,6 +297,7 @@ h2 {
   position: fixed;
   left: 0;
   bottom: 0;
+  height: 80px;
   width: 100%;
   color: #fc6412;
   text-align: center;
@@ -331,7 +349,7 @@ h2 {
 
 /* Tooltip arrow */
 .tooltip .tooltiptext::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 100%;
   left: 50%;
@@ -359,8 +377,9 @@ a:visited {
 }
 a:hover {
   color: black;
+  font-weight: bold;
   background-color: transparent;
-  text-decoration: underline;
+  text-decoration: none;
 }
 a:active {
   color: darkslategray;
