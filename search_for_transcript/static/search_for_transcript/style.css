@@ -345,3 +345,24 @@ h2 {
   visibility: visible;
   opacity: 1;
 }
+
+a:link {
+  color: black;
+  background-color: transparent;
+  text-decoration: none;
+}
+a:visited {
+  color: gray;
+  background-color: transparent;
+  text-decoration: none;
+}
+a:hover {
+  color: black;
+  background-color: transparent;
+  text-decoration: underline;
+}
+a:active {
+  color: darkslategray;
+  background-color: transparent;
+  text-decoration: underline;
+}
