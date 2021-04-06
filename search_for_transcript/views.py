@@ -431,7 +431,7 @@ class SearchResultsView(ListView):
         if total_queries > 1:
             occur_form = 'occurrences'
         formatted_query = self.get_formatted_query()
-        response = 'Found <b>{}</b> {} of {} in <b>{}</b> {} in total'.format(
+        response = 'Found <strong>{}</strong> {} of {} in <strong>{}</strong> {} in total'.format(
             total_queries,
             occur_form,
             formatted_query,

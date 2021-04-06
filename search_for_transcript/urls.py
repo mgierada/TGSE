@@ -9,7 +9,6 @@ from .views import (HomePageView,
 
 urlpatterns = [
     path('search/', SearchResultsView.as_view(), name='search_results'),
-    # path('main/', views.main, name='main'),
     path('', HomePageView.as_view(), name='home'),
     path('search/transcript_highlight/<int:episode_number>/<str:query>',
          TranscriptHighlightView.as_view(), name='transcript'),
