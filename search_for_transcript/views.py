@@ -427,10 +427,17 @@ class SearchResultsView(ListView):
         ep_form = 'episode'
         if total_episodes > 1:
             ep_form = 'episodes'
+        occur_form = 'occurrence'
+        if total_queries > 1:
+            occur_form = 'occurrences'
         formatted_query = self.get_formatted_query()
-        response = 'Found {} occurrences of {} in {} {} in total'.format(
-            total_queries, formatted_query, total_episodes, ep_form)
-
+        response = 'Found <b>{}</b> {} of {} in <b>{}</b> {} in total'.format(
+            total_queries,
+            occur_form,
+            formatted_query,
+            total_episodes,
+            ep_form)
+        response = mark_safe(response)
         return response
 
     def get_formatted_query(self) -> str:

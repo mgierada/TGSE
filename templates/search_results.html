@@ -44,7 +44,11 @@
       </div>
       <br>
       <div class='show_occurances'>
-        Found {{ query_count }} occurrences
+        {% if query_count == 1 %}
+        Found <b>{{ query_count }}</b> occurrence
+        {% else %}
+        Found <b>{{ query_count }}</b> occurrences
+        {% endif %}
       </div>
       <br>
       <div class='short_text'>
