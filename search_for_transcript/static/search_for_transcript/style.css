@@ -143,7 +143,6 @@ h2 {
 .show_total_occurances_info,
 .show_total_occurances_button {
   flex-shrink: 1;
-
 }
 
 .episode_number_result {
@@ -184,7 +183,7 @@ h2 {
   color: #fc6412;
 }
 
-.button__home_read_more{
+.button__home_read_more {
   float: right;
   background-color: #1a608b;
   color: #fff;
@@ -196,7 +195,7 @@ h2 {
   margin: 10px;
 }
 
-.button__home_read_more:hover{
+.button__home_read_more:hover {
   box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
     0 17px 50px 0 rgba(0, 0, 0, 0.19);
   cursor: pointer;
@@ -320,6 +319,25 @@ h2 {
   justify-content: center;
 }
 
+.step-links {
+  width: 90vw;
+  height: 70px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 400px;
+}
+
+.step-links-next-last,
+.step-links-first-previous {
+  flex-shrink: 1;
+  margin: 15px;
+}
+
 .date_published {
   margin-top: -20px;
   font-size: 12px;
@@ -391,4 +409,5 @@ a:active {
   color: darkslategray;
   background-color: transparent;
   text-decoration: underline;
+  text-decoration: none;
 }
