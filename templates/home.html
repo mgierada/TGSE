@@ -5,36 +5,38 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>SGU-TSA</title>
-    </head>
-    <body>
-        <br><br><br><br>
-        <div class='container'>
-            <div class='figure'>
-                <img src="{% static 'search_for_transcript/Skepticsguideweb.png' %}"" alt='https://www.theskepticsguide.org'>
-            </div>
-        </div>
 
-        <div class='container'>
-            <div class='center'>
-                <h2>A transcript search engine for the Skeptics' Guide to the Universe podcasts</h2>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGU-TSA</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class='container_logo'>
+            <div class='figure'>
+                <img src="{% static 'search_for_transcript/Skepticsguideweb.png' %}"" 
+                    alt='https://www.theskepticsguide.org'>
+                </div>
+            </div>
+
+            <div class='container_text'>
+                    <h2>A transcript search engine for the Skeptics' Guide to the Universe podcasts</h2>
+            </div>
+            <div class=" wrap">
+                <form class="SearchBar" method="GET" action="{% url 'search_results' %}">
+                    <div class="search tooltip">
+                        <span class="tooltiptext">use quotation marks for an exact search e.g. 'covid vaccine'</span>
+                        <input type="text" class="searchTerm" placeholder="Search..." name="q">
+                        <input type="submit" class="searchButton">
+                    </div>
+                </form>
             </div>
         </div>
-        <div class="wrap">
-            <form class="SearchBar" method="GET" action="{% url 'search_results' %}">
-                <div class="search tooltip">
-                    <span class="tooltiptext">use quotation marks for an exact search e.g. 'covid vaccine'</span>
-                    <input type="text" class="searchTerm" placeholder="Search..." name="q">
-                    <input type="submit" class="searchButton">
-                </div>
-            </form>
-        </div>
-<br><br>
 
 </body>
-{% include "footer.html" %} 
+{% include "footer.html" %}
+
 </html>
