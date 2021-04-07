@@ -177,12 +177,12 @@ body {
 }
 
 a:link {
-  color: white;
+  color: gray;
   background-color: transparent;
   text-decoration: none;
 }
 a:visited {
-  color: gray;
+  color: rgb(88, 86, 86);
   background-color: transparent;
   text-decoration: none;
 }
