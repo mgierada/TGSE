@@ -71,7 +71,7 @@
           onClick="parent.location='transcript_read_mode/{{ episode.episode_number }}/ {{ query }}'">
           Transcript <br> (read mode)
         </button>
-         
+
         <!-- <button class='button__show_transcript_highlight' onClick="parent.location='transcript_highlight/{{ episode.episode_number }}/{{ highlighted_txt_trigger }}'">
           Show full transcript highlighted
         </button> -->
@@ -87,7 +87,7 @@
   {% endfor %}
 
   <div class="pagination">
-   
+
     <div class="step-links">
       <div class="step-links-first-previous">
         {% if page_obj.has_previous %}
@@ -109,8 +109,7 @@
         Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
       </span>
 
-      
-      <div class = "step-links-next-last">
+      <div class="step-links-next-last">
         <button class="button_pagination" style="font-size:15px"
           onClick="location='?{% url_replace request 'page' page_obj.next_page_number %}'">
           Next
@@ -125,7 +124,7 @@
       {% endif %}
     </div>
   </div>
-  <br /><br /><br /><br />
+  <br /><br /><br />
 </body>
 
 {% include "footer.html" %}
