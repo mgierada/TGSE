@@ -15,21 +15,25 @@
 <body>
   <div>
       <div>
-          <form method="GET" action="{% url 'search_results' %}">
+        <form method="GET" action="{% url 'search_results' %}">
             <div class="search_results">
               <input type="text" class="searchTerm" placeholder="{{ initial_query }}" name="q">
               <input type="submit" class="searchButton">
             </div>
           </form>
         </div>
-        <br><br>
-        <div class='show_total_occurances'>
-          {{ response }}
-          {{ count }}
-          <button class="button__home" onclick="location.href = '/'">
-            <span class="fa fa-home fa-2x"></span>
-          </button>
-    </div>
+          <div class="show_total_occurances">
+            <div class="show_total_occurances_info">
+              {{ response }}
+              {{ count }}
+            </div>
+            <div class="show_total_occurances_button">
+              <button class="button__home" onclick="location.href = '/'">
+                <span class="fa fa-home fa-2x"></span>
+              </button>
+            </div>  
+          </div>
+      </div>
   </div>
   
   {% for query_count, episode, short_text in queries_episodes_short_texts %}
@@ -51,10 +55,10 @@
         {% endif %}
       </div>
       <br>
-      <div class='short_text'>
-        <a href="/search/transcript_highlight/{{ episode.episode_number }}/{{ highlighted_txt_trigger }}">{{ short_text }}</a>
-      </div>
-      </br>
+    </br>
+    <div class='short_text'>
+      <a href="/search/transcript_highlight/{{ episode.episode_number }}/{{ highlighted_txt_trigger }}">{{ short_text }}</a>
+    </div>
       <div class='center_buttons'>
         
         <button id='listen_button{{episode.episode_number}}' class='button__downolad' onClick="location='{{ episode.link_to_mp3 }}'">
@@ -105,12 +109,9 @@
         {% endif %}
     </span>
   </div>
-</div>
-    
+    <br/><br/><br/>
 </body>
-<br>
-<br>
-<br>
+
 {% include "footer.html" %} 
 </html>
   
