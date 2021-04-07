@@ -175,3 +175,25 @@ body {
     text-shadow: 0 0 1rem #fefefe;
   }
 }
+
+a:link {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
+}
+a:visited {
+  color: gray;
+  background-color: transparent;
+  text-decoration: none;
+}
+a:hover {
+  color: black;
+  background-color: transparent;
+  text-decoration: none;
+}
+a:active {
+  color: darkslategray;
+  background-color: transparent;
+  text-decoration: underline;
+  text-decoration: none;
+}

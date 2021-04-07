@@ -1,3 +1,5 @@
+import os
+from pathlib import Path
 """
 Django settings for sgu_search project.
 
@@ -10,8 +12,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-from pathlib import Path
-import os
 # import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ['sgu_search_secret_key']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['sgu-search.herokuapp.com', '.herokuapp.com',
                  'localhost', '127.0.0.1', ]
@@ -151,7 +151,7 @@ if os.getcwd() == '/app':
     DATABASES['default'].update(db_from_env)
 
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    ALLOWED_HOSTS = ['sgu_search.herokuapp.com']
+    ALLOWED_HOSTS = ['APP_NAME.herokuapp.com']
     DEBUG = True
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
