@@ -186,7 +186,7 @@ h2 {
   color: #fc6412;
 }
 
-.button__home_read_more_transcript{
+.button__home_read_more_transcript {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -299,7 +299,7 @@ h2 {
 
 .transcript_read_main {
   margin: 10px;
-  
+
   border-radius: 5px;
 }
 
