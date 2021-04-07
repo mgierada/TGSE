@@ -6,67 +6,76 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGU-TSA transcript</title>
-</head>
-<body>
-    <h1>Episode #{{ episode_number }}</h1>
-    <h2>Transcript</h2>
 
-    <button class="button__home_read_more" onclick="location.href = '/'">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SGU-TSA transcript</title>
+</head>
+
+<body>
+  <h1 class='episode_number_result'>Episode #{{ episode_number }}</h1>
+  <h2>Transcript</h2>
+
+
+  <div>
+    <div class="button__home_read_more_transcript">
+      <button class="button__home_read_more" onclick="location.href = '/'">
         <span class="fa fa-home fa-2x"></span>
-    </button>
+      </button>
+    </div>
 
     <div>
-        {% for p, t in zipped %}
-        <div class='show_transcript_content'>
-            {{ p }}
-        </div>
-        {% endfor %}
+      {% for p, t in zipped %}
     </div>
 
-    <div class="pagination">
-      <span class="step-links">
-          
+    <div class='show_transcript_content'>
+      {{ p }}
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="pagination">
+
+    <div class="step-links">
+      <div class="step-links-first-previous">
         {% if page_obj.has_previous %}
+        <button class="button_pagination" onClick="location='?{% url_replace request 'page' 1 %}'">
+          <i class="fa fa-angle-double-left"></i>
+          First
+        </button>
+        <button class="button_pagination" style="font-size:15px"
+          onClick="location='?{% url_replace request 'page' page_obj.previous_page_number %}'">
+          <i class="fa fa-arrow-circle-left"></i>
+          Previous
+        </button>
+        {% endif %}
+      </div>
 
-              <button class="button_pagination" onClick="location='?{% url_replace request 'page' 1 %}'">
-                <i class="fa fa-angle-double-left"></i>
-                First
-              </button>
+      {% if page_obj.has_next %}
 
-              <button class="button_pagination" style="font-size:15px" onClick="location='?{% url_replace request 'page' page_obj.previous_page_number %}'">
-                <i class="fa fa-arrow-circle-left"></i>
-                Previous
-              </button>
-              
-          {% endif %}
-          
-          {% if page_obj.has_next %}
-          
-            <span class="current">
-              Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-          </span>
-          
-              <button class="button_pagination" style="font-size:15px" onClick="location='?{% url_replace request 'page' page_obj.next_page_number %}'">
-                Next
-                <i class="fa fa-arrow-circle-right"></i>
-              </button>
-
-              <button class="button_pagination" onClick="location='?{% url_replace request 'page' page_obj.paginator.num_pages %}'">
-                Last
-                <i class="fa fa-angle-double-right"></i>
-              </button>
-              
-              <!-- <a href="?{% url_replace request 'page' page_obj.paginator.num_pages %}">last &raquo;</a> -->
-
-          {% endif %}
+      <span class="current">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
       </span>
+
+
+      <div class="step-links-next-last">
+        <button class="button_pagination" style="font-size:15px"
+          onClick="location='?{% url_replace request 'page' page_obj.next_page_number %}'">
+          Next
+          <i class="fa fa-arrow-circle-right"></i>
+        </button>
+        <button class="button_pagination"
+          onClick="location='?{% url_replace request 'page' page_obj.paginator.num_pages %}'">
+          Last
+          <i class="fa fa-angle-double-right"></i>
+        </button>
+      </div>
+      {% endif %}
     </div>
-    
+  </div>
 
 </body>
+
 </html>

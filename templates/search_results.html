@@ -6,42 +6,44 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SGU-TSA results</title>
 </head>
+
 <body>
   <div>
-      <div>
-        <form method="GET" action="{% url 'search_results' %}">
-            <div class="search_results">
-              <input type="text" class="searchTerm" placeholder="{{ initial_query }}" name="q">
-              <input type="submit" class="searchButton">
-            </div>
-          </form>
+    <div>
+      <form method="GET" action="{% url 'search_results' %}">
+        <div class="search_results">
+          <input type="text" class="searchTerm" placeholder="{{ initial_query }}" name="q">
+          <input type="submit" class="searchButton">
         </div>
-          <div class="show_total_occurances">
-            <div class="show_total_occurances_info">
-              {{ response }}
-              {{ count }}
-            </div>
-            <div class="show_total_occurances_button">
-              <button class="button__home" onclick="location.href = '/'">
-                <span class="fa fa-home fa-2x"></span>
-              </button>
-            </div>  
-          </div>
+      </form>
+    </div>
+    <div class="show_total_occurances">
+      <div class="show_total_occurances_info">
+        {{ response }}
+        {{ count }}
       </div>
+      <div class="show_total_occurances_button">
+        <button class="button__home" onclick="location.href = '/'">
+          <span class="fa fa-home fa-2x"></span>
+        </button>
+      </div>
+    </div>
   </div>
-  
+  </div>
+
   {% for query_count, episode, short_text in queries_episodes_short_texts %}
 
   <div class='main_search_results'>
-    <div class ="show_results">
-      <div class = "episode_number_result">
-        <h1 class = "episode_number_result"> Episode #{{ episode.episode_number }}</h1>
+    <div class="show_results">
+      <div class="episode_number_result">
+        <h1 class="episode_number_result"> Episode #{{ episode.episode_number }}</h1>
       </div>
       <div class='date_published'>
         {{ episode.date_published }}
@@ -54,65 +56,77 @@
         Found <b>{{ query_count }}</b> occurrences
         {% endif %}
       </div>
-      <br>
-    </br>
-    <div class='short_text'>
-      <a href="/search/transcript_highlight/{{ episode.episode_number }}/{{ highlighted_txt_trigger }}">{{ short_text }}</a>
-    </div>
+      </br>
+      <div class='short_text'>
+        <a href="/search/transcript_highlight/{{ episode.episode_number }}/{{ highlighted_txt_trigger }}">
+          {{ short_text }}</a>
+      </div>
       <div class='center_buttons'>
-        
-        <button id='listen_button{{episode.episode_number}}' class='button__downolad' onClick="location='{{ episode.link_to_mp3 }}'">
+
+        <button id='listen_button{{episode.episode_number}}' class='button__downolad'
+          onClick="location='{{ episode.link_to_mp3 }}'">
           Download/Listen
         </button>
-        <button class='button__show_transcript_read_mode' onClick="parent.location='transcript_read_mode/{{ episode.episode_number }}/ {{ query }}'">
+        <button class='button__show_transcript_read_mode'
+          onClick="parent.location='transcript_read_mode/{{ episode.episode_number }}/ {{ query }}'">
           Transcript <br> (read mode)
         </button>
-       
+
         <!-- <button class='button__show_transcript_highlight' onClick="parent.location='transcript_highlight/{{ episode.episode_number }}/{{ highlighted_txt_trigger }}'">
           Show full transcript highlighted
         </button> -->
-        
+
       </div>
+      <br />
       <div class='link_sgu_website'>
         <a href="{{ episode.link_to_podcast }}"> {{ episode.link_to_podcast }}</a>
       </div>
-      </div>
     </div>
-    {% endfor %}
-  
-  <div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <button class="button_pagination" onClick="location='?{% url_replace request 'page' 1 %}'">
-              <i class="fa fa-angle-double-left"></i>
-              First
-            </button>
-            <button class="button_pagination" style="font-size:15px" onClick="location='?{% url_replace request 'page' page_obj.previous_page_number %}'">
-              <i class="fa fa-arrow-circle-left"></i>
-              Previous
-            </button>
-        {% endif %}
-        
-        {% if page_obj.has_next %}
-        <span class="current">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-        </span>
-        
-            <button class="button_pagination" style="font-size:15px" onClick="location='?{% url_replace request 'page' page_obj.next_page_number %}'">
-              Next
-              <i class="fa fa-arrow-circle-right"></i>
-            </button>
-            <button class="button_pagination" onClick="location='?{% url_replace request 'page' page_obj.paginator.num_pages %}'">
-              Last
-              <i class="fa fa-angle-double-right"></i>
-            </button>
-        {% endif %}
-    </span>
   </div>
-    <br/><br/><br/>
+
+  {% endfor %}
+
+  <div class="pagination">
+
+    <div class="step-links">
+      <div class="step-links-first-previous">
+        {% if page_obj.has_previous %}
+        <button class="button_pagination" onClick="location='?{% url_replace request 'page' 1 %}'">
+          <i class="fa fa-angle-double-left"></i>
+          First
+        </button>
+        <button class="button_pagination" style="font-size:15px"
+          onClick="location='?{% url_replace request 'page' page_obj.previous_page_number %}'">
+          <i class="fa fa-arrow-circle-left"></i>
+          Previous
+        </button>
+        {% endif %}
+      </div>
+
+      {% if page_obj.has_next %}
+
+      <span class="current">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+      </span>
+
+      <div class="step-links-next-last">
+        <button class="button_pagination" style="font-size:15px"
+          onClick="location='?{% url_replace request 'page' page_obj.next_page_number %}'">
+          Next
+          <i class="fa fa-arrow-circle-right"></i>
+        </button>
+        <button class="button_pagination"
+          onClick="location='?{% url_replace request 'page' page_obj.paginator.num_pages %}'">
+          Last
+          <i class="fa fa-angle-double-right"></i>
+        </button>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  <br /><br /><br />
 </body>
 
-{% include "footer.html" %} 
+{% include "footer.html" %}
+
 </html>
-  
-  
