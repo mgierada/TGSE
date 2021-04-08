@@ -358,7 +358,7 @@ class SearchResultsView(ListView):
         return short_texts
 
     def get_index_most_common_word(self):
-        first_occurence_idx_list = []
+        timestamps = []
         for episode in self.episode_list:
             if self.is_exact_match_requested():
                 most_common_word = self.query
@@ -367,15 +367,41 @@ class SearchResultsView(ListView):
                     episode.episode_number)
             text = episode.text
             text_lower = text.lower()
-            index = text_lower.find(most_common_word)
             splitted_text = text_lower.split(' ')
-            index = splitted_text.index(most_common_word)
-            # for word in splitted_text:
-            #     if word == most_common_word:
+
+            # when exact search is executed
+            if self.is_exact_match_requested():
+                index = self.get_index_exact_match(
+                    most_common_word, splitted_text)
+            else:
+                index = splitted_text.index(most_common_word)
 
             timestamp = episode.words[index]['start']
-            first_occurence_idx_list.append(timestamp)
-        return first_occurence_idx_list
+            timestamps.append(timestamp)
+        return timestamps
+
+    def find_all_indicies_of_words_in_list(self, splitted_text, matching_word):
+        all_indicies = []
+        for i, word in enumerate(splitted_text):
+            if word == matching_word:
+                all_indicies.append(i)
+        return all_indicies
+
+    def get_index_exact_match(self, most_common_word, splitted_text):
+        first_word = most_common_word.split(' ')[0].lower()
+        second_word = most_common_word.split(' ')[1].lower()
+
+        all_occurances_first_word = self.find_all_indicies_of_words_in_list(
+            splitted_text, first_word)
+
+        idx = 0
+        while idx < len(all_occurances_first_word):
+            current_index = all_occurances_first_word[idx]
+            next_index = current_index + 1
+            if splitted_text[next_index].startswith(second_word):
+                index = current_index
+                return index
+            idx += 1
 
     @staticmethod
     def append_end_of_string(
