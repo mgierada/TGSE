@@ -178,12 +178,13 @@ class SearchResultsView(ListView):
         if self.initial_query and self.episode_list:
             self.each_query_count_list = list(self.get_queries_sum().values())
             self.short_texts_list = self.get_short_text_highlighted()
+            self.index_list = self.get_index_most_common_word()
 
             # sort queries, episodes_list and transcritps by query occurrence
             sorted_q_e_st = self.sort_by_occurrence_descending()
 
             # unzip sorted list
-            q_sorted, e_sorted, st_sorted = zip(
+            q_sorted, e_sorted, st_sorted, index_list = zip(
                 *sorted_q_e_st)
 
             paginator_q = Paginator(q_sorted, self.paginate_idx)
@@ -198,9 +199,13 @@ class SearchResultsView(ListView):
             page_st = self.request.GET.get('page')
             page_obj_st = paginator_st.get_page(page_st)
 
+            paginator_idx = Paginator(index_list, self.paginate_idx)
+            page_idx = self.request.GET.get('page')
+            page_obj_idx = paginator_idx.get_page(page_idx)
+
             # zip the final and sorted objects and add it to context
             q_e_st_paginated = zip(
-                page_obj_q, page_obj_e, page_obj_st)
+                page_obj_q, page_obj_e, page_obj_st, page_obj_idx)
             context['queries_episodes_short_texts'] = q_e_st_paginated
 
             # update page_obj as it is manually edited
@@ -220,6 +225,7 @@ class SearchResultsView(ListView):
 
             # print(self.get_exact_match())
             return context
+
         elif not self.initial_query:
             response = 'No results found. Please search again using different query'
             context['response'] = response
@@ -248,7 +254,8 @@ class SearchResultsView(ListView):
         unsorted = zip(
             self.each_query_count_list,
             self.episode_list,
-            self.short_texts_list)
+            self.short_texts_list,
+            self.index_list)
         zipped = list(unsorted)
         sorted_q_e_st = reversed(
             sorted(zipped, key=operator.itemgetter(0)))
@@ -295,7 +302,6 @@ class SearchResultsView(ListView):
         short_texts = []
         # do I need this? #TODO
         self.each_query_count = self.get_each_word_in_query_count()
-        self.get_index_most_common_word()
 
         for episode in self.episode_list:
             if self.is_exact_match_requested():
@@ -359,11 +365,16 @@ class SearchResultsView(ListView):
             else:
                 most_common_word = self.get_most_common_query_word(
                     episode.episode_number)
-            print(most_common_word)
             text = episode.text
             text_lower = text.lower()
             index = text_lower.find(most_common_word)
-            first_occurence_idx_list.append(index)
+            splitted_text = text_lower.split(' ')
+            index = splitted_text.index(most_common_word)
+            # for word in splitted_text:
+            #     if word == most_common_word:
+
+            timestamp = episode.words[index]['start']
+            first_occurence_idx_list.append(timestamp)
         return first_occurence_idx_list
 
     @staticmethod

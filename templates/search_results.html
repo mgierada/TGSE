@@ -38,7 +38,7 @@
   </div>
   </div>
 
-  {% for query_count, episode, short_text in queries_episodes_short_texts %}
+  {% for query_count, episode, short_text, index in queries_episodes_short_texts %}
   <script src="{% static 'search_for_transcript/play_exact_location.js' %}"></script>
 
   <div class='main_search_results'>
@@ -48,6 +48,7 @@
       </div>
       <div class='date_published'>
         {{ episode.date_published }}
+        {{index}}
       </div>
       <br>
       <div class='show_occurances'>
@@ -66,7 +67,7 @@
 
         <audio id='listen_button{{episode.episode_number}}' src='{{ episode.link_to_mp3 }}' controls></audio>
         
-        <button class='button__downolad' onclick="myFunction('listen_button{{episode.episode_number}}')">
+        <button class='button__downolad' onclick="myFunction('listen_button{{episode.episode_number}}','{{index}}')">
           Download/Listen
         </button>
 
