@@ -39,6 +39,7 @@
   </div>
 
   {% for query_count, episode, short_text in queries_episodes_short_texts %}
+  <script src="{% static 'search_for_transcript/play_exact_location.js' %}"></script>
 
   <div class='main_search_results'>
     <div class="show_results">
@@ -63,10 +64,17 @@
       </div>
       <div class='center_buttons'>
 
-        <button id='listen_button{{episode.episode_number}}' class='button__downolad'
-          onClick="location='{{ episode.link_to_mp3 }}'">
+        <audio id='listen_button{{episode.episode_number}}' src='{{ episode.link_to_mp3 }}' controls></audio>
+        
+        <button class='button__downolad' onclick="myFunction('listen_button{{episode.episode_number}}')">
           Download/Listen
         </button>
+
+        <!-- <button id='listen_button{{episode.episode_number}}' class='button__downolad'
+          onClick="location='{{ episode.link_to_mp3 }}'">
+          Download/Listen
+        </button> -->
+
         <button class='button__show_transcript_read_mode'
           onClick="parent.location='transcript_read_mode/{{ episode.episode_number }}/ {{ query }}'">
           Transcript <br> (read mode)
