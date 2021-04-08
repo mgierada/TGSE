@@ -365,29 +365,48 @@ class SearchResultsView(ListView):
             else:
                 most_common_word = self.get_most_common_query_word(
                     episode.episode_number)
+
             text = episode.text
             text_lower = text.lower()
             splitted_text = text_lower.split(' ')
-
             # when exact search is executed
             if self.is_exact_match_requested():
                 index = self.get_index_exact_match(
-                    most_common_word, splitted_text)
+                    most_common_word,
+                    splitted_text)
             else:
-                index = splitted_text.index(most_common_word)
+                index = self.get_index_partial_match(
+                    most_common_word,
+                    splitted_text)
 
             timestamp = episode.words[index]['start']
             timestamps.append(timestamp)
         return timestamps
 
-    def find_all_indicies_of_words_in_list(self, splitted_text, matching_word):
+    def find_all_indicies_of_words_in_list(
+            self,
+            splitted_text,
+            matching_word):
         all_indicies = []
         for i, word in enumerate(splitted_text):
             if word == matching_word:
                 all_indicies.append(i)
         return all_indicies
 
-    def get_index_exact_match(self, most_common_word, splitted_text):
+    def get_index_partial_match(
+            self,
+            most_common_word,
+            splitted_text):
+
+        for word in splitted_text:
+            if word.startswith(most_common_word):
+                index = splitted_text.index(word)
+                return index
+
+    def get_index_exact_match(
+            self,
+            most_common_word,
+            splitted_text):
         first_word = most_common_word.split(' ')[0].lower()
         second_word = most_common_word.split(' ')[1].lower()
 
