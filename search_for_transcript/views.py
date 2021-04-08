@@ -293,7 +293,9 @@ class SearchResultsView(ListView):
 
         '''
         short_texts = []
+        # do I need this? #TODO
         self.each_query_count = self.get_each_word_in_query_count()
+        self.get_index_most_common_word()
 
         for episode in self.episode_list:
             if self.is_exact_match_requested():
@@ -348,6 +350,21 @@ class SearchResultsView(ListView):
             short_text_highlighted = mark_safe(short_text_highlighted)
             short_texts.append(short_text_highlighted)
         return short_texts
+
+    def get_index_most_common_word(self):
+        first_occurence_idx_list = []
+        for episode in self.episode_list:
+            if self.is_exact_match_requested():
+                most_common_word = self.query
+            else:
+                most_common_word = self.get_most_common_query_word(
+                    episode.episode_number)
+            print(most_common_word)
+            text = episode.text
+            text_lower = text.lower()
+            index = text_lower.find(most_common_word)
+            first_occurence_idx_list.append(index)
+        return first_occurence_idx_list
 
     @staticmethod
     def append_end_of_string(
