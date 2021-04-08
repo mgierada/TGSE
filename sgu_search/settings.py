@@ -84,18 +84,28 @@ WSGI_APPLICATION = 'sgu_search.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-
-# Heroku DB
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ['sgu_search_db_name'],
-        'USER': os.environ['sgu_search_db_user'],
-        'PASSWORD': os.environ['sgu_search_db_passwd'],
-        'HOST': os.environ['sgu_search_db_host'],
-        'PORT': '5432',
+        'NAME': 'sgu_db',
+        'USER': 'sgu_db_user',
+        'PASSWORD': 'dzin111majonez',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
+
+# Heroku DB
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': os.environ['sgu_search_db_name'],
+#         'USER': os.environ['sgu_search_db_user'],
+#         'PASSWORD': os.environ['sgu_search_db_passwd'],
+#         'HOST': os.environ['sgu_search_db_host'],
+#         'PORT': '5432',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

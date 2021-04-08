@@ -11,6 +11,7 @@ class Transcript(models.Model):
     idd = models.CharField(max_length=240)
     status = models.CharField(max_length=245)
     text = models.TextField()
+    words = models.JSONField()
 
     class Meta:
         verbose_name_plural = 'Transcripts'
@@ -40,6 +41,7 @@ def populate_db_old():
             text=data['text'],
             link_to_mp3=link_to_mp3,
             status=data['status'],
+            words=data['words']
         )
 
 
@@ -64,6 +66,7 @@ def add_links_and_episodes_number():
                 date_published=date_published,
                 link_to_mp3=link_to_mp3,
                 link_to_podcast=link_to_podcast,
+                words='empty'
             )
         except IntegrityError:
             print('Skipping episode #{} - episode already exists'.format(
@@ -84,16 +87,19 @@ def populate_db():
         status = data['status']
         idd = data['id']
         text = data['text']
+        words = data['words']
         try:
             Transcript.objects.filter(
                 link_to_mp3=link_to_mp3).update(status=status,
                                                 idd=idd,
-                                                text=text)
+                                                text=text,
+                                                words=words)
         except IntegrityError:
             Transcript.objects.filter(
                 link_to_mp3=link_to_mp3).update(status=status,
                                                 idd=idd,
-                                                text='in progress...')
+                                                text='in progress...',
+                                                words=' ')
 
 
 def clear_db():
