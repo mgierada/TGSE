@@ -178,13 +178,13 @@ class SearchResultsView(ListView):
         if self.initial_query and self.episode_list:
             self.each_query_count_list = list(self.get_queries_sum().values())
             self.short_texts_list = self.get_short_text_highlighted()
-            self.index_list = self.get_index_most_common_word()
+            self.timestamps = self.get_timestamps()
 
             # sort queries, episodes_list and transcritps by query occurrence
             sorted_q_e_st = self.sort_by_occurrence_descending()
 
             # unzip sorted list
-            q_sorted, e_sorted, st_sorted, index_list = zip(
+            q_sorted, e_sorted, st_sorted, timestamps = zip(
                 *sorted_q_e_st)
 
             paginator_q = Paginator(q_sorted, self.paginate_idx)
@@ -199,7 +199,7 @@ class SearchResultsView(ListView):
             page_st = self.request.GET.get('page')
             page_obj_st = paginator_st.get_page(page_st)
 
-            paginator_idx = Paginator(index_list, self.paginate_idx)
+            paginator_idx = Paginator(timestamps, self.paginate_idx)
             page_idx = self.request.GET.get('page')
             page_obj_idx = paginator_idx.get_page(page_idx)
 
@@ -255,7 +255,7 @@ class SearchResultsView(ListView):
             self.each_query_count_list,
             self.episode_list,
             self.short_texts_list,
-            self.index_list)
+            self.timestamps)
         zipped = list(unsorted)
         sorted_q_e_st = reversed(
             sorted(zipped, key=operator.itemgetter(0)))
@@ -357,7 +357,16 @@ class SearchResultsView(ListView):
             short_texts.append(short_text_highlighted)
         return short_texts
 
-    def get_index_most_common_word(self):
+    def get_timestamps(self) -> List[int]:
+        ''' Get a list with all timestamps [in ms] for which the exact match
+        were found.
+
+        Returns
+        -------
+        List[int]
+            timestamps for all episodes for which the exact match were found
+
+        '''
         timestamps = []
         for episode in self.episode_list:
             if self.is_exact_match_requested():
@@ -383,10 +392,27 @@ class SearchResultsView(ListView):
             timestamps.append(timestamp)
         return timestamps
 
-    def find_all_indicies_of_words_in_list(
+    def get_all_indicies_of_words_in_list(
             self,
-            splitted_text,
-            matching_word):
+            splitted_text: List[str],
+            matching_word: str) -> List[int]:
+        ''' Get a list with all indicies of the first query word that occurs
+        in the splitted_text list
+
+        Parameters
+        ----------
+        splitted_text : List[str]
+            a list containing transcript splited by ' '
+        matching_word : str
+            the first query word
+
+        Returns
+        -------
+        all_indicies : ist[int]
+            a list with all indicies of the first word that occurs in
+            splitted_text list
+
+        '''
         all_indicies = []
         for i, word in enumerate(splitted_text):
             if word == matching_word:
@@ -395,8 +421,24 @@ class SearchResultsView(ListView):
 
     def get_index_partial_match(
             self,
-            most_common_word,
-            splitted_text):
+            most_common_word: str,
+            splitted_text: List[str]) -> int:
+        ''' Returns a correct index for the most_common_word (first occurance)
+
+        Parameters
+        ----------
+        most_common_word : str
+            the most common word of query
+        splitted_text : List[str]
+            a list containing transcript splited by ' '
+
+        Returns
+        -------
+        index : int
+            an index at which most_common_word can be found in
+            splitted_text list (first occurance)
+
+        '''
 
         for word in splitted_text:
             if word.startswith(most_common_word):
@@ -405,12 +447,30 @@ class SearchResultsView(ListView):
 
     def get_index_exact_match(
             self,
-            most_common_word,
-            splitted_text):
+            most_common_word: str,
+            splitted_text: List[str]) -> int:
+        ''' Get a correct index for the most_common_word so the second 
+        word occurs just after the first one
+
+        Parameters
+        ----------
+        most_common_word : str
+            the most common word of query
+        splitted_text : List[str]
+            a list containing transcript splited by ' '
+
+        Returns
+        -------
+        index : int
+            an index at which most_common_word can be found in
+            splitted_text list. It is not necessary the first occurance
+            (usually it is not)
+
+        '''
         first_word = most_common_word.split(' ')[0].lower()
         second_word = most_common_word.split(' ')[1].lower()
 
-        all_occurances_first_word = self.find_all_indicies_of_words_in_list(
+        all_occurances_first_word = self.get_all_indicies_of_words_in_list(
             splitted_text, first_word)
 
         idx = 0
