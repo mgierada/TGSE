@@ -9,5 +9,5 @@ jobs:
       - uses: actions/first-interaction@v1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          issue-message: 'Hello! Thank you for submiting your issue. I will definitly look at that. Feel free to reach out to me at @mgierada or maciek.gierada@gmail.com if you have more details'
-          pr-message: 'Hello! Feel free to reach out to me at @mgierada or maciek.gierada@gmail.com'
+          issue-message: 'Hello! Thank you for submiting your issue. I will definitly look at that. Feel free to reach out to me at @mgierada (GitHub) or maciek.gierada@gmail.com if you have more details'
+          pr-message: 'Hello! Thank you for submiting your PR. I will definitly look at that. Feel free to reach out to me at @mgierada (GitHub) or maciek.gierada@gmail.com if you have more details'
