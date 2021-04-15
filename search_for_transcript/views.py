@@ -1,4 +1,3 @@
-from django.db import reset_queries
 from django.views.generic import TemplateView, ListView
 from django.utils.safestring import SafeString
 from typing import Any, Dict, List
@@ -893,6 +892,3 @@ class APIGetEpisode(TemplateView):
         return JsonResponse(serializer.data,
                             safe=False,
                             json_dumps_params={'indent': 4})
-
-
-reset_queries()
