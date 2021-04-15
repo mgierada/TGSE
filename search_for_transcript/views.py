@@ -84,9 +84,11 @@ class SearchResultsView(ListView):
 
         '''
         self.query = self.initial_query[1:-1]
-        self.episode_list = Transcript.objects.filter(
+        all_episodes_list = Transcript.objects.filter(
             text__icontains=self.query)
-        print(self.episode_list.explain())
+        paginator = Paginator(all_episodes_list, 10)
+        page = paginator.page(1)
+        self.episode_list = page.object_list
         return self.episode_list
 
     def get_partial_match(self) -> QuerySet:
