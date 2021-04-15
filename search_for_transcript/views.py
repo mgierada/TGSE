@@ -82,7 +82,7 @@ class SearchResultsView(ListView):
         '''
         self.query = self.initial_query[1:-1]
         self.episode_list = Transcript.objects.filter(
-            text__icontains=self.query)
+            text__icontains=self.query).defer('text')
         return self.episode_list
 
     def get_partial_match(self) -> QuerySet:
