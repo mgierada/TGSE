@@ -1,3 +1,4 @@
+from django.db import reset_queries
 from django.views.generic import TemplateView, ListView
 from django.utils.safestring import SafeString
 from typing import Any, Dict, List
@@ -7,6 +8,8 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 import re
 import operator
+import sys
+from memory_profiler import profile
 
 # from rest_framework import serializers
 from .utils import forbiden_words
@@ -82,7 +85,8 @@ class SearchResultsView(ListView):
         '''
         self.query = self.initial_query[1:-1]
         self.episode_list = Transcript.objects.filter(
-            text__icontains=self.query).iterator()
+            text__icontains=self.query)
+        print(self.episode_list.explain())
         return self.episode_list
 
     def get_partial_match(self) -> QuerySet:
@@ -161,6 +165,7 @@ class SearchResultsView(ListView):
             word for word in splitted_query if word not in forbiden_words]
         return ' '.join(splitted_query_cleaned)
 
+    @profile
     def get_context_data(
             self,
             **kwargs: Any) -> Dict[str, Any]:
@@ -892,3 +897,6 @@ class APIGetEpisode(TemplateView):
         return JsonResponse(serializer.data,
                             safe=False,
                             json_dumps_params={'indent': 4})
+
+
+reset_queries()
