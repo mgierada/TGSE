@@ -6,6 +6,7 @@ from django.utils.safestring import mark_safe
 from django.db.models.query import QuerySet
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 import re
 import operator
 import sys
@@ -84,11 +85,19 @@ class SearchResultsView(ListView):
 
         '''
         self.query = self.initial_query[1:-1]
-        all_episodes_list = Transcript.objects.filter(
-            text__icontains=self.query)
+        vector = SearchVector('text')
+        query = SearchQuery(self.query, search_type='phrase')
+        all_episodes_list = Transcript.objects.annotate(
+            rank=SearchRank(vector, query)).order_by('-rank')
+        # self.episode_list = Transcript.objects.filter(
+        #     text__icontains=self.query)
+        # all_episodes_list = Transcript.objects.filter(
+        #     text__icontains=self.query)
+
         paginator = Paginator(all_episodes_list, 10)
         page = paginator.page(1)
         self.episode_list = page.object_list
+        print(self.episode_list)
         return self.episode_list
 
     def get_partial_match(self) -> QuerySet:
@@ -167,7 +176,6 @@ class SearchResultsView(ListView):
             word for word in splitted_query if word not in forbiden_words]
         return ' '.join(splitted_query_cleaned)
 
-    @profile
     def get_context_data(
             self,
             **kwargs: Any) -> Dict[str, Any]:
