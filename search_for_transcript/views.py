@@ -1,7 +1,7 @@
 from django.db import reset_queries
 from django.views.generic import TemplateView, ListView
 from django.utils.safestring import SafeString
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Type
 from django.utils.safestring import mark_safe
 from django.db.models.query import QuerySet
 from django.db.models import Q
@@ -326,8 +326,11 @@ class SearchResultsView(ListView):
                     episode.episode_number)
             text = episode.text
 
-            index, _ = re.search(
-                most_common_word, text, re.IGNORECASE).span()
+            try:
+                index, _ = re.search(
+                    most_common_word, text, re.IGNORECASE).span()
+            except AttributeError:
+                pass
             idx_query_word = index + len(most_common_word)
             start_idx = index - around_idx
             end_idx = around_idx + idx_query_word
@@ -402,9 +405,11 @@ class SearchResultsView(ListView):
                 index = self.get_index_partial_match(
                     most_common_word,
                     splitted_text)
-
-            timestamp = episode.words[index]['start']
-            timestamps.append(timestamp)
+            try:
+                timestamp = episode.words[index]['start']
+                timestamps.append(timestamp)
+            except TypeError:
+                pass
         return timestamps
 
     def get_all_indicies_of_words_in_list(
@@ -762,7 +767,6 @@ class TranscriptHighlightView(ListView):
     def get_highlighted_text_exact_match(
             self,
             text: str) -> str:
-        print(type(text))
         self.query = self.query[1:len(self.query) - 1]
         replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
             self.query.upper())
@@ -770,7 +774,6 @@ class TranscriptHighlightView(ListView):
             re.escape(str(self.query)), re.IGNORECASE)
         insensitive_text = insensitive_query.sub(replacing_query, text)
         highlighted_text = mark_safe(insensitive_text)
-        print(type(highlighted_text))
         return highlighted_text
 
     def get_highlighted_text_partial_match(
