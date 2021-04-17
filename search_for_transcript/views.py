@@ -101,6 +101,11 @@ class SearchResultsView(ListView):
         # print(self.episode_list)
         return self.episode_list
 
+    def format_query(self):
+        splitted_query = self.query.split(' ')
+        formatted_query = ' & '.join(splitted_query)
+        return formatted_query
+
     def get_partial_match(self) -> QuerySet:
         ''' Get a QuerySet with partial match found
 
@@ -114,7 +119,7 @@ class SearchResultsView(ListView):
         '''
         self.query = self.initial_query
         vector = SearchVector('text')
-        query = SearchQuery(self.query, search_type='phrase')
+        query = SearchQuery(self.format_query(), search_type='websearch')
         all_episodes_list = Transcript.objects.annotate(
             rank=SearchRank(vector, query)).order_by('-rank')
 
@@ -242,6 +247,7 @@ class SearchResultsView(ListView):
                 total_queries_count += int(occurence)
         return total_queries_count
 
+    @profile
     def get_context_data(
             self,
             **kwargs: Any) -> Dict[str, Any]:
@@ -265,9 +271,11 @@ class SearchResultsView(ListView):
                 # for one episode kind of works
                 self.each_query_count_list.append(
                     self.get_query_sum(episode))
-
-                self.short_texts_list.append(
-                    self.get_short_text_highlighted(episode)[0])
+                try:
+                    self.short_texts_list.append(
+                        self.get_short_text_highlighted(episode)[0])
+                except TypeError:
+                    pass
 
                 self.timestamps.append(self.get_timestamps(episode))
 
@@ -406,56 +414,59 @@ class SearchResultsView(ListView):
         else:
             most_common_word = self.get_most_common_query_word(
                 episode.episode_number)
+        print('word', most_common_word, 'episode', episode.episode_number)
         text = episode.text
 
-        try:
-            index, _ = re.search(
-                most_common_word, text, re.IGNORECASE).span()
-        except AttributeError:
-            pass
-        idx_query_word = index + len(most_common_word)
-        start_idx = index - around_idx
-        end_idx = around_idx + idx_query_word
+        if most_common_word in text:
 
-        first_char_idx = SearchResultsView.prepend_beginning_of_string(
-            text, start_idx)
-        last_char_idx = SearchResultsView.append_end_of_string(
-            text, end_idx)
+            try:
+                index, _ = re.search(
+                    most_common_word, text, re.IGNORECASE).span()
+            except AttributeError:
+                pass
+            idx_query_word = index + len(most_common_word)
+            start_idx = index - around_idx
+            end_idx = around_idx + idx_query_word
 
-        short_text = text[first_char_idx:last_char_idx]
+            first_char_idx = SearchResultsView.prepend_beginning_of_string(
+                text, start_idx)
+            last_char_idx = SearchResultsView.append_end_of_string(
+                text, end_idx)
 
-        # highlight all query words
-        if self.is_exact_match_requested():
-            replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
-                self.query)
-            insensitive_query = re.compile(
-                re.escape(str(self.query)), re.IGNORECASE)
-            insensitive_text = insensitive_query.sub(
-                replacing_query, short_text)
-            short_text = insensitive_text
-            short_text_highlighted = short_text
-        else:
-            for word in self.query.split(' '):
+            short_text = text[first_char_idx:last_char_idx]
+
+            # highlight all query words
+            if self.is_exact_match_requested():
                 replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
-                    word)
+                    self.query)
                 insensitive_query = re.compile(
-                    re.escape(str(word)), re.IGNORECASE)
+                    re.escape(str(self.query)), re.IGNORECASE)
                 insensitive_text = insensitive_query.sub(
                     replacing_query, short_text)
                 short_text = insensitive_text
-            short_text_highlighted = short_text
+                short_text_highlighted = short_text
+            else:
+                for word in self.query.split(' '):
+                    replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
+                        word)
+                    insensitive_query = re.compile(
+                        re.escape(str(word)), re.IGNORECASE)
+                    insensitive_text = insensitive_query.sub(
+                        replacing_query, short_text)
+                    short_text = insensitive_text
+                short_text_highlighted = short_text
 
-        # the edge case where the query is at the beginning
-        # of the transcript
-        if first_char_idx != 0:
-            short_text_highlighted = '(...) ' + short_text_highlighted
+            # the edge case where the query is at the beginning
+            # of the transcript
+            if first_char_idx != 0:
+                short_text_highlighted = '(...) ' + short_text_highlighted
 
-        # the edge case where the query is at the end of the transcript
-        if last_char_idx != len(text):
-            short_text_highlighted += ' (...)'
-        short_text_highlighted = mark_safe(short_text_highlighted)
-        short_texts.append(short_text_highlighted)
-        return short_texts
+            # the edge case where the query is at the end of the transcript
+            if last_char_idx != len(text):
+                short_text_highlighted += ' (...)'
+            short_text_highlighted = mark_safe(short_text_highlighted)
+            short_texts.append(short_text_highlighted)
+            return short_texts
 
     def get_timestamps(self, episode) -> List[int]:
         ''' Get a list with all timestamps [in ms] for which the exact match
@@ -487,9 +498,9 @@ class SearchResultsView(ListView):
                 splitted_text)
         try:
             timestamp = episode.words[index]['start']
+            return timestamp
         except TypeError:
             pass
-        return timestamp
 
     def get_all_indicies_of_words_in_list(
             self,
