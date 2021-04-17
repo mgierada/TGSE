@@ -306,9 +306,9 @@ class SearchResultsView(ListView):
             context['queries_episodes_short_texts'] = q_e_st_paginated
 
             # update page_obj as it is manually edited
-            # context['paginator'] = paginator_q
-            # context['page_obj'] = page_obj_q
-            # context['is_paginated'] = True
+            context['paginator'] = paginator_q
+            context['page_obj'] = page_obj_q
+            context['is_paginated'] = True
 
             # add other usefull variables
             context['query'] = self.query
