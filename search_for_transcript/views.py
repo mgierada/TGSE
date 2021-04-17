@@ -112,47 +112,57 @@ class SearchResultsView(ListView):
             not necessary, and usually not, close to each otehr
 
         '''
-        splitted_query = self.initial_query.split(' ')
-        self.query = SearchResultsView.check_for_forbidden_words(
-            splitted_query)
+        self.query = self.initial_query
+        vector = SearchVector('text')
+        query = SearchQuery(self.query, search_type='phrase')
+        all_episodes_list = Transcript.objects.annotate(
+            rank=SearchRank(vector, query)).order_by('-rank')
 
-        q = [Q(text__icontains=splitted_query[i])
-             for i in range(len(splitted_query))]
+        paginator = Paginator(all_episodes_list, 10)
+        page = paginator.page(1)
+        self.episode_list = page.object_list
 
-        # that if-else statement is a nasty part of the code #TODO refactor it
-        if len(q) == 1:
-            self.episode_list = Transcript.objects.filter(
-                text__icontains=self.query)
-        elif len(q) == 2:
-            c0, c1 = [i for i in q]
-            self.episode_list = Transcript.objects.filter(
-                c0, c1)
-        elif len(q) == 3:
-            c0, c1, c2 = [i for i in q]
-            self.episode_list = Transcript.objects.filter(
-                c0, c1, c2)
-        elif len(q) == 4:
-            c0, c1, c2, c3 = [i for i in q]
-            self.episode_list = Transcript.objects.filter(
-                c0, c1, c2, c3)
-        elif len(q) == 5:
-            c0, c1, c2, c3, c4 = [i for i in q]
-            self.episode_list = Transcript.objects.filter(
-                c0, c1, c2, c3, c4)
-        elif len(q) == 6:
-            c0, c1, c2, c3, c4, c5 = [i for i in q]
-            self.episode_list = Transcript.objects.filter(
-                c0, c1, c2, c3, c4, c5)
-        elif len(q) == 7:
-            c0, c1, c2, c3, c4, c5, c6 = [
-                i for i in q]
-            self.episode_list = Transcript.objects.filter(
-                c0, c1, c2, c3, c4, c5, c6)
-        else:
-            c0, c1, c2, c3, c4, c5, c6, *_ = [
-                i for i in q]
-            self.episode_list = Transcript.objects.filter(
-                c0, c1, c2, c3, c4, c5, c6)
+        # splitted_query = self.initial_query.split(' ')
+        # self.query = SearchResultsView.check_for_forbidden_words(
+        #     splitted_query)
+
+        # q = [Q(text__icontains=splitted_query[i])
+        #      for i in range(len(splitted_query))]
+
+        # # that if-else statement is a nasty part of the code #TODO refactor it
+        # if len(q) == 1:
+        #     self.episode_list = Transcript.objects.filter(
+        #         text__icontains=self.query)
+        # elif len(q) == 2:
+        #     c0, c1 = [i for i in q]
+        #     self.episode_list = Transcript.objects.filter(
+        #         c0, c1)
+        # elif len(q) == 3:
+        #     c0, c1, c2 = [i for i in q]
+        #     self.episode_list = Transcript.objects.filter(
+        #         c0, c1, c2)
+        # elif len(q) == 4:
+        #     c0, c1, c2, c3 = [i for i in q]
+        #     self.episode_list = Transcript.objects.filter(
+        #         c0, c1, c2, c3)
+        # elif len(q) == 5:
+        #     c0, c1, c2, c3, c4 = [i for i in q]
+        #     self.episode_list = Transcript.objects.filter(
+        #         c0, c1, c2, c3, c4)
+        # elif len(q) == 6:
+        #     c0, c1, c2, c3, c4, c5 = [i for i in q]
+        #     self.episode_list = Transcript.objects.filter(
+        #         c0, c1, c2, c3, c4, c5)
+        # elif len(q) == 7:
+        #     c0, c1, c2, c3, c4, c5, c6 = [
+        #         i for i in q]
+        #     self.episode_list = Transcript.objects.filter(
+        #         c0, c1, c2, c3, c4, c5, c6)
+        # else:
+        #     c0, c1, c2, c3, c4, c5, c6, *_ = [
+        #         i for i in q]
+        #     self.episode_list = Transcript.objects.filter(
+        #         c0, c1, c2, c3, c4, c5, c6)
         return self.episode_list
 
     @staticmethod
