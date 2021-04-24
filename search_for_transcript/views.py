@@ -10,8 +10,6 @@ from django.core.paginator import Paginator
 from django.contrib.postgres.search import (
     SearchQuery, SearchRank, SearchVector)
 import re
-import operator
-from memory_profiler import profile
 
 # from rest_framework import serializers
 from .utils import forbiden_words
