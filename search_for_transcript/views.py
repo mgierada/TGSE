@@ -543,7 +543,6 @@ class SearchResultsView(ListView):
                 map(SearchResultsView.remove_punctation, splitted_text))
             index = text_no_punctation.index(most_common_word.lower())
             return index
-
         else:
             first_word = most_common_word.split(' ')[0].lower()
             second_word = most_common_word.split(' ')[1].lower()
