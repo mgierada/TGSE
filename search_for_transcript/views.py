@@ -1,23 +1,12 @@
 from django.db import reset_queries
-from django.utils.functional import cached_property
 from django.views.generic import TemplateView, ListView
 from django.utils.safestring import SafeString
 from typing import Any, Dict, List
 from django.utils.safestring import mark_safe
 from django.db.models.query import QuerySet
-from django.db.models import Q
 from django.core.paginator import Paginator
-from django.contrib.postgres.search import (
-    SearchQuery, SearchRank, SearchVector)
 import re
-import operator
-from memory_profiler import profile
-
-# from rest_framework import serializers
-from .utils import forbiden_words
-
 from .models import Transcript
-
 from .serializers import TranscriptSerializers
 from django.http import JsonResponse
 
@@ -31,8 +20,6 @@ class SearchResultsView(ListView):
     template_name = 'search_results.html'
     context_object_name = 'episode_list'
     paginate_idx = 3
-    context = None
-    # paginate_by = 3
 
     def get_queryset(self) -> QuerySet:
         ''' Get Transcripts objects where query can by found in the
@@ -44,38 +31,12 @@ class SearchResultsView(ListView):
             transcript objects containing query in the text filed
 
         '''
-        self.initial_query = self.request.GET.get('q').lower()
-        if not self.initial_query:
+        self.query = self.request.GET.get('q').lower()
+        if not self.query:
             self.episode_list = None
             return self.episode_list
 
-        # check if exact match execution can be started
-        if self.is_exact_match_requested():
-            self.get_exact_match()
-        else:
-            self.get_partial_match()
-
-    def is_exact_match_requested(self):
-        ''' Check if exact search is requested by placing query in
-        quotation marks
-
-        Returns
-        -------
-        True
-            if there are matching quotation marks around the query
-        False
-            otherwise
-
-        '''
-        quotation_marks = ['\'', '"', '“', '”',
-                           '‘', '’', '”', '“', '\u201e', '\u201c']
-        if (
-            self.initial_query[0] in quotation_marks
-            and
-            self.initial_query[len(self.initial_query) - 1] in quotation_marks
-        ):
-            return True
-        return False
+        self.get_exact_match()
 
     def get_exact_match(self) -> QuerySet:
         ''' Get QuerySet with and exact match found
@@ -87,74 +48,10 @@ class SearchResultsView(ListView):
             match (query) in the text field
 
         '''
-        self.query = self.initial_query[1:-1]
-        # vector = SearchVector('text')
-        # query = SearchQuery(self.query, search_type='phrase')
-        # all_episodes_list = Transcript.objects.annotate(
-        #     rank=SearchRank(vector, query)).order_by('-rank')
+
         self.episode_list = Transcript.objects.filter(
             text__icontains=self.query).order_by('-date_published')
-        # all_episodes_list = Transcript.objects.filter(
-        #     text__icontains=self.query)
-
-        # paginator = Paginator(all_episodes_list, 10)
-        # page = paginator.page(1)
-        # self.episode_list = page.object_list
         return self.episode_list
-
-    def format_query(self):
-        splitted_query = self.query.split(' ')
-        formatted_query = ' & '.join(splitted_query)
-        return formatted_query
-
-    def get_partial_match(self) -> QuerySet:
-        ''' Get a QuerySet with partial match found
-
-        Returns
-        -------
-        QuerySet
-            all Transcripts objects for which there is an partial match, i.e.
-            each query words apperad in the text field of a given episode but
-            not necessary, and usually not, close to each otehr
-
-        '''
-        self.query = self.initial_query
-        vector = SearchVector('text')
-        query = SearchQuery(self.format_query(), search_type='websearch')
-        # all_episodes_list = Transcript.objects.filter(
-        #     text__icontains=self.query)
-        all_episodes_list = Transcript.objects.annotate(
-            rank=SearchRank(vector, query)).order_by('-rank').defer('text')
-        print(all_episodes_list.explain(verbose=True, analyze=True))
-
-        paginator = Paginator(all_episodes_list, 9)
-        # analyze only the first 9 episodes ordered by rank
-        page = paginator.page(1)
-        self.episode_list = page.object_list
-
-        return self.episode_list
-
-    @staticmethod
-    def check_for_forbidden_words(
-            splitted_query: List[str]) -> str:
-        ''' Check if there is a forbidden words in query. If so, remove it.
-        Some words like 'the', 'in', 'I' are not allowed to be in the query
-        as a search engine will struggle to organize relevant matches
-
-        Parameters
-        ----------
-        splitted_query : List[str]
-            a list with all words as put in query
-
-        Returns
-        -------
-        str
-            a query string free of forbidden words
-
-        '''
-        splitted_query_cleaned = [
-            word for word in splitted_query if word not in forbiden_words]
-        return ' '.join(splitted_query_cleaned)
 
     def get_query_count(self, episode):
         ''' Get a dictionary showing how many times given word in query
@@ -180,13 +77,8 @@ class SearchResultsView(ListView):
         count = 0
         each_query_count = {}
         inner_dict = {}
-        if self.is_exact_match_requested():
-            count = episode.text.lower().count(self.query)
-            inner_dict[self.query] = count
-        else:
-            for word in self.query.split(' '):
-                count = episode.text.lower().count(word.lower())
-                inner_dict[word] = count
+        count = episode.text.lower().count(self.query)
+        inner_dict[self.query] = count
         each_query_count[episode.episode_number] = inner_dict
         return each_query_count
 
@@ -228,10 +120,9 @@ class SearchResultsView(ListView):
         self.short_texts_list = []
         self.timestamps = []
 
-        # update context only if self.initial_query is not empty
-        if self.initial_query and self.episode_list:
+        # update context only if self.query is not empty
+        if self.query and self.episode_list:
             for episode in self.episode_list:
-                # for one episode kind of works
                 self.each_query_count_list.append(
                     self.get_query_sum(episode))
                 try:
@@ -240,13 +131,8 @@ class SearchResultsView(ListView):
                 except TypeError:
                     pass
                 self.timestamps.append(self.get_timestamps(episode))
-            # sort queries, episodes_list and transcritps by query occurrence
-            # sorted_q_e_st = self.sort_by_occurrence_descending()
 
-            # # unzip sorted list
-            # q_sorted, e_sorted, st_sorted, timestamps = zip(
-            #     *sorted_q_e_st)
-
+            # For sure there is a better way to approach this
             paginator_q = Paginator(
                 self.each_query_count_list, self.paginate_idx)
             page_q = self.request.GET.get('page')
@@ -266,12 +152,11 @@ class SearchResultsView(ListView):
 
             # zip the final and sorted objects and add it to context
             q_e_st_paginated = zip(
-                page_obj_q, page_obj_e, page_obj_st, page_obj_idx)
-            # q_e_st_paginated = zip(
-            #     self.each_query_count_list,
-            #     self.episode_list,
-            #     self.short_texts_list,
-            #     self.timestamps)
+                page_obj_q,
+                page_obj_e,
+                page_obj_st,
+                page_obj_idx)
+
             context['queries_episodes_short_texts'] = q_e_st_paginated
 
             # update page_obj as it is manually edited
@@ -281,19 +166,16 @@ class SearchResultsView(ListView):
 
             # add other usefull variables
             context['query'] = self.query
-            context['initial_query'] = self.initial_query
+            context['initial_query'] = self.query
             context['count'] = self.count_total()
             context['highlighted_txt_trigger'] = self.query
 
-            if self.is_exact_match_requested():
-                context['highlighted_txt_trigger'] = '"{}"'.format(
-                    self.query[:len(self.initial_query) - 1])
+            context['highlighted_txt_trigger'] = '"{}"'.format(
+                self.query[:len(self.query) - 1])
 
-            self.episode_list = None
-            self.initial_query = None
             return context
 
-        elif not self.initial_query:
+        elif not self.query:
             response = 'No results found. Please search again using different query'
             context['response'] = response
             return context
@@ -303,50 +185,9 @@ class SearchResultsView(ListView):
                         Please search again using
                         different query.'''.format(
                 self.get_formatted_query())
-            context['initial_query'] = self.initial_query
+            context['initial_query'] = self.query
             context['response'] = response
             return context
-
-    # def sort_by_occurrence_descending(self) -> List[object]:
-    #     ''' Sort queries count, episodes and short text together by decending
-    #     occurrence of query
-
-    #     Returns
-    #     -------
-    #     List[object]
-    #         a reversed list iterator (zip) holding sorted
-    #         queries count, episodes and short texts
-
-    #     '''
-    #     unsorted = zip(
-    #         self.each_query_count_list,
-    #         self.episode_list,
-    #         self.short_texts_list,
-    #         self.timestamps)
-    #     zipped = list(unsorted)
-    #     sorted_q_e_st = reversed(
-    #         sorted(zipped, key=operator.itemgetter(0)))
-    #     return sorted_q_e_st
-
-    def get_most_common_query_word(
-            self,
-            episode_number: int) -> str:
-        ''' Get the a word from query which is the most common for a given
-        episode_number
-
-        Parameters
-        ----------
-        episode_number : int
-            number of the episode
-
-        Returns
-        -------
-        str
-            the most common word in query for a given episode_number
-        '''
-        for word, occurance in self.each_query_count[episode_number].items():
-            if occurance == max(self.each_query_count[episode_number].values()):
-                return word
 
     def get_short_text_highlighted(
             self,
@@ -368,14 +209,8 @@ class SearchResultsView(ListView):
 
         '''
         short_texts = []
-        # do I need this? #TODO
-        self.each_query_count = self.get_each_word_in_query_count()
 
-        if self.is_exact_match_requested():
-            most_common_word = self.query
-        else:
-            most_common_word = self.get_most_common_query_word(
-                episode.episode_number)
+        most_common_word = self.query
         text = episode.text
 
         if most_common_word.lower() in text.lower():
@@ -396,25 +231,14 @@ class SearchResultsView(ListView):
             short_text = text[first_char_idx:last_char_idx]
 
             # highlight all query words
-            if self.is_exact_match_requested():
-                replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
-                    self.query)
-                insensitive_query = re.compile(
-                    re.escape(str(self.query)), re.IGNORECASE)
-                insensitive_text = insensitive_query.sub(
-                    replacing_query, short_text)
-                short_text = insensitive_text
-                short_text_highlighted = short_text
-            else:
-                for word in self.query.split(' '):
-                    replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
-                        word)
-                    insensitive_query = re.compile(
-                        re.escape(str(word)), re.IGNORECASE)
-                    insensitive_text = insensitive_query.sub(
-                        replacing_query, short_text)
-                    short_text = insensitive_text
-                short_text_highlighted = short_text
+            replacing_query = '<span class="highlighted"><strong>{}</strong></span>'.format(
+                self.query)
+            insensitive_query = re.compile(
+                re.escape(str(self.query)), re.IGNORECASE)
+            insensitive_text = insensitive_query.sub(
+                replacing_query, short_text)
+            short_text = insensitive_text
+            short_text_highlighted = short_text
 
             # the edge case where the query is at the beginning
             # of the transcript
@@ -438,24 +262,15 @@ class SearchResultsView(ListView):
             timestamps for all episodes for which the exact match were found
 
         '''
-        if self.is_exact_match_requested():
-            most_common_word = self.query
-        else:
-            most_common_word = self.get_most_common_query_word(
-                episode.episode_number)
-
+        most_common_word = self.query
         text = episode.text
         text_lower = text.lower()
         splitted_text = text_lower.split(' ')
-        # when exact search is executed
-        if self.is_exact_match_requested():
-            index = self.get_index_exact_match(
-                most_common_word,
-                splitted_text)
-        else:
-            index = self.get_index_partial_match(
-                most_common_word,
-                splitted_text)
+
+        index = self.get_index_exact_match(
+            most_common_word,
+            splitted_text)
+
         try:
             timestamp = episode.words[index]['start']
             return timestamp
@@ -488,32 +303,6 @@ class SearchResultsView(ListView):
             if word == matching_word:
                 all_indicies.append(i)
         return all_indicies
-
-    def get_index_partial_match(
-            self,
-            most_common_word: str,
-            splitted_text: List[str]) -> int:
-        ''' Returns a correct index for the most_common_word (first occurance)
-
-        Parameters
-        ----------
-        most_common_word : str
-            the most common word of query
-        splitted_text : List[str]
-            a list containing transcript splited by ' '
-
-        Returns
-        -------
-        index : int
-            an index at which most_common_word can be found in
-            splitted_text list (first occurance)
-
-        '''
-
-        for word in splitted_text:
-            if word.startswith(most_common_word):
-                index = splitted_text.index(word)
-                return index
 
     def get_index_exact_match(
             self,
@@ -669,14 +458,7 @@ class SearchResultsView(ListView):
             >>> "covid" "vaccine" "usa"
 
         '''
-        if self.is_exact_match_requested():
-            formatted_query_string = '"{}" '.format(self.query)
-        else:
-            splitted_query = self.query.split(' ')
-            formatted_query_string = ''
-            for q in splitted_query:
-                formatted = '"{}" '.format(q)
-                formatted_query_string += formatted
+        formatted_query_string = '’{}’'.format(self.query)
         return formatted_query_string
 
     def get_queries_sum(self) -> Dict[int, int]:
@@ -700,25 +482,6 @@ class SearchResultsView(ListView):
                 total_queries_count += int(occurence)
                 queries_sum[episode_number] = total_queries_count
         return queries_sum
-
-    def get_exact_match_dict(self) -> Dict[str, int]:
-        '''Get dict with info about how any occurrences of a given query
-        appears per episode
-
-        Returns
-        -------
-        Dict[str, int]
-            e.g.
-
-            >>> each_query_count = {'815': 2, '816': 35}
-
-        '''
-        count = 0
-        exact_match = {}
-        for episode in self.episode_list:
-            count = episode.text.count(self.query)
-            exact_match[episode.episode_number] = count
-        return exact_match
 
     def get_each_word_in_query_count(self) -> Dict[int, Dict[str, int]]:
         ''' Get a dictionary showing how many times given word in query
@@ -745,13 +508,8 @@ class SearchResultsView(ListView):
         each_query_count = {}
         for episode in self.episode_list:
             inner_dict = {}
-            if self.is_exact_match_requested():
-                count = episode.text.lower().count(self.query)
-                inner_dict[self.query] = count
-            else:
-                for word in self.query.split(' '):
-                    count = episode.text.lower().count(word.lower())
-                    inner_dict[word] = count
+            count = episode.text.lower().count(self.query)
+            inner_dict[self.query] = count
             each_query_count[episode.episode_number] = inner_dict
         return each_query_count
 
