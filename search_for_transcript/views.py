@@ -91,14 +91,13 @@ class SearchResultsView(ListView):
         # all_episodes_list = Transcript.objects.annotate(
         #     rank=SearchRank(vector, query)).order_by('-rank')
         self.episode_list = Transcript.objects.filter(
-            text__icontains=self.query)
+            text__icontains=self.query).order_by('-date_published')
         # all_episodes_list = Transcript.objects.filter(
         #     text__icontains=self.query)
 
         # paginator = Paginator(all_episodes_list, 10)
         # page = paginator.page(1)
         # self.episode_list = page.object_list
-        # print(self.episode_list)
         return self.episode_list
 
     def format_query(self):
@@ -238,9 +237,7 @@ class SearchResultsView(ListView):
                         self.get_short_text_highlighted(episode)[0])
                 except TypeError:
                     pass
-
                 self.timestamps.append(self.get_timestamps(episode))
-
             # sort queries, episodes_list and transcritps by query occurrence
             # sorted_q_e_st = self.sort_by_occurrence_descending()
 
@@ -379,8 +376,7 @@ class SearchResultsView(ListView):
                 episode.episode_number)
         text = episode.text
 
-        if most_common_word in text:
-
+        if most_common_word.lower() in text.lower():
             try:
                 index, _ = re.search(
                     most_common_word, text, re.IGNORECASE).span()
@@ -539,20 +535,33 @@ class SearchResultsView(ListView):
             (usually it is not)
 
         '''
-        first_word = most_common_word.split(' ')[0].lower()
-        second_word = most_common_word.split(' ')[1].lower()
 
-        all_occurances_first_word = self.get_all_indicies_of_words_in_list(
-            splitted_text, first_word)
+        if len(most_common_word.split(' ')) == 1:
+            text_no_punctation = list(
+                map(SearchResultsView.remove_punctation, splitted_text))
+            index = text_no_punctation.index(most_common_word.lower())
+            return index
+        else:
+            first_word = most_common_word.split(' ')[0].lower()
+            second_word = most_common_word.split(' ')[1].lower()
 
-        idx = 0
-        while idx < len(all_occurances_first_word):
-            current_index = all_occurances_first_word[idx]
-            next_index = current_index + 1
-            if splitted_text[next_index].startswith(second_word):
-                index = current_index
-                return index
-            idx += 1
+            all_occurances_first_word = self.get_all_indicies_of_words_in_list(
+                splitted_text, first_word)
+
+            idx = 0
+            while idx < len(all_occurances_first_word):
+                current_index = all_occurances_first_word[idx]
+                next_index = current_index + 1
+                if splitted_text[next_index].startswith(second_word):
+                    index = current_index
+                    return index
+                idx += 1
+
+    @staticmethod
+    def remove_punctation(word):
+        import string
+        new_word = word.translate(str.maketrans('', '', string.punctuation))
+        return new_word
 
     @staticmethod
     def append_end_of_string(
