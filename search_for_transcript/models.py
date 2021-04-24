@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.fields import CharField, IntegerField
 from django.db.utils import IntegrityError
+from django.db import reset_queries
 
 
 class Transcript(models.Model):
@@ -107,6 +108,7 @@ def clear_db():
     entries.delete()
 
 
+# reset_queries()
 # populate_db()
 # add_links_and_episodes_number()
 # populate_db()
