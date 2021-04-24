@@ -88,18 +88,8 @@ class SearchResultsView(ListView):
 
         '''
         self.query = self.initial_query[1:-1]
-        # vector = SearchVector('text')
-        # query = SearchQuery(self.query, search_type='phrase')
-        # all_episodes_list = Transcript.objects.annotate(
-        #     rank=SearchRank(vector, query)).order_by('-rank')
         self.episode_list = Transcript.objects.filter(
             text__icontains=self.query).order_by('-date_published')
-        # all_episodes_list = Transcript.objects.filter(
-        #     text__icontains=self.query)
-
-        # paginator = Paginator(all_episodes_list, 10)
-        # page = paginator.page(1)
-        # self.episode_list = page.object_list
         return self.episode_list
 
     def format_query(self):
