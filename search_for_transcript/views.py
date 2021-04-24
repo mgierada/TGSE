@@ -1,4 +1,5 @@
 from django.db import reset_queries
+from django.utils.functional import cached_property
 from django.views.generic import TemplateView, ListView
 from django.utils.safestring import SafeString
 from typing import Any, Dict, List
@@ -30,6 +31,7 @@ class SearchResultsView(ListView):
     template_name = 'search_results.html'
     context_object_name = 'episode_list'
     paginate_idx = 3
+    context = None
     # paginate_by = 3
 
     def get_queryset(self) -> QuerySet:
@@ -120,54 +122,17 @@ class SearchResultsView(ListView):
         self.query = self.initial_query
         vector = SearchVector('text')
         query = SearchQuery(self.format_query(), search_type='websearch')
+        # all_episodes_list = Transcript.objects.filter(
+        #     text__icontains=self.query)
         all_episodes_list = Transcript.objects.annotate(
-            rank=SearchRank(vector, query)).order_by('-rank')
+            rank=SearchRank(vector, query)).order_by('-rank').defer('text')
+        print(all_episodes_list.explain(verbose=True, analyze=True))
 
-        paginator = Paginator(all_episodes_list, 10)
+        paginator = Paginator(all_episodes_list, 9)
+        # analyze only the first 9 episodes ordered by rank
         page = paginator.page(1)
         self.episode_list = page.object_list
 
-        # splitted_query = self.initial_query.split(' ')
-        # self.query = SearchResultsView.check_for_forbidden_words(
-        #     splitted_query)
-
-        # q = [Q(text__icontains=splitted_query[i])
-        #      for i in range(len(splitted_query))]
-
-        # # that if-else statement is a nasty part of the code #TODO refactor it
-        # if len(q) == 1:
-        #     self.episode_list = Transcript.objects.filter(
-        #         text__icontains=self.query)
-        # elif len(q) == 2:
-        #     c0, c1 = [i for i in q]
-        #     self.episode_list = Transcript.objects.filter(
-        #         c0, c1)
-        # elif len(q) == 3:
-        #     c0, c1, c2 = [i for i in q]
-        #     self.episode_list = Transcript.objects.filter(
-        #         c0, c1, c2)
-        # elif len(q) == 4:
-        #     c0, c1, c2, c3 = [i for i in q]
-        #     self.episode_list = Transcript.objects.filter(
-        #         c0, c1, c2, c3)
-        # elif len(q) == 5:
-        #     c0, c1, c2, c3, c4 = [i for i in q]
-        #     self.episode_list = Transcript.objects.filter(
-        #         c0, c1, c2, c3, c4)
-        # elif len(q) == 6:
-        #     c0, c1, c2, c3, c4, c5 = [i for i in q]
-        #     self.episode_list = Transcript.objects.filter(
-        #         c0, c1, c2, c3, c4, c5)
-        # elif len(q) == 7:
-        #     c0, c1, c2, c3, c4, c5, c6 = [
-        #         i for i in q]
-        #     self.episode_list = Transcript.objects.filter(
-        #         c0, c1, c2, c3, c4, c5, c6)
-        # else:
-        #     c0, c1, c2, c3, c4, c5, c6, *_ = [
-        #         i for i in q]
-        #     self.episode_list = Transcript.objects.filter(
-        #         c0, c1, c2, c3, c4, c5, c6)
         return self.episode_list
 
     @staticmethod
@@ -247,7 +212,6 @@ class SearchResultsView(ListView):
                 total_queries_count += int(occurence)
         return total_queries_count
 
-    @profile
     def get_context_data(
             self,
             **kwargs: Any) -> Dict[str, Any]:
@@ -328,7 +292,8 @@ class SearchResultsView(ListView):
                 context['highlighted_txt_trigger'] = '"{}"'.format(
                     self.query[:len(self.initial_query) - 1])
 
-            # print(self.get_exact_match())
+            self.episode_list = None
+            self.initial_query = None
             return context
 
         elif not self.initial_query:
@@ -345,26 +310,26 @@ class SearchResultsView(ListView):
             context['response'] = response
             return context
 
-    def sort_by_occurrence_descending(self) -> List[object]:
-        ''' Sort queries count, episodes and short text together by decending
-        occurrence of query
+    # def sort_by_occurrence_descending(self) -> List[object]:
+    #     ''' Sort queries count, episodes and short text together by decending
+    #     occurrence of query
 
-        Returns
-        -------
-        List[object]
-            a reversed list iterator (zip) holding sorted
-            queries count, episodes and short texts
+    #     Returns
+    #     -------
+    #     List[object]
+    #         a reversed list iterator (zip) holding sorted
+    #         queries count, episodes and short texts
 
-        '''
-        unsorted = zip(
-            self.each_query_count_list,
-            self.episode_list,
-            self.short_texts_list,
-            self.timestamps)
-        zipped = list(unsorted)
-        sorted_q_e_st = reversed(
-            sorted(zipped, key=operator.itemgetter(0)))
-        return sorted_q_e_st
+    #     '''
+    #     unsorted = zip(
+    #         self.each_query_count_list,
+    #         self.episode_list,
+    #         self.short_texts_list,
+    #         self.timestamps)
+    #     zipped = list(unsorted)
+    #     sorted_q_e_st = reversed(
+    #         sorted(zipped, key=operator.itemgetter(0)))
+    #     return sorted_q_e_st
 
     def get_most_common_query_word(
             self,
@@ -414,7 +379,6 @@ class SearchResultsView(ListView):
         else:
             most_common_word = self.get_most_common_query_word(
                 episode.episode_number)
-        print('word', most_common_word, 'episode', episode.episode_number)
         text = episode.text
 
         if most_common_word in text:
