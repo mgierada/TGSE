@@ -1,4 +1,4 @@
-![Python package](https://github.com/mgierada/`TGSE`/actions/workflows/python-package.yml/badge.svg)
+![Python package](https://github.com/mgierada/TGSE/actions/workflows/python-package.yml/badge.svg)
 ![GitHub last commit](https://img.shields.io/github/last-commit/mgierada/TGSE?label=last%20modified)
 ![GitHub repo size](https://img.shields.io/github/repo-size/mgierada/TGSE)
 ![GitHub](https://img.shields.io/badge/License-GPLv3-orange)
