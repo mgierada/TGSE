@@ -1,12 +1,12 @@
-![Python package](https://github.com/mgierada/sgu_transcript_generator/actions/workflows/python-package.yml/badge.svg)
-![GitHub last commit](https://img.shields.io/github/last-commit/mgierada/sgu_transcript_generator?label=last%20modified)
-![GitHub repo size](https://img.shields.io/github/repo-size/mgierada/sgu_transcript_generator)
+![Python package](https://github.com/mgierada/`TGSE`/actions/workflows/python-package.yml/badge.svg)
+![GitHub last commit](https://img.shields.io/github/last-commit/mgierada/TGSE?label=last%20modified)
+![GitHub repo size](https://img.shields.io/github/repo-size/mgierada/TGSE)
 ![GitHub](https://img.shields.io/badge/License-GPLv3-orange)
-![GitHub top language](https://img.shields.io/github/languages/top/mgierada/sgu_transcript_generator?color=brightgreen)
-[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/mgierada/sgu_transcript_generator.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/mgierada/sgu_transcript_generator/context:python)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/mgierada/sgu_transcript_generator.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/mgierada/sgu_transcript_generator/alerts/)
+![GitHub top language](https://img.shields.io/github/languages/top/mgierada/TGSE?color=brightgreen)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/mgierada/TGSE.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/mgierada/TGSE/context:python)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/mgierada/TGSE.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/mgierada/TGSE/alerts/)
 
-# Transcripts & Search Engine (**TSE**)
+# Transcripts Generator & Search Engine (**TGSE**)
 
 A Django based search engine and transcripts generator currently applied to the Skeptics Guide to the Universe (SGU) podcast.
 
@@ -36,15 +36,15 @@ Contributions are highly welcome! There is still a lot of work to be done!
 
 # How to run local
 
-SGU-TSA backend is Django based, so to run locally do:
+TGSA backend is Django based, so to run locally do:
 
 ```bash
 # navigate to path where you will keep the project
 cd path_to_install
 # clone the repo (if you are planning to contribute, fork the repo and clone it)
-git clone https://github.com/mgierada/sgu_transcript_generator.git
+git clone https://github.com/mgierada/TGSE.git
 # enter the repo's root directory
-cd sgu_transcript_generator
+cd TGSE
 # create a virtual environment
 python3 -m venv sgu-tse_venv
 # activate the environment
