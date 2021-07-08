@@ -6,9 +6,9 @@
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/mgierada/sgu_transcript_generator.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/mgierada/sgu_transcript_generator/context:python)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/mgierada/sgu_transcript_generator.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/mgierada/sgu_transcript_generator/alerts/)
 
-# SGU Transcripts & Search Engine (**SGU-TSE**)
+# Transcripts & Search Engine (**TSE**)
 
-A Django based search engine and transcripts generator for the Skeptics Guide to the Universe (SGU) podcast.
+A Django based search engine and transcripts generator currently applied to the Skeptics Guide to the Universe (SGU) podcast.
 
 # Functionality
 
@@ -71,11 +71,11 @@ It is not my main goal to have a nice REST API at this moment, however, there ar
 
 - [ ] better design
 - [ ] set up an event listiner to check for new episodes, get detials, submit for transcription, get transcript and populate DB in automated fashion
-- [ ] use timestaps to navigate to the exact moment in the audio file matching the query
-- [ ] better transcripts quality
+- [x] use timestaps to navigate to the exact moment in the audio file matching the query
+- [x] better transcripts quality
 - [ ] improved search-engine by implementing a method to search for an almost exact match
-- [ ] refactoring
-- [ ] documentation
+- [x] refactoring
+- [x] documentation
 
 # Tech Stack
 
