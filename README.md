@@ -8,7 +8,8 @@
 
 # Transcripts Generator & Search Engine (**TGSE**)
 
-A Django based search engine and transcripts generator currently applied to the Skeptics Guide to the Universe (SGU) podcast.
+An English based audio files to text converter and search engine that ensures that grammar, casing and punctuation are on the spot. An efficient search engine allows users to define a text-based query and play an audio file from the exact location where the query occurs. Among others, it's a unique tool for podcating as it makes feel you are searching through audio files like you do through texts. Currently applied to the Skeptic's Guide to the Universe Podcast.
+
 
 # Functionality
 
